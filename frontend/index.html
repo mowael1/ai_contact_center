@@ -852,10 +852,12 @@
       companies: [],
       admins: [],
       agents: [],
+      customers: [],
       currentCompany: null,
       companySearch: "",
       adminSearch: "",
       agentSearch: "",
+      customerSearch: "",
       loadingCount: 0
     };
 
@@ -972,6 +974,7 @@
       state.companies = [];
       state.admins = [];
       state.agents = [];
+      state.customers = [];
       state.currentCompany = null;
     }
 
@@ -1126,6 +1129,10 @@
         return role === "ADMIN";
       }
 
+      if (route.startsWith("/customers")) {
+        return role === "ADMIN";
+      }
+
       return ["SUPER_ADMIN", "ADMIN", "AGENT"].includes(role);
     }
 
@@ -1215,6 +1222,17 @@
           const id = route.split("/")[2];
           await renderAgentDetails(id);
 
+        } else if (route === "/customers") {
+          await renderCustomers();
+        } else if (route === "/customers/new") {
+          await renderCustomerForm();
+        } else if (/^\/customers\/\d+\/edit$/.test(route)) {
+          const id = route.split("/")[2];
+          await renderCustomerForm(id);
+        } else if (/^\/customers\/\d+$/.test(route)) {
+          const id = route.split("/")[2];
+          await renderCustomerDetails(id);
+
         } else {
           renderNotFound();
         }
@@ -1269,6 +1287,16 @@
         `
         : "";
 
+      const customersNav = role === "ADMIN"
+        ? `
+          <button class="nav-btn ${activeItem === "customers" ? "active" : ""}"
+                  onclick="navigate('/customers')">
+            <span>👤</span>
+            <span>Customers</span>
+          </button>
+        `
+        : "";
+
       root.innerHTML = `
         <div class="shell">
           <aside class="sidebar" id="sidebar">
@@ -1290,6 +1318,7 @@
               ${companiesNav}
               ${adminsNav}
               ${agentsNav}
+              ${customersNav}
 
               <button class="nav-btn ${activeItem === "profile" ? "active" : ""}"
                       onclick="navigate('/profile')">
@@ -1483,6 +1512,12 @@
       return state.agents;
     }
 
+    async function loadCustomers() {
+      const data = await apiRequest("/customers");
+      state.customers = unwrapList(data);
+      return state.customers;
+    }
+
     async function renderSuperAdminDashboard() {
       const companies = await loadCompanies();
 
@@ -1596,28 +1631,60 @@
     async function renderAdminDashboard() {
       const user = state.currentUser;
       const name = user?.full_name || user?.email || "Admin";
-      const agents = await loadAgents();
+
+      const [agents, customers] = await Promise.all([
+        loadAgents(),
+        loadCustomers()
+      ]);
+
       const activeAgents = agents.filter(agent => agent.is_active === true).length;
-      const inactiveAgents = agents.filter(agent => agent.is_active === false).length;
+      const activeCustomers = customers.filter(customer => customer.is_active === true).length;
+      const inactiveCustomers = customers.filter(customer => customer.is_active === false).length;
 
       renderShell(`
         <section class="page">
           <div class="page-header">
-            <div><h1>Welcome, ${escapeHtml(name)}</h1><p>Your company administration workspace.</p></div>
-            <button class="btn btn-primary" onclick="navigate('/agents/new')">+ Add Agent</button>
+            <div>
+              <h1>Welcome, ${escapeHtml(name)}</h1>
+              <p>Your company administration workspace.</p>
+            </div>
+
+            <div class="actions">
+              <button class="btn btn-secondary" onclick="navigate('/agents/new')">+ Add Agent</button>
+              <button class="btn btn-primary" onclick="navigate('/customers/new')">+ Add Customer</button>
+            </div>
           </div>
 
           <div class="stats">
-            <div class="card stat-card"><div class="stat-label">Total Agents</div><div class="stat-value">${agents.length}</div></div>
-            <div class="card stat-card"><div class="stat-label">Active Agents</div><div class="stat-value">${activeAgents}</div></div>
-            <div class="card stat-card"><div class="stat-label">Inactive Agents</div><div class="stat-value">${inactiveAgents}</div></div>
+            <div class="card stat-card">
+              <div class="stat-label">Total Agents</div>
+              <div class="stat-value">${agents.length}</div>
+              <div class="stat-note">${activeAgents} active</div>
+            </div>
+
+            <div class="card stat-card">
+              <div class="stat-label">Customers</div>
+              <div class="stat-value">${customers.length}</div>
+              <div class="stat-note">${activeCustomers} active</div>
+            </div>
+
+            <div class="card stat-card">
+              <div class="stat-label">Inactive Customers</div>
+              <div class="stat-value">${inactiveCustomers}</div>
+            </div>
           </div>
 
           <div class="card">
             <div class="card-body">
               <h2 style="margin-bottom:10px;">Company: ${escapeHtml(getCompanyName(user))}</h2>
-              <p style="color:var(--muted);line-height:1.7;">Agents are scoped to your company by the backend. When you create an Agent, you do not choose a company manually.</p>
-              <div style="margin-top:20px;"><button class="btn btn-primary" onclick="navigate('/agents')">Manage Agents</button></div>
+              <p style="color:var(--muted);line-height:1.7;">
+                Agents and Customers are scoped to your company by the backend. The frontend never sends
+                a company_id when creating or updating a Customer.
+              </p>
+              <div class="actions" style="margin-top:20px;">
+                <button class="btn btn-secondary" onclick="navigate('/agents')">Manage Agents</button>
+                <button class="btn btn-primary" onclick="navigate('/customers')">Manage Customers</button>
+              </div>
             </div>
           </div>
         </section>
@@ -2576,6 +2643,386 @@
             body: { is_active: newStatus }
           });
           showToast(`${label} ${newStatus ? "activated" : "deactivated"} successfully.`, "success");
+          await router();
+        }
+      });
+    }
+
+    // ------------------------------------------------------------
+    // Customers - Company Admin
+    // ------------------------------------------------------------
+
+    async function renderCustomers() {
+      if (getRoleName() !== "ADMIN") {
+        navigate("/403");
+        return;
+      }
+
+      await loadCustomers();
+
+      renderShell(`
+        <section class="page">
+          <div class="page-header">
+            <div>
+              <h1>Customers</h1>
+              <p>Manage Customers belonging to your company.</p>
+            </div>
+
+            <button class="btn btn-primary" onclick="navigate('/customers/new')">
+              + Add Customer
+            </button>
+          </div>
+
+          <div class="card">
+            <div class="toolbar">
+              <div class="search-box">
+                <input
+                  id="customerSearch"
+                  type="search"
+                  placeholder="Search by name, phone or email..."
+                  value="${escapeHtml(state.customerSearch)}"
+                />
+              </div>
+
+              <div style="color:var(--muted);font-size:14px;align-self:center;">
+                <span id="customerResultCount"></span>
+              </div>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="customersTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      `, "customers", "Customers");
+
+      document.getElementById("customerSearch")?.addEventListener("input", event => {
+        state.customerSearch = event.target.value;
+        drawCustomersTable();
+      });
+
+      drawCustomersTable();
+    }
+
+    function drawCustomersTable() {
+      const tbody = document.getElementById("customersTableBody");
+      const count = document.getElementById("customerResultCount");
+      if (!tbody) return;
+
+      const query = state.customerSearch.trim().toLowerCase();
+      const customers = state.customers.filter(customer => {
+        const haystack = [
+          customer.full_name,
+          customer.phone,
+          customer.email
+        ].filter(Boolean).join(" ").toLowerCase();
+
+        return haystack.includes(query);
+      });
+
+      if (count) {
+        count.textContent = `${customers.length} result${customers.length === 1 ? "" : "s"}`;
+      }
+
+      tbody.innerHTML = customers.length
+        ? customers.map(customer => `
+            <tr>
+              <td><strong>${escapeHtml(customer.full_name || "—")}</strong></td>
+              <td>${escapeHtml(customer.phone || "—")}</td>
+              <td>${escapeHtml(customer.email || "—")}</td>
+              <td>${statusBadge(customer.is_active)}</td>
+              <td>${formatDate(customer.created_at)}</td>
+              <td>
+                <div class="actions">
+                  <button
+                    class="btn btn-secondary btn-sm"
+                    onclick="navigate('/customers/${Number(customer.id)}')"
+                  >
+                    View
+                  </button>
+
+                  <button
+                    class="btn btn-secondary btn-sm"
+                    onclick="navigate('/customers/${Number(customer.id)}/edit')"
+                  >
+                    Edit
+                  </button>
+
+                  <button
+                    class="btn ${customer.is_active === true ? "btn-danger" : "btn-success"} btn-sm"
+                    onclick="confirmCustomerStatus(
+                      ${Number(customer.id)},
+                      ${customer.is_active !== true},
+                      '${escapeJs(customer.full_name || customer.phone || "Customer")}'
+                    )"
+                  >
+                    ${customer.is_active === true ? "Deactivate" : "Activate"}
+                  </button>
+                </div>
+              </td>
+            </tr>
+          `).join("")
+        : `
+            <tr>
+              <td colspan="6">
+                <div class="state-box">
+                  <h3>${state.customers.length ? "No matching Customers" : "No Customers yet"}</h3>
+                  <p>${state.customers.length ? "Try another search term." : "Add the first Customer for your company."}</p>
+                </div>
+              </td>
+            </tr>
+          `;
+    }
+
+    async function renderCustomerDetails(id) {
+      if (getRoleName() !== "ADMIN") {
+        navigate("/403");
+        return;
+      }
+
+      const customer = await apiRequest(
+        `/customers/${encodeURIComponent(id)}`
+      );
+
+      renderShell(`
+        <section class="page">
+          <div class="page-header">
+            <div>
+              <button class="btn-link" onclick="navigate('/customers')">
+                ← Back to Customers
+              </button>
+              <h1 style="margin-top:10px;">
+                ${escapeHtml(customer?.full_name || "Customer")}
+              </h1>
+              <p>Customer details for your company.</p>
+            </div>
+
+            <div class="actions">
+              <button
+                class="btn btn-secondary"
+                onclick="navigate('/customers/${Number(customer.id)}/edit')"
+              >
+                Edit
+              </button>
+
+              <button
+                class="btn ${customer.is_active === true ? "btn-danger" : "btn-success"}"
+                onclick="confirmCustomerStatus(
+                  ${Number(customer.id)},
+                  ${customer.is_active !== true},
+                  '${escapeJs(customer.full_name || customer.phone || "Customer")}'
+                )"
+              >
+                ${customer.is_active === true ? "Deactivate" : "Activate"}
+              </button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h2>Customer Information</h2>
+              ${statusBadge(customer?.is_active)}
+            </div>
+
+            <div class="card-body">
+              <div class="details-grid">
+                ${detailItem("ID", customer?.id)}
+                ${detailItem("Full Name", customer?.full_name)}
+                ${detailItem("Phone", customer?.phone)}
+                ${detailItem("Email", customer?.email)}
+                ${detailItem("Company ID", customer?.company_id)}
+                ${detailItem("Status", customer?.is_active === true ? "Active" : customer?.is_active === false ? "Inactive" : "Unknown")}
+                ${detailItem("Created At", formatDate(customer?.created_at), true)}
+                ${detailItem("Updated At", formatDate(customer?.updated_at), true)}
+              </div>
+            </div>
+          </div>
+        </section>
+      `, "customers", "Customer Details");
+    }
+
+    async function renderCustomerForm(id = null) {
+      if (getRoleName() !== "ADMIN") {
+        navigate("/403");
+        return;
+      }
+
+      const edit = Boolean(id);
+      const customer = edit
+        ? await apiRequest(`/customers/${encodeURIComponent(id)}`)
+        : null;
+
+      renderShell(`
+        <section class="page">
+          <div class="page-header">
+            <div>
+              <button class="btn-link" onclick="${edit ? `navigate('/customers/${Number(id)}')` : `navigate('/customers')`}">
+                ← Back
+              </button>
+              <h1 style="margin-top:10px;">${edit ? "Edit Customer" : "Add Customer"}</h1>
+              <p>
+                ${edit
+                  ? "Update this Customer's information."
+                  : "Create a Customer inside your authenticated company."}
+              </p>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-body">
+              <form id="customerForm">
+                <div class="error-box" id="customerFormError"></div>
+
+                <div class="form-group">
+                  <label for="customerFullName">Full Name *</label>
+                  <input
+                    id="customerFullName"
+                    type="text"
+                    maxlength="200"
+                    required
+                    value="${escapeHtml(customer?.full_name || "")}"
+                  />
+                </div>
+
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label for="customerPhone">Phone *</label>
+                    <input
+                      id="customerPhone"
+                      type="tel"
+                      maxlength="50"
+                      required
+                      value="${escapeHtml(customer?.phone || "")}"
+                    />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="customerEmail">Email</label>
+                    <input
+                      id="customerEmail"
+                      type="email"
+                      maxlength="320"
+                      value="${escapeHtml(customer?.email || "")}"
+                    />
+                  </div>
+                </div>
+
+                ${!edit ? `
+                  <div class="checkbox-row">
+                    <input id="customerActive" type="checkbox" checked />
+                    <label for="customerActive">Customer is active</label>
+                  </div>
+                ` : ""}
+
+                <div style="padding:13px 14px;border-radius:10px;background:#f8fafc;color:var(--muted);font-size:13px;line-height:1.6;">
+                  Company assignment is taken from your authenticated Admin account. No company_id is sent from this form.
+                </div>
+
+                <div class="form-actions">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    onclick="${edit ? `navigate('/customers/${Number(id)}')` : `navigate('/customers')`}"
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    type="submit"
+                    class="btn btn-primary"
+                    id="customerSaveBtn"
+                  >
+                    ${edit ? "Save Changes" : "Create Customer"}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </section>
+      `, "customers", edit ? "Edit Customer" : "Add Customer");
+
+      document.getElementById("customerForm")?.addEventListener("submit", async event => {
+        event.preventDefault();
+        hideInlineError("customerFormError");
+
+        const button = document.getElementById("customerSaveBtn");
+        button.disabled = true;
+        button.textContent = edit ? "Saving..." : "Creating...";
+
+        const payload = {
+          full_name: document.getElementById("customerFullName").value.trim(),
+          phone: document.getElementById("customerPhone").value.trim(),
+          email: document.getElementById("customerEmail").value.trim() || null
+        };
+
+        if (!edit) {
+          payload.is_active = document.getElementById("customerActive").checked;
+        }
+
+        try {
+          const saved = await apiRequest(
+            edit
+              ? `/customers/${encodeURIComponent(id)}`
+              : "/customers",
+            {
+              method: edit ? "PATCH" : "POST",
+              body: payload
+            }
+          );
+
+          showToast(
+            edit ? "Customer updated successfully." : "Customer created successfully.",
+            "success"
+          );
+
+          if (saved?.id) {
+            navigate(`/customers/${saved.id}`);
+          } else if (id) {
+            navigate(`/customers/${id}`);
+          } else {
+            navigate("/customers");
+          }
+        } catch (error) {
+          showInlineError("customerFormError", error.message);
+        } finally {
+          button.disabled = false;
+          button.textContent = edit ? "Save Changes" : "Create Customer";
+        }
+      });
+    }
+
+    function confirmCustomerStatus(id, newStatus, name) {
+      openConfirm({
+        title: `${newStatus ? "Activate" : "Deactivate"} Customer`,
+        message: `Are you sure you want to ${newStatus ? "activate" : "deactivate"} "${name}"?`,
+        confirmText: newStatus ? "Activate" : "Deactivate",
+        danger: !newStatus,
+        onConfirm: async () => {
+          await apiRequest(
+            `/customers/${encodeURIComponent(id)}/status`,
+            {
+              method: "PATCH",
+              body: { is_active: newStatus }
+            }
+          );
+
+          showToast(
+            `Customer ${newStatus ? "activated" : "deactivated"} successfully.`,
+            "success"
+          );
+
           await router();
         }
       });

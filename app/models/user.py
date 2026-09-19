@@ -17,6 +17,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING: 
     from app.models.company import Company
     from app.models.role import Role
+    from app.models.ticket import Ticket
 
 class User(Base):
     __tablename__ = "users"
@@ -78,3 +79,8 @@ class User(Base):
     role: Mapped["Role"] = relationship(
         back_populates="users"
     )
+    
+    assigned_tickets: Mapped[list["Ticket"]] = relationship(
+    back_populates="assigned_agent",
+    foreign_keys="Ticket.assigned_agent_id"
+)

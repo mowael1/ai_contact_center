@@ -3,6 +3,8 @@ from fastapi import APIRouter
 from app.api.routes import (
     auth,
     companies,
+    customers,
+    tickets,
     users,
 )
 
@@ -28,4 +30,16 @@ api_router.include_router(
     users.router,
     prefix="/users",
     tags=["Users"]
+)
+
+api_router.include_router(
+    customers.router,
+    prefix="/customers",
+    tags=["Customers"]
+)
+
+api_router.include_router(
+    tickets.router,
+    prefix="/tickets",
+    tags=["Tickets"]
 )

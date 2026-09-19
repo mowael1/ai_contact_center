@@ -1,40 +1,56 @@
 from datetime import datetime
+from typing import TYPE_CHECKING
 
-from sqlalchemy import Integer, Boolean, Unicode, text
+from sqlalchemy import (
+    Integer,
+    Boolean,
+    ForeignKey,
+    Unicode,
+    text,
+)
 from sqlalchemy.dialects.mssql import DATETIME2
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import (
+    Mapped,
+    mapped_column,
+    relationship,
+)
 
 from app.db.base import Base
 
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING: 
-    from app.models.user import User
-    from app.models.customer import Customer
+if TYPE_CHECKING:
+    from app.models.company import Company
     from app.models.ticket import Ticket
 
-class Company(Base):
-    
-    __tablename__ = "companies"
-    
+
+class Customer(Base):
+    __tablename__ = "customers"
+
     id: Mapped[int] = mapped_column(
         Integer,
         primary_key=True,
         autoincrement=True
     )
-    
-    name: Mapped[str] = mapped_column(
+
+    company_id: Mapped[int] = mapped_column(
+        Integer,
+        ForeignKey("companies.id"),
+        nullable=False,
+        index=True
+    )
+
+    full_name: Mapped[str] = mapped_column(
+        Unicode(200),
+        nullable=False
+    )
+
+    phone: Mapped[str] = mapped_column(
         Unicode(50),
         nullable=False
     )
 
     email: Mapped[str | None] = mapped_column(
-        Unicode(50),
-        nullable=True
-    )
-
-    phone: Mapped[str | None] = mapped_column(
-        Unicode(13),
+        Unicode(320),
         nullable=True
     )
 
@@ -54,15 +70,11 @@ class Company(Base):
         DATETIME2,
         nullable=True
     )
-    
-    users: Mapped[list["User"]] = relationship(
-        back_populates="company"
-    )
-    
-    customers: Mapped[list["Customer"]] = relationship(
-    back_populates="company"
+
+    company: Mapped["Company"] = relationship(
+        back_populates="customers"
     )
     
     tickets: Mapped[list["Ticket"]] = relationship(
-        back_populates="company"
+        back_populates="customer"
     )
