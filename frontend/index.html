@@ -1,0 +1,2716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Contact Center</title>
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --surface: #ffffff;
+      --surface-2: #f8fafc;
+      --sidebar: #101827;
+      --sidebar-2: #182235;
+      --text: #152033;
+      --muted: #6b7587;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --success: #15803d;
+      --success-bg: #dcfce7;
+      --danger: #b91c1c;
+      --danger-bg: #fee2e2;
+      --warning: #a16207;
+      --warning-bg: #fef3c7;
+      --border: #e5e9f0;
+      --shadow: 0 10px 30px rgba(15, 23, 42, 0.07);
+      --radius: 14px;
+      --sidebar-width: 255px;
+      --header-height: 70px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Inter, "Segoe UI", Tahoma, Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      min-height: 100vh;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .app {
+      min-height: 100vh;
+    }
+
+    /* LOGIN */
+    .login-page {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      background: linear-gradient(135deg, #eef4ff 0%, #f8fafc 55%, #eef2ff 100%);
+    }
+
+    .login-hero {
+      padding: 70px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(37, 99, 235, .20), transparent 32%),
+        radial-gradient(circle at 75% 80%, rgba(14, 165, 233, .16), transparent 30%),
+        #101827;
+      color: white;
+    }
+
+    .brand-mark {
+      width: 54px;
+      height: 54px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #3b82f6, #60a5fa);
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 26px;
+      box-shadow: 0 10px 30px rgba(59, 130, 246, .35);
+    }
+
+    .login-hero h1 {
+      font-size: clamp(34px, 5vw, 62px);
+      line-height: 1.05;
+      max-width: 680px;
+      margin-bottom: 20px;
+    }
+
+    .login-hero p {
+      font-size: 18px;
+      line-height: 1.7;
+      max-width: 610px;
+      color: #cbd5e1;
+    }
+
+    .login-panel {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    .login-card {
+      width: min(430px, 100%);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 36px;
+      box-shadow: var(--shadow);
+    }
+
+    .login-card h2 {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .login-card > p {
+      color: var(--muted);
+      margin-bottom: 30px;
+    }
+
+    /* APP SHELL */
+    .shell {
+      display: grid;
+      grid-template-columns: var(--sidebar-width) 1fr;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 0;
+      width: var(--sidebar-width);
+      background: var(--sidebar);
+      color: #dbe4f0;
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      z-index: 30;
+    }
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 4px 10px 26px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+
+    .sidebar-brand .mini-mark {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      background: var(--primary);
+      border-radius: 12px;
+      font-weight: 800;
+      color: white;
+    }
+
+    .sidebar-brand strong {
+      display: block;
+      color: white;
+      font-size: 15px;
+    }
+
+    .sidebar-brand span {
+      display: block;
+      font-size: 12px;
+      color: #94a3b8;
+      margin-top: 2px;
+    }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 22px;
+    }
+
+    .nav-btn {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      color: #cbd5e1;
+      text-align: left;
+      padding: 12px 14px;
+      border-radius: 10px;
+      transition: .2s ease;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+
+    .nav-btn:hover,
+    .nav-btn.active {
+      background: var(--sidebar-2);
+      color: white;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      border-top: 1px solid rgba(255,255,255,.08);
+      padding-top: 16px;
+    }
+
+    .sidebar-user {
+      padding: 10px 11px 16px;
+    }
+
+    .sidebar-user strong {
+      display: block;
+      color: white;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sidebar-user span {
+      color: #94a3b8;
+      font-size: 12px;
+      display: block;
+      margin-top: 4px;
+    }
+
+    .main {
+      grid-column: 2;
+      min-width: 0;
+    }
+
+    .topbar {
+      height: var(--header-height);
+      background: rgba(255,255,255,.92);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 30px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(10px);
+    }
+
+    .topbar-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .mobile-menu {
+      display: none;
+      border: 1px solid var(--border);
+      background: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+    }
+
+    .topbar-user {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #e8efff;
+      color: var(--primary);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+    }
+
+    .page {
+      padding: 30px;
+      max-width: 1500px;
+      margin: 0 auto;
+    }
+
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .page-header h1 {
+      font-size: 30px;
+      margin-bottom: 6px;
+    }
+
+    .page-header p {
+      color: var(--muted);
+    }
+
+    /* CARDS */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .stat-card {
+      padding: 22px;
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    .stat-value {
+      font-size: 32px;
+      font-weight: 800;
+    }
+
+    .card-header {
+      padding: 20px 22px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .card-header h2 {
+      font-size: 18px;
+    }
+
+    .card-body {
+      padding: 22px;
+    }
+
+    /* FORMS */
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 650;
+      font-size: 14px;
+    }
+
+    input[type="email"],
+    input[type="password"],
+    input[type="text"],
+    input[type="tel"],
+    input[type="search"],
+    select {
+      width: 100%;
+      height: 46px;
+      border: 1px solid #d7dde7;
+      border-radius: 10px;
+      padding: 0 13px;
+      outline: none;
+      background: white;
+      color: var(--text);
+      transition: .2s ease;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, .12);
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 10px 0 18px;
+    }
+
+    .checkbox-row label {
+      margin: 0;
+      font-weight: 500;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .error-box {
+      display: none;
+      background: var(--danger-bg);
+      color: var(--danger);
+      border: 1px solid #fecaca;
+      padding: 12px 14px;
+      border-radius: 10px;
+      margin-bottom: 18px;
+      font-size: 14px;
+    }
+
+    /* BUTTONS */
+    .btn {
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 16px;
+      font-weight: 700;
+      transition: .2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn:disabled {
+      opacity: .65;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: var(--primary-hover);
+    }
+
+    .btn-secondary {
+      background: #eef2f7;
+      color: #344054;
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background: #e2e8f0;
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+    }
+
+    .btn-success {
+      background: var(--success);
+      color: white;
+    }
+
+    .btn-sm {
+      padding: 8px 10px;
+      font-size: 13px;
+    }
+
+    .btn-link {
+      border: 0;
+      padding: 0;
+      background: transparent;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    /* TABLE */
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .search-box {
+      max-width: 380px;
+      width: 100%;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 800px;
+    }
+
+    th,
+    td {
+      padding: 15px 18px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    th {
+      font-size: 12px;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: #fbfcfe;
+    }
+
+    td {
+      font-size: 14px;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .actions {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+
+    /* BADGES */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    .badge-success {
+      color: var(--success);
+      background: var(--success-bg);
+    }
+
+    .badge-danger {
+      color: var(--danger);
+      background: var(--danger-bg);
+    }
+
+    .badge-info {
+      color: #1d4ed8;
+      background: #dbeafe;
+    }
+
+    /* DETAILS */
+    .details-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .detail-item {
+      background: white;
+      padding: 20px;
+    }
+
+    .detail-item span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 7px;
+    }
+
+    .detail-item strong {
+      word-break: break-word;
+    }
+
+    /* EMPTY / ERROR / 403 */
+    .state-box {
+      text-align: center;
+      padding: 48px 24px;
+      color: var(--muted);
+    }
+
+    .state-box h3 {
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .access-page {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 30px;
+      background: var(--bg);
+    }
+
+    .access-card {
+      max-width: 520px;
+      width: 100%;
+      text-align: center;
+      padding: 46px 30px;
+    }
+
+    .access-code {
+      font-size: 76px;
+      font-weight: 900;
+      color: var(--primary);
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+
+    /* LOADING */
+    .loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(248,250,252,.70);
+      backdrop-filter: blur(2px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    .spinner {
+      width: 44px;
+      height: 44px;
+      border: 4px solid #dbe4f0;
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin .75s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* MODAL */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, .55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 110;
+    }
+
+    .modal {
+      width: min(450px, 100%);
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(15,23,42,.2);
+      padding: 26px;
+    }
+
+    .modal h3 {
+      margin-bottom: 10px;
+    }
+
+    .modal p {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 9px;
+      margin-top: 24px;
+    }
+
+    /* TOAST */
+    .toast-wrap {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      z-index: 120;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .toast {
+      min-width: 290px;
+      max-width: 420px;
+      background: #111827;
+      color: white;
+      padding: 13px 16px;
+      border-radius: 11px;
+      box-shadow: var(--shadow);
+      animation: toastIn .2s ease;
+    }
+
+    .toast.success {
+      background: #166534;
+    }
+
+    .toast.error {
+      background: #991b1b;
+    }
+
+    @keyframes toastIn {
+      from { transform: translateY(10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .login-page {
+        grid-template-columns: 1fr;
+      }
+
+      .login-hero {
+        display: none;
+      }
+
+      .login-panel {
+        min-height: 100vh;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .form-grid,
+      .details-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .shell {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform .22s ease;
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .main {
+        grid-column: 1;
+      }
+
+      .mobile-menu {
+        display: inline-grid;
+        place-items: center;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .page,
+      .topbar {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      .page-header,
+      .toolbar {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .login-panel {
+        padding: 18px;
+      }
+
+      .login-card {
+        padding: 26px 20px;
+      }
+
+      .topbar-user .user-text {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root" class="app"></div>
+
+  <div id="loadingOverlay" class="loading-overlay">
+    <div class="spinner" aria-label="Loading"></div>
+  </div>
+
+  <div id="confirmModal" class="modal-backdrop" aria-hidden="true">
+    <div class="modal">
+      <h3 id="confirmTitle">Confirm action</h3>
+      <p id="confirmMessage">Are you sure?</p>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="confirmCancelBtn">Cancel</button>
+        <button class="btn btn-danger" id="confirmOkBtn">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toastWrap" class="toast-wrap"></div>
+
+  <script>
+    "use strict";
+
+    /*
+      ============================================================
+      AI CONTACT CENTER - SINGLE FILE FRONTEND
+      HTML + CSS + Vanilla JavaScript only
+      ============================================================
+
+      If you open this HTML file directly, requests go to:
+      http://127.0.0.1:8000/api/v1
+
+      If FastAPI serves this file itself on port 8000, the same URL
+      still works.
+
+      Change only API_BASE_URL below if your backend runs elsewhere.
+    */
+
+    const API_BASE_URL = "http://127.0.0.1:8000/api/v1";
+    const TOKEN_KEY = "ai_contact_center_access_token";
+
+    const state = {
+      currentUser: null,
+      companies: [],
+      admins: [],
+      agents: [],
+      currentCompany: null,
+      companySearch: "",
+      adminSearch: "",
+      agentSearch: "",
+      loadingCount: 0
+    };
+
+    const root = document.getElementById("root");
+    const loadingOverlay = document.getElementById("loadingOverlay");
+
+    // ------------------------------------------------------------
+    // Helpers
+    // ------------------------------------------------------------
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function formatDate(value) {
+      if (!value) return "—";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return escapeHtml(value);
+      return date.toLocaleString();
+    }
+
+    function getRoleName(user = state.currentUser) {
+      const rawRole =
+        user?.role?.name ??
+        user?.role ??
+        "";
+
+      return String(rawRole)
+        .trim()
+        .toUpperCase()
+        .replace(/[\s-]+/g, "_");
+    }
+
+    function roleLabel(role = getRoleName()) {
+      const labels = {
+        SUPER_ADMIN: "Super Admin",
+        ADMIN: "Admin",
+        AGENT: "Agent"
+      };
+      return labels[role] || role || "Unknown";
+    }
+
+    function getCompanyName(user = state.currentUser) {
+      if (user?.company?.name) return user.company.name;
+      const companyId = user?.company_id ?? user?.company?.id;
+      if (companyId !== null && companyId !== undefined) {
+        const company = state.companies.find(item => String(item.id) === String(companyId));
+        if (company?.name) return company.name;
+        return `Company #${companyId}`;
+      }
+      return "—";
+    }
+
+    function getInitials(name) {
+      const parts = String(name || "U")
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean);
+
+      return parts
+        .slice(0, 2)
+        .map(p => p[0]?.toUpperCase() || "")
+        .join("") || "U";
+    }
+
+    function setLoading(isLoading) {
+      state.loadingCount += isLoading ? 1 : -1;
+      if (state.loadingCount < 0) state.loadingCount = 0;
+      loadingOverlay.style.display = state.loadingCount > 0 ? "flex" : "none";
+    }
+
+    function showToast(message, type = "") {
+      const wrap = document.getElementById("toastWrap");
+      const toast = document.createElement("div");
+      toast.className = `toast ${type}`.trim();
+      toast.textContent = message;
+      wrap.appendChild(toast);
+
+      setTimeout(() => {
+        toast.remove();
+      }, 3500);
+    }
+
+    function showInlineError(elementId, message) {
+      const box = document.getElementById(elementId);
+      if (!box) return;
+      box.textContent = message;
+      box.style.display = "block";
+    }
+
+    function hideInlineError(elementId) {
+      const box = document.getElementById(elementId);
+      if (!box) return;
+      box.textContent = "";
+      box.style.display = "none";
+    }
+
+    function token() {
+      return localStorage.getItem(TOKEN_KEY);
+    }
+
+    function saveToken(value) {
+      localStorage.setItem(TOKEN_KEY, value);
+    }
+
+    function clearSession() {
+      localStorage.removeItem(TOKEN_KEY);
+      state.currentUser = null;
+      state.companies = [];
+      state.admins = [];
+      state.agents = [];
+      state.currentCompany = null;
+    }
+
+    function unwrapList(data) {
+      if (Array.isArray(data)) return data;
+      if (Array.isArray(data?.items)) return data.items;
+      if (Array.isArray(data?.results)) return data.results;
+      if (Array.isArray(data?.data)) return data.data;
+      return [];
+    }
+
+    // ------------------------------------------------------------
+    // API
+    // ------------------------------------------------------------
+
+    async function apiRequest(endpoint, options = {}) {
+      const headers = new Headers(options.headers || {});
+      const authToken = token();
+
+      if (authToken) {
+        headers.set("Authorization", `Bearer ${authToken}`);
+      }
+
+      let body = options.body;
+
+      if (
+        body &&
+        typeof body === "object" &&
+        !(body instanceof FormData) &&
+        !(body instanceof URLSearchParams)
+      ) {
+        headers.set("Content-Type", "application/json");
+        body = JSON.stringify(body);
+      }
+
+      const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+        ...options,
+        headers,
+        body
+      });
+
+      let data = null;
+      const contentType = response.headers.get("content-type") || "";
+
+      if (response.status !== 204) {
+        if (contentType.includes("application/json")) {
+          data = await response.json();
+        } else {
+          const text = await response.text();
+          data = text ? { detail: text } : null;
+        }
+      }
+
+      if (response.status === 401) {
+        clearSession();
+        window.location.hash = "#/login";
+        throw new Error(data?.detail || "Your session has expired.");
+      }
+
+      if (response.status === 403) {
+        window.location.hash = "#/403";
+        throw new Error(data?.detail || "You do not have permission to perform this action.");
+      }
+
+      if (!response.ok) {
+        let message = "Something went wrong.";
+
+        if (typeof data?.detail === "string") {
+          message = data.detail;
+        } else if (Array.isArray(data?.detail)) {
+          message = data.detail
+            .map(item => item.msg || JSON.stringify(item))
+            .join(" | ");
+        }
+
+        throw new Error(message);
+      }
+
+      return data;
+    }
+
+    // ------------------------------------------------------------
+    // Authentication
+    // ------------------------------------------------------------
+
+    async function login(email, password) {
+      /*
+        Current backend login contract:
+        POST /api/v1/auth/login
+        JSON:
+        {
+          "email": "...",
+          "password": "..."
+        }
+      */
+      const data = await apiRequest("/auth/login", {
+        method: "POST",
+        body: { email, password }
+      });
+
+      if (!data?.access_token) {
+        throw new Error("Login succeeded but no access token was returned.");
+      }
+
+      saveToken(data.access_token);
+      state.currentUser = await fetchCurrentUser();
+      return state.currentUser;
+    }
+
+    async function fetchCurrentUser() {
+      return await apiRequest("/users/me");
+    }
+
+    async function ensureAuthenticated() {
+      if (!token()) {
+        state.currentUser = null;
+        return false;
+      }
+
+      if (!state.currentUser) {
+        state.currentUser = await fetchCurrentUser();
+      }
+
+      return true;
+    }
+
+    function logout() {
+      clearSession();
+      window.location.hash = "#/login";
+    }
+
+    // ------------------------------------------------------------
+    // Role Guards
+    // ------------------------------------------------------------
+
+    function isSuperAdmin() {
+      return getRoleName() === "SUPER_ADMIN";
+    }
+
+    function routeAllowedForRole(route) {
+      const role = getRoleName();
+
+      if (
+        route.startsWith("/companies") ||
+        route.startsWith("/company") ||
+        route.startsWith("/admins")
+      ) {
+        return role === "SUPER_ADMIN";
+      }
+
+      if (route.startsWith("/agents")) {
+        return role === "ADMIN";
+      }
+
+      return ["SUPER_ADMIN", "ADMIN", "AGENT"].includes(role);
+    }
+
+    // ------------------------------------------------------------
+    // Router
+    // ------------------------------------------------------------
+
+    function getRoute() {
+      const hash = window.location.hash || "#/";
+      return hash.slice(1) || "/";
+    }
+
+    async function router() {
+      const route = getRoute();
+
+      if (route === "/" || route === "/login") {
+        if (token()) {
+          try {
+            await ensureAuthenticated();
+            window.location.hash = "#/dashboard";
+            return;
+          } catch (_) {
+            clearSession();
+          }
+        }
+        renderLogin();
+        return;
+      }
+
+      if (route === "/403") {
+        render403();
+        return;
+      }
+
+      try {
+        setLoading(true);
+
+        const authenticated = await ensureAuthenticated();
+
+        if (!authenticated) {
+          window.location.hash = "#/login";
+          return;
+        }
+
+        if (!routeAllowedForRole(route)) {
+          window.location.hash = "#/403";
+          return;
+        }
+
+        if (route === "/dashboard") {
+          await renderDashboard();
+        } else if (route === "/profile") {
+          renderProfile();
+
+        } else if (route === "/companies") {
+          await renderCompanies();
+        } else if (route === "/company/new") {
+          renderCompanyForm();
+        } else if (/^\/company\/\d+\/edit$/.test(route)) {
+          const id = route.split("/")[2];
+          await renderCompanyForm(id);
+        } else if (/^\/company\/\d+$/.test(route)) {
+          const id = route.split("/")[2];
+          await renderCompanyDetails(id);
+
+        } else if (route === "/admins") {
+          await renderAdmins();
+        } else if (route.startsWith("/admins/new")) {
+          const query = route.split("?")[1] || "";
+          const params = new URLSearchParams(query);
+          await renderAdminCreate(params.get("company"));
+        } else if (/^\/admins\/\d+\/edit$/.test(route)) {
+          const id = route.split("/")[2];
+          await renderAdminEdit(id);
+        } else if (/^\/admins\/\d+$/.test(route)) {
+          const id = route.split("/")[2];
+          await renderAdminDetails(id);
+
+        } else if (route === "/agents") {
+          await renderAgents();
+        } else if (route === "/agents/new") {
+          await renderAgentCreate();
+        } else if (/^\/agents\/\d+\/edit$/.test(route)) {
+          const id = route.split("/")[2];
+          await renderAgentEdit(id);
+        } else if (/^\/agents\/\d+$/.test(route)) {
+          const id = route.split("/")[2];
+          await renderAgentDetails(id);
+
+        } else {
+          renderNotFound();
+        }
+      } catch (error) {
+        if (getRoute() !== "/login" && getRoute() !== "/403") {
+          showToast(error.message, "error");
+        }
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    window.addEventListener("hashchange", router);
+    window.addEventListener("DOMContentLoaded", router);
+
+    // ------------------------------------------------------------
+    // Layout
+    // ------------------------------------------------------------
+
+    function renderShell(contentHtml, activeItem = "dashboard", pageTitle = "Dashboard") {
+      const user = state.currentUser;
+      const role = getRoleName(user);
+      const name = user?.full_name || user?.email || "User";
+
+      const companiesNav = role === "SUPER_ADMIN"
+        ? `
+          <button class="nav-btn ${activeItem === "companies" ? "active" : ""}"
+                  onclick="navigate('/companies')">
+            <span>🏢</span>
+            <span>Companies</span>
+          </button>
+        `
+        : "";
+
+      const adminsNav = role === "SUPER_ADMIN"
+        ? `
+          <button class="nav-btn ${activeItem === "admins" ? "active" : ""}"
+                  onclick="navigate('/admins')">
+            <span>👥</span>
+            <span>Admins</span>
+          </button>
+        `
+        : "";
+
+      const agentsNav = role === "ADMIN"
+        ? `
+          <button class="nav-btn ${activeItem === "agents" ? "active" : ""}"
+                  onclick="navigate('/agents')">
+            <span>🎧</span>
+            <span>Agents</span>
+          </button>
+        `
+        : "";
+
+      root.innerHTML = `
+        <div class="shell">
+          <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+              <div class="mini-mark">AI</div>
+              <div>
+                <strong>Contact Center</strong>
+                <span>Management Portal</span>
+              </div>
+            </div>
+
+            <nav class="nav">
+              <button class="nav-btn ${activeItem === "dashboard" ? "active" : ""}"
+                      onclick="navigate('/dashboard')">
+                <span>▦</span>
+                <span>Dashboard</span>
+              </button>
+
+              ${companiesNav}
+              ${adminsNav}
+              ${agentsNav}
+
+              <button class="nav-btn ${activeItem === "profile" ? "active" : ""}"
+                      onclick="navigate('/profile')">
+                <span>👤</span>
+                <span>Profile</span>
+              </button>
+            </nav>
+
+            <div class="sidebar-footer">
+              <div class="sidebar-user">
+                <strong>${escapeHtml(name)}</strong>
+                <span>${escapeHtml(roleLabel(role))}</span>
+              </div>
+
+              <button class="nav-btn" onclick="logout()">
+                <span>↪</span>
+                <span>Logout</span>
+              </button>
+            </div>
+          </aside>
+
+          <main class="main">
+            <header class="topbar">
+              <div class="topbar-title">
+                <button class="mobile-menu" onclick="toggleSidebar()">☰</button>
+                <strong>${escapeHtml(pageTitle)}</strong>
+              </div>
+
+              <div class="topbar-user">
+                <div class="user-text">
+                  <strong>${escapeHtml(name)}</strong>
+                  <div style="font-size:12px;color:var(--muted);margin-top:2px;">
+                    ${escapeHtml(roleLabel(role))}
+                  </div>
+                </div>
+                <div class="avatar">${escapeHtml(getInitials(name))}</div>
+              </div>
+            </header>
+
+            ${contentHtml}
+          </main>
+        </div>
+      `;
+    }
+
+    function toggleSidebar() {
+      document.getElementById("sidebar")?.classList.toggle("open");
+    }
+
+    function navigate(route) {
+      window.location.hash = `#${route}`;
+    }
+
+    function goToDashboard() {
+      if (token()) {
+        navigate("/dashboard");
+      } else {
+        navigate("/login");
+      }
+    }
+
+    // ------------------------------------------------------------
+    // Login View
+    // ------------------------------------------------------------
+
+    function renderLogin() {
+      root.innerHTML = `
+        <section class="login-page">
+          <div class="login-hero">
+            <div class="brand-mark">AI</div>
+            <h1>AI Contact Center</h1>
+            <p>
+              Secure role-based workspace for platform administrators,
+              company administrators and agents.
+            </p>
+          </div>
+
+          <div class="login-panel">
+            <form class="login-card" id="loginForm">
+              <h2>Welcome back</h2>
+              <p>Sign in with your account to continue.</p>
+
+              <div class="error-box" id="loginError"></div>
+
+              <div class="form-group">
+                <label for="loginEmail">Email</label>
+                <input
+                  id="loginEmail"
+                  type="email"
+                  autocomplete="email"
+                  placeholder="name@example.com"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="loginPassword">Password</label>
+                <input
+                  id="loginPassword"
+                  type="password"
+                  autocomplete="current-password"
+                  placeholder="Enter your password"
+                  required
+                />
+              </div>
+
+              <button class="btn btn-primary" style="width:100%;" id="loginBtn" type="submit">
+                Login
+              </button>
+            </form>
+          </div>
+        </section>
+      `;
+
+      document.getElementById("loginForm").addEventListener("submit", handleLoginSubmit);
+    }
+
+    async function handleLoginSubmit(event) {
+      event.preventDefault();
+      hideInlineError("loginError");
+
+      const button = document.getElementById("loginBtn");
+      const email = document.getElementById("loginEmail").value.trim();
+      const password = document.getElementById("loginPassword").value;
+
+      button.disabled = true;
+      button.textContent = "Signing in...";
+
+      try {
+        await login(email, password);
+        window.location.hash = "#/dashboard";
+      } catch (error) {
+        showInlineError("loginError", error.message);
+      } finally {
+        button.disabled = false;
+        button.textContent = "Login";
+      }
+    }
+
+    // ------------------------------------------------------------
+    // Dashboard
+    // ------------------------------------------------------------
+
+    async function renderDashboard() {
+      const role = getRoleName();
+
+      if (role === "SUPER_ADMIN") {
+        await renderSuperAdminDashboard();
+        return;
+      }
+
+      if (role === "ADMIN") {
+        await renderAdminDashboard();
+        return;
+      }
+
+      if (role === "AGENT") {
+        renderAgentDashboard();
+        return;
+      }
+
+      renderShell(
+        `
+          <section class="page">
+            <div class="state-box card">
+              <h3>Unknown role</h3>
+              <p>The role returned by the backend is not supported by this frontend.</p>
+            </div>
+          </section>
+        `,
+        "dashboard",
+        "Dashboard"
+      );
+    }
+
+    async function loadCompanies() {
+      const data = await apiRequest("/companies/");
+      state.companies = unwrapList(data);
+      return state.companies;
+    }
+
+    async function loadAdmins() {
+      const data = await apiRequest("/users/admins");
+      state.admins = unwrapList(data);
+      return state.admins;
+    }
+
+    async function loadAgents() {
+      const data = await apiRequest("/users/agents");
+      state.agents = unwrapList(data);
+      return state.agents;
+    }
+
+    async function renderSuperAdminDashboard() {
+      const companies = await loadCompanies();
+
+      const total = companies.length;
+      const active = companies.filter(c => c.is_active === true).length;
+      const inactive = companies.filter(c => c.is_active === false).length;
+
+      const recent = [...companies]
+        .sort((a, b) => {
+          const aDate = new Date(a.created_at || 0).getTime();
+          const bDate = new Date(b.created_at || 0).getTime();
+          return bDate - aDate;
+        })
+        .slice(0, 5);
+
+      const rows = recent.length
+        ? recent.map(company => `
+            <tr>
+              <td>
+                <button class="btn-link" onclick="navigate('/company/${Number(company.id)}')">
+                  ${escapeHtml(company.name || "Unnamed company")}
+                </button>
+              </td>
+              <td>${escapeHtml(company.email || "—")}</td>
+              <td>${statusBadge(company.is_active)}</td>
+              <td>${formatDate(company.created_at)}</td>
+            </tr>
+          `).join("")
+        : `
+            <tr>
+              <td colspan="4">
+                <div class="state-box">
+                  <h3>No companies yet</h3>
+                  <p>Create the first company to see it here.</p>
+                </div>
+              </td>
+            </tr>
+          `;
+
+      const name = state.currentUser?.full_name || "Super Admin";
+
+      renderShell(
+        `
+          <section class="page">
+            <div class="page-header">
+              <div>
+                <h1>Welcome, ${escapeHtml(name)}</h1>
+                <p>Platform overview based on your current backend data.</p>
+              </div>
+              <div class="actions">
+                <button class="btn btn-secondary" onclick="navigate('/admins/new')">
+                  + Create Admin
+                </button>
+                <button class="btn btn-primary" onclick="navigate('/company/new')">
+                  + Add Company
+                </button>
+              </div>
+            </div>
+
+            <div class="stats">
+              <div class="card stat-card">
+                <div class="stat-label">Total Companies</div>
+                <div class="stat-value">${total}</div>
+              </div>
+
+              <div class="card stat-card">
+                <div class="stat-label">Active Companies</div>
+                <div class="stat-value">${active}</div>
+              </div>
+
+              <div class="card stat-card">
+                <div class="stat-label">Inactive Companies</div>
+                <div class="stat-value">${inactive}</div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h2>Recent Companies</h2>
+                  <div style="color:var(--muted);font-size:13px;margin-top:4px;">
+                    Real data from GET /companies/
+                  </div>
+                </div>
+                <button class="btn btn-secondary btn-sm" onclick="navigate('/companies')">
+                  View All
+                </button>
+              </div>
+
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Company</th>
+                      <th>Email</th>
+                      <th>Status</th>
+                      <th>Created</th>
+                    </tr>
+                  </thead>
+                  <tbody>${rows}</tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+        `,
+        "dashboard",
+        "Dashboard"
+      );
+    }
+
+    async function renderAdminDashboard() {
+      const user = state.currentUser;
+      const name = user?.full_name || user?.email || "Admin";
+      const agents = await loadAgents();
+      const activeAgents = agents.filter(agent => agent.is_active === true).length;
+      const inactiveAgents = agents.filter(agent => agent.is_active === false).length;
+
+      renderShell(`
+        <section class="page">
+          <div class="page-header">
+            <div><h1>Welcome, ${escapeHtml(name)}</h1><p>Your company administration workspace.</p></div>
+            <button class="btn btn-primary" onclick="navigate('/agents/new')">+ Add Agent</button>
+          </div>
+
+          <div class="stats">
+            <div class="card stat-card"><div class="stat-label">Total Agents</div><div class="stat-value">${agents.length}</div></div>
+            <div class="card stat-card"><div class="stat-label">Active Agents</div><div class="stat-value">${activeAgents}</div></div>
+            <div class="card stat-card"><div class="stat-label">Inactive Agents</div><div class="stat-value">${inactiveAgents}</div></div>
+          </div>
+
+          <div class="card">
+            <div class="card-body">
+              <h2 style="margin-bottom:10px;">Company: ${escapeHtml(getCompanyName(user))}</h2>
+              <p style="color:var(--muted);line-height:1.7;">Agents are scoped to your company by the backend. When you create an Agent, you do not choose a company manually.</p>
+              <div style="margin-top:20px;"><button class="btn btn-primary" onclick="navigate('/agents')">Manage Agents</button></div>
+            </div>
+          </div>
+        </section>
+      `, "dashboard", "Dashboard");
+    }
+
+    function renderAgentDashboard() {
+      const user = state.currentUser;
+      const name = user?.full_name || user?.email || "Agent";
+
+      renderShell(
+        `
+          <section class="page">
+            <div class="page-header">
+              <div>
+                <h1>Welcome, ${escapeHtml(name)}</h1>
+                <p>Your agent workspace.</p>
+              </div>
+            </div>
+
+            <div class="stats">
+              <div class="card stat-card">
+                <div class="stat-label">Role</div>
+                <div class="stat-value" style="font-size:24px;">Agent</div>
+              </div>
+
+              <div class="card stat-card">
+                <div class="stat-label">Company</div>
+                <div class="stat-value" style="font-size:24px;">
+                  ${escapeHtml(getCompanyName())}
+                </div>
+              </div>
+
+              <div class="card stat-card">
+                <div class="stat-label">Account Status</div>
+                <div style="margin-top:8px;">
+                  ${statusBadge(user?.is_active)}
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-body">
+                <h2 style="margin-bottom:10px;">Agent Workspace</h2>
+                <p style="color:var(--muted);line-height:1.7;">
+                  This area is ready for assigned customers, calls, tickets and escalations once
+                  those backend endpoints are available.
+                </p>
+              </div>
+            </div>
+          </section>
+        `,
+        "dashboard",
+        "Dashboard"
+      );
+    }
+
+    // ------------------------------------------------------------
+    // Company Admins - Super Admin
+    // ------------------------------------------------------------
+
+    async function renderAdmins() {
+      if (!isSuperAdmin()) {
+        navigate("/403");
+        return;
+      }
+
+      await Promise.all([loadCompanies(), loadAdmins()]);
+
+      renderShell(`
+        <section class="page">
+          <div class="page-header">
+            <div>
+              <h1>Company Admins</h1>
+              <p>Create and manage Admin accounts for platform companies.</p>
+            </div>
+            <button class="btn btn-primary" onclick="navigate('/admins/new')">+ Create Admin</button>
+          </div>
+
+          <div class="card">
+            <div class="toolbar">
+              <div class="search-box">
+                <input id="adminSearch" type="search" placeholder="Search by name, email or company..." value="${escapeHtml(state.adminSearch)}" />
+              </div>
+              <div style="color:var(--muted);font-size:14px;align-self:center;"><span id="adminResultCount"></span></div>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Name</th><th>Email</th><th>Company</th><th>Status</th><th>Actions</th></tr></thead>
+                <tbody id="adminsTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      `, "admins", "Admins");
+
+      document.getElementById("adminSearch")?.addEventListener("input", event => {
+        state.adminSearch = event.target.value;
+        drawAdminsTable();
+      });
+
+      drawAdminsTable();
+    }
+
+    function drawAdminsTable() {
+      const tbody = document.getElementById("adminsTableBody");
+      const count = document.getElementById("adminResultCount");
+      if (!tbody) return;
+
+      const query = state.adminSearch.trim().toLowerCase();
+      const admins = state.admins.filter(admin => {
+        const text = [admin.full_name, admin.email, getCompanyName(admin)].filter(Boolean).join(" ").toLowerCase();
+        return text.includes(query);
+      });
+
+      if (count) count.textContent = `${admins.length} result${admins.length === 1 ? "" : "s"}`;
+
+      tbody.innerHTML = admins.length ? admins.map(admin => `
+        <tr>
+          <td><strong>${escapeHtml(admin.full_name || "—")}</strong></td>
+          <td>${escapeHtml(admin.email || "—")}</td>
+          <td>${escapeHtml(getCompanyName(admin))}</td>
+          <td>${statusBadge(admin.is_active)}</td>
+          <td>
+            <div class="actions">
+              <button class="btn btn-secondary btn-sm" onclick="navigate('/admins/${Number(admin.id)}')">View</button>
+              <button class="btn btn-secondary btn-sm" onclick="navigate('/admins/${Number(admin.id)}/edit')">Edit</button>
+              <button class="btn ${admin.is_active === true ? "btn-danger" : "btn-success"} btn-sm"
+                onclick="confirmUserStatus('admin', ${Number(admin.id)}, ${admin.is_active !== true}, '${escapeJs(admin.full_name || admin.email || "Admin")}')">
+                ${admin.is_active === true ? "Deactivate" : "Activate"}
+              </button>
+            </div>
+          </td>
+        </tr>
+      `).join("") : `
+        <tr><td colspan="5"><div class="state-box"><h3>${state.admins.length ? "No matching admins" : "No Admins yet"}</h3><p>${state.admins.length ? "Try another search term." : "Create an Admin and assign a company."}</p></div></td></tr>
+      `;
+    }
+
+    async function renderAdminCreate(preselectedCompanyId = null) {
+      if (!isSuperAdmin()) {
+        navigate("/403");
+        return;
+      }
+
+      const companies = await loadCompanies();
+      const options = companies.map(company => `
+        <option value="${Number(company.id)}" ${String(company.id) === String(preselectedCompanyId) ? "selected" : ""}>
+          ${escapeHtml(company.name || `Company #${company.id}`)}${company.is_active === false ? " (Inactive)" : ""}
+        </option>
+      `).join("");
+
+      renderShell(`
+        <section class="page">
+          <div class="page-header">
+            <div>
+              <button class="btn-link" onclick="navigate('/admins')">← Back to Admins</button>
+              <h1 style="margin-top:10px;">Create Company Admin</h1>
+              <p>Select the company that this Admin will manage.</p>
+            </div>
+          </div>
+
+          <div class="card"><div class="card-body">
+            <form id="adminCreateForm">
+              <div class="error-box" id="adminCreateError"></div>
+
+              <div class="form-group">
+                <label for="adminCompany">Company *</label>
+                <select id="adminCompany" required ${companies.length ? "" : "disabled"}>
+                  <option value="">Select a company</option>
+                  ${options || '<option value="">No companies available</option>'}
+                </select>
+              </div>
+
+              <div class="form-group"><label for="adminFullName">Full Name *</label><input id="adminFullName" type="text" maxlength="200" required /></div>
+              <div class="form-grid">
+                <div class="form-group"><label for="adminEmail">Email *</label><input id="adminEmail" type="email" maxlength="320" required /></div>
+                <div class="form-group"><label for="adminPassword">Password *</label><input id="adminPassword" type="password" autocomplete="new-password" required /></div>
+              </div>
+              <div class="checkbox-row"><input id="adminActive" type="checkbox" checked /><label for="adminActive">Admin account is active</label></div>
+
+              <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="navigate('/admins')">Cancel</button>
+                <button type="submit" class="btn btn-primary" id="adminCreateBtn" ${companies.length ? "" : "disabled"}>Create Admin</button>
+              </div>
+            </form>
+          </div></div>
+        </section>
+      `, "admins", "Create Admin");
+
+      document.getElementById("adminCreateForm")?.addEventListener("submit", async event => {
+        event.preventDefault();
+        hideInlineError("adminCreateError");
+
+        const companyId = document.getElementById("adminCompany").value;
+        const button = document.getElementById("adminCreateBtn");
+        if (!companyId) {
+          showInlineError("adminCreateError", "Please select a company.");
+          return;
+        }
+
+        button.disabled = true;
+        button.textContent = "Creating...";
+
+        try {
+          const created = await apiRequest(`/companies/${encodeURIComponent(companyId)}/admins`, {
+            method: "POST",
+            body: {
+              full_name: document.getElementById("adminFullName").value.trim(),
+              email: document.getElementById("adminEmail").value.trim(),
+              password: document.getElementById("adminPassword").value,
+              is_active: document.getElementById("adminActive").checked
+            }
+          });
+          showToast("Admin created successfully.", "success");
+          navigate(created?.id ? `/admins/${created.id}` : "/admins");
+        } catch (error) {
+          showInlineError("adminCreateError", error.message);
+        } finally {
+          button.disabled = false;
+          button.textContent = "Create Admin";
+        }
+      });
+    }
+
+    async function renderAdminDetails(id) {
+      if (!isSuperAdmin()) { navigate("/403"); return; }
+      if (!state.companies.length) await loadCompanies();
+      const admin = await apiRequest(`/users/admins/${encodeURIComponent(id)}`);
+
+      renderShell(`
+        <section class="page">
+          <div class="page-header">
+            <div><button class="btn-link" onclick="navigate('/admins')">← Back to Admins</button><h1 style="margin-top:10px;">${escapeHtml(admin?.full_name || "Admin")}</h1><p>Company Admin details.</p></div>
+            <div class="actions">
+              <button class="btn btn-secondary" onclick="navigate('/admins/${Number(admin.id)}/edit')">Edit</button>
+              <button class="btn ${admin.is_active === true ? "btn-danger" : "btn-success"}" onclick="confirmUserStatus('admin', ${Number(admin.id)}, ${admin.is_active !== true}, '${escapeJs(admin.full_name || admin.email || "Admin")}')">${admin.is_active === true ? "Deactivate" : "Activate"}</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h2>Admin Information</h2>${statusBadge(admin?.is_active)}</div>
+            <div class="card-body"><div class="details-grid">
+              ${detailItem("ID", admin?.id)}
+              ${detailItem("Full Name", admin?.full_name)}
+              ${detailItem("Email", admin?.email)}
+              ${detailItem("Role", roleLabel(getRoleName(admin)))}
+              ${detailItem("Company", getCompanyName(admin))}
+              ${detailItem("Created At", formatDate(admin?.created_at), true)}
+            </div></div>
+          </div>
+        </section>
+      `, "admins", "Admin Details");
+    }
+
+    async function renderAdminEdit(id) {
+      if (!isSuperAdmin()) { navigate("/403"); return; }
+      const admin = await apiRequest(`/users/admins/${encodeURIComponent(id)}`);
+      renderUserEditForm({
+        user: admin,
+        label: "Admin",
+        endpoint: `/users/admins/${encodeURIComponent(id)}`,
+        backRoute: `/admins/${id}`,
+        activeItem: "admins",
+        pageTitle: "Edit Admin"
+      });
+    }
+
+    // ------------------------------------------------------------
+    // Companies
+    // ------------------------------------------------------------
+
+    function statusBadge(isActive) {
+      if (isActive === true) {
+        return `<span class="badge badge-success">Active</span>`;
+      }
+
+      if (isActive === false) {
+        return `<span class="badge badge-danger">Inactive</span>`;
+      }
+
+      return `<span class="badge badge-info">Unknown</span>`;
+    }
+
+    async function renderCompanies() {
+      if (!isSuperAdmin()) {
+        navigate("/403");
+        return;
+      }
+
+      await loadCompanies();
+
+      renderCompaniesShell();
+    }
+
+    function renderCompaniesShell() {
+      renderShell(
+        `
+          <section class="page">
+            <div class="page-header">
+              <div>
+                <h1>Companies</h1>
+                <p>Manage all companies registered on the platform.</p>
+              </div>
+
+              <div class="actions">
+                <button class="btn btn-secondary" onclick="navigate('/admins/new')">
+                  + Create Admin
+                </button>
+                <button class="btn btn-primary" onclick="navigate('/company/new')">
+                  + Add Company
+                </button>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="toolbar">
+                <div class="search-box">
+                  <input
+                    id="companySearch"
+                    type="search"
+                    placeholder="Search by name, email or phone..."
+                    value="${escapeHtml(state.companySearch)}"
+                  />
+                </div>
+
+                <div style="color:var(--muted);font-size:14px;align-self:center;">
+                  <span id="companyResultCount"></span>
+                </div>
+              </div>
+
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Phone</th>
+                      <th>Status</th>
+                      <th>Created</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="companiesTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+        `,
+        "companies",
+        "Companies"
+      );
+
+      const searchInput = document.getElementById("companySearch");
+      searchInput.addEventListener("input", event => {
+        state.companySearch = event.target.value;
+        drawCompaniesTable();
+      });
+
+      drawCompaniesTable();
+    }
+
+    function drawCompaniesTable() {
+      const tbody = document.getElementById("companiesTableBody");
+      const count = document.getElementById("companyResultCount");
+
+      if (!tbody) return;
+
+      const query = state.companySearch.trim().toLowerCase();
+
+      const companies = state.companies.filter(company => {
+        const haystack = [
+          company.name,
+          company.email,
+          company.phone
+        ].filter(Boolean).join(" ").toLowerCase();
+
+        return haystack.includes(query);
+      });
+
+      if (count) {
+        count.textContent = `${companies.length} result${companies.length === 1 ? "" : "s"}`;
+      }
+
+      if (!companies.length) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6">
+              <div class="state-box">
+                <h3>${state.companies.length ? "No matching companies" : "No companies found"}</h3>
+                <p>
+                  ${state.companies.length
+                    ? "Try a different search term."
+                    : "Create a company to get started."}
+                </p>
+              </div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = companies.map(company => {
+        const id = Number(company.id);
+        const isActive = company.is_active === true;
+
+        return `
+          <tr>
+            <td><strong>${escapeHtml(company.name || "—")}</strong></td>
+            <td>${escapeHtml(company.email || "—")}</td>
+            <td>${escapeHtml(company.phone || "—")}</td>
+            <td>${statusBadge(company.is_active)}</td>
+            <td>${formatDate(company.created_at)}</td>
+            <td>
+              <div class="actions">
+                <button class="btn btn-secondary btn-sm"
+                        onclick="navigate('/company/${id}')">
+                  View
+                </button>
+
+                <button class="btn btn-secondary btn-sm"
+                        onclick="navigate('/company/${id}/edit')">
+                  Edit
+                </button>
+
+                <button
+                  class="btn ${isActive ? "btn-danger" : "btn-success"} btn-sm"
+                  onclick="confirmCompanyStatus(${id}, ${!isActive}, '${escapeJs(company.name || "this company")}')"
+                >
+                  ${isActive ? "Deactivate" : "Activate"}
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function escapeJs(value) {
+      return String(value ?? "")
+        .replaceAll("\\", "\\\\")
+        .replaceAll("'", "\\'")
+        .replaceAll("\n", "\\n")
+        .replaceAll("\r", "\\r");
+    }
+
+    async function getCompany(id) {
+      return await apiRequest(`/companies/${encodeURIComponent(id)}`);
+    }
+
+    async function renderCompanyDetails(id) {
+      if (!isSuperAdmin()) {
+        navigate("/403");
+        return;
+      }
+
+      const company = await getCompany(id);
+      state.currentCompany = company;
+
+      const active = company?.is_active === true;
+
+      renderShell(
+        `
+          <section class="page">
+            <div class="page-header">
+              <div>
+                <button class="btn-link" onclick="navigate('/companies')">← Back to Companies</button>
+                <h1 style="margin-top:10px;">${escapeHtml(company?.name || "Company")}</h1>
+                <p>Company details from the backend.</p>
+              </div>
+
+              <div class="actions">
+                <button class="btn btn-secondary" onclick="navigate('/admins/new?company=${Number(company.id)}')">
+                  Create Admin
+                </button>
+
+                <button class="btn btn-secondary"
+                        onclick="navigate('/company/${Number(company.id)}/edit')">
+                  Edit
+                </button>
+
+                <button
+                  class="btn ${active ? "btn-danger" : "btn-success"}"
+                  onclick="confirmCompanyStatus(${Number(company.id)}, ${!active}, '${escapeJs(company.name || "this company")}')"
+                >
+                  ${active ? "Deactivate" : "Activate"}
+                </button>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h2>Company Information</h2>
+                ${statusBadge(company?.is_active)}
+              </div>
+
+              <div class="card-body">
+                <div class="details-grid">
+                  ${detailItem("ID", company?.id)}
+                  ${detailItem("Name", company?.name)}
+                  ${detailItem("Email", company?.email)}
+                  ${detailItem("Phone", company?.phone)}
+                  ${detailItem("Status", company?.is_active === true ? "Active" : company?.is_active === false ? "Inactive" : "Unknown")}
+                  ${detailItem("Created At", formatDate(company?.created_at), true)}
+                  ${detailItem("Updated At", formatDate(company?.updated_at), true)}
+                </div>
+              </div>
+            </div>
+          </section>
+        `,
+        "companies",
+        "Company Details"
+      );
+    }
+
+    function detailItem(label, value, valueAlreadyEscaped = false) {
+      const shown = value === null || value === undefined || value === ""
+        ? "—"
+        : value;
+
+      return `
+        <div class="detail-item">
+          <span>${escapeHtml(label)}</span>
+          <strong>${valueAlreadyEscaped ? shown : escapeHtml(shown)}</strong>
+        </div>
+      `;
+    }
+
+    // ------------------------------------------------------------
+    // Company Create / Edit
+    // ------------------------------------------------------------
+
+    async function renderCompanyForm(id = null) {
+      if (!isSuperAdmin()) {
+        navigate("/403");
+        return;
+      }
+
+      let company = null;
+      const isEdit = Boolean(id);
+
+      if (isEdit) {
+        company = await getCompany(id);
+      }
+
+      renderShell(
+        `
+          <section class="page">
+            <div class="page-header">
+              <div>
+                <button class="btn-link" onclick="navigate('/companies')">← Back to Companies</button>
+                <h1 style="margin-top:10px;">
+                  ${isEdit ? "Edit Company" : "Create Company"}
+                </h1>
+                <p>
+                  ${isEdit
+                    ? "Update the company using the existing PATCH endpoint."
+                    : "Create a new company using the existing POST endpoint."}
+                </p>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-body">
+                <form id="companyForm">
+                  <div class="error-box" id="companyFormError"></div>
+
+                  <div class="form-group">
+                    <label for="companyName">Company Name *</label>
+                    <input
+                      id="companyName"
+                      type="text"
+                      required
+                      maxlength="200"
+                      value="${escapeHtml(company?.name || "")}"
+                    />
+                  </div>
+
+                  <div class="form-grid">
+                    <div class="form-group">
+                      <label for="companyEmail">Email</label>
+                      <input
+                        id="companyEmail"
+                        type="email"
+                        maxlength="320"
+                        value="${escapeHtml(company?.email || "")}"
+                      />
+                    </div>
+
+                    <div class="form-group">
+                      <label for="companyPhone">Phone</label>
+                      <input
+                        id="companyPhone"
+                        type="tel"
+                        maxlength="50"
+                        value="${escapeHtml(company?.phone || "")}"
+                      />
+                    </div>
+                  </div>
+
+                  ${
+                    !isEdit
+                      ? `
+                        <div class="checkbox-row">
+                          <input id="companyActive" type="checkbox" checked />
+                          <label for="companyActive">Company is active</label>
+                        </div>
+                      `
+                      : ""
+                  }
+
+                  <div class="form-actions">
+                    <button type="button"
+                            class="btn btn-secondary"
+                            onclick="${isEdit
+                              ? `navigate('/company/${Number(id)}')`
+                              : `navigate('/companies')`}">
+                      Cancel
+                    </button>
+
+                    <button type="submit" class="btn btn-primary" id="companySaveBtn">
+                      ${isEdit ? "Save Changes" : "Create Company"}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </section>
+        `,
+        "companies",
+        isEdit ? "Edit Company" : "Create Company"
+      );
+
+      document.getElementById("companyForm").addEventListener("submit", event => {
+        handleCompanySubmit(event, isEdit ? id : null);
+      });
+    }
+
+    async function handleCompanySubmit(event, id = null) {
+      event.preventDefault();
+      hideInlineError("companyFormError");
+
+      const saveBtn = document.getElementById("companySaveBtn");
+      const name = document.getElementById("companyName").value.trim();
+      const email = document.getElementById("companyEmail").value.trim();
+      const phone = document.getElementById("companyPhone").value.trim();
+
+      if (!name) {
+        showInlineError("companyFormError", "Company name is required.");
+        return;
+      }
+
+      const payload = {
+        name,
+        email: email || null,
+        phone: phone || null
+      };
+
+      if (!id) {
+        payload.is_active = document.getElementById("companyActive").checked;
+      }
+
+      saveBtn.disabled = true;
+      saveBtn.textContent = id ? "Saving..." : "Creating...";
+
+      try {
+        if (id) {
+          await apiRequest(`/companies/${encodeURIComponent(id)}`, {
+            method: "PATCH",
+            body: payload
+          });
+
+          showToast("Company updated successfully.", "success");
+          window.location.hash = `#/company/${id}`;
+        } else {
+          const created = await apiRequest("/companies/", {
+            method: "POST",
+            body: payload
+          });
+
+          showToast("Company created successfully.", "success");
+
+          if (created?.id) {
+            window.location.hash = `#/company/${created.id}`;
+          } else {
+            window.location.hash = "#/companies";
+          }
+        }
+      } catch (error) {
+        showInlineError("companyFormError", error.message);
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = id ? "Save Changes" : "Create Company";
+      }
+    }
+
+    // ------------------------------------------------------------
+    // Company Status
+    // ------------------------------------------------------------
+
+    function confirmCompanyStatus(id, newStatus, companyName) {
+      const action = newStatus ? "activate" : "deactivate";
+
+      openConfirm({
+        title: `${newStatus ? "Activate" : "Deactivate"} Company`,
+        message: `Are you sure you want to ${action} "${companyName}"?`,
+        confirmText: newStatus ? "Activate" : "Deactivate",
+        danger: !newStatus,
+        onConfirm: async () => {
+          try {
+            setLoading(true);
+
+            await apiRequest(`/companies/${encodeURIComponent(id)}/status`, {
+              method: "PATCH",
+              body: { is_active: newStatus }
+            });
+
+            showToast(
+              `Company ${newStatus ? "activated" : "deactivated"} successfully.`,
+              "success"
+            );
+
+            const route = getRoute();
+
+            if (route === "/companies") {
+              await renderCompanies();
+            } else if (/^\/company\/\d+$/.test(route)) {
+              await renderCompanyDetails(id);
+            } else {
+              await router();
+            }
+          } catch (error) {
+            showToast(error.message, "error");
+          } finally {
+            setLoading(false);
+          }
+        }
+      });
+    }
+
+    // ------------------------------------------------------------
+    // Agents - Company Admin
+    // ------------------------------------------------------------
+
+    async function renderAgents() {
+      if (getRoleName() !== "ADMIN") { navigate("/403"); return; }
+      await loadAgents();
+
+      renderShell(`
+        <section class="page">
+          <div class="page-header">
+            <div><h1>Agents</h1><p>Manage Agent accounts belonging to your company.</p></div>
+            <button class="btn btn-primary" onclick="navigate('/agents/new')">+ Add Agent</button>
+          </div>
+
+          <div class="card">
+            <div class="toolbar">
+              <div class="search-box"><input id="agentSearch" type="search" placeholder="Search by name or email..." value="${escapeHtml(state.agentSearch)}" /></div>
+              <div style="color:var(--muted);font-size:14px;align-self:center;"><span id="agentResultCount"></span></div>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Name</th><th>Email</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
+                <tbody id="agentsTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      `, "agents", "Agents");
+
+      document.getElementById("agentSearch")?.addEventListener("input", event => {
+        state.agentSearch = event.target.value;
+        drawAgentsTable();
+      });
+
+      drawAgentsTable();
+    }
+
+    function drawAgentsTable() {
+      const tbody = document.getElementById("agentsTableBody");
+      const count = document.getElementById("agentResultCount");
+      if (!tbody) return;
+
+      const query = state.agentSearch.trim().toLowerCase();
+      const agents = state.agents.filter(agent => [agent.full_name, agent.email].filter(Boolean).join(" ").toLowerCase().includes(query));
+      if (count) count.textContent = `${agents.length} result${agents.length === 1 ? "" : "s"}`;
+
+      tbody.innerHTML = agents.length ? agents.map(agent => `
+        <tr>
+          <td><strong>${escapeHtml(agent.full_name || "—")}</strong></td>
+          <td>${escapeHtml(agent.email || "—")}</td>
+          <td>${statusBadge(agent.is_active)}</td>
+          <td>${formatDate(agent.created_at)}</td>
+          <td>
+            <div class="actions">
+              <button class="btn btn-secondary btn-sm" onclick="navigate('/agents/${Number(agent.id)}')">View</button>
+              <button class="btn btn-secondary btn-sm" onclick="navigate('/agents/${Number(agent.id)}/edit')">Edit</button>
+              <button class="btn ${agent.is_active === true ? "btn-danger" : "btn-success"} btn-sm" onclick="confirmUserStatus('agent', ${Number(agent.id)}, ${agent.is_active !== true}, '${escapeJs(agent.full_name || agent.email || "Agent")}')">${agent.is_active === true ? "Deactivate" : "Activate"}</button>
+            </div>
+          </td>
+        </tr>
+      `).join("") : `<tr><td colspan="5"><div class="state-box"><h3>${state.agents.length ? "No matching Agents" : "No Agents yet"}</h3><p>${state.agents.length ? "Try another search term." : "Create the first Agent for your company."}</p></div></td></tr>`;
+    }
+
+    async function renderAgentCreate() {
+      if (getRoleName() !== "ADMIN") { navigate("/403"); return; }
+
+      renderShell(`
+        <section class="page">
+          <div class="page-header"><div><button class="btn-link" onclick="navigate('/agents')">← Back to Agents</button><h1 style="margin-top:10px;">Create Agent</h1><p>The Agent is automatically attached to your company by the backend.</p></div></div>
+          <div class="card"><div class="card-body">
+            <form id="agentCreateForm">
+              <div class="error-box" id="agentCreateError"></div>
+              <div class="form-group"><label for="agentFullName">Full Name *</label><input id="agentFullName" type="text" maxlength="200" required /></div>
+              <div class="form-grid">
+                <div class="form-group"><label for="agentEmail">Email *</label><input id="agentEmail" type="email" maxlength="320" required /></div>
+                <div class="form-group"><label for="agentPassword">Password *</label><input id="agentPassword" type="password" autocomplete="new-password" required /></div>
+              </div>
+              <div class="checkbox-row"><input id="agentActive" type="checkbox" checked /><label for="agentActive">Agent account is active</label></div>
+              <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="navigate('/agents')">Cancel</button>
+                <button type="submit" class="btn btn-primary" id="agentCreateBtn">Create Agent</button>
+              </div>
+            </form>
+          </div></div>
+        </section>
+      `, "agents", "Create Agent");
+
+      document.getElementById("agentCreateForm")?.addEventListener("submit", async event => {
+        event.preventDefault();
+        hideInlineError("agentCreateError");
+        const button = document.getElementById("agentCreateBtn");
+        button.disabled = true;
+        button.textContent = "Creating...";
+
+        try {
+          const created = await apiRequest("/users/agents", {
+            method: "POST",
+            body: {
+              full_name: document.getElementById("agentFullName").value.trim(),
+              email: document.getElementById("agentEmail").value.trim(),
+              password: document.getElementById("agentPassword").value,
+              is_active: document.getElementById("agentActive").checked
+            }
+          });
+          showToast("Agent created successfully.", "success");
+          navigate(created?.id ? `/agents/${created.id}` : "/agents");
+        } catch (error) {
+          showInlineError("agentCreateError", error.message);
+        } finally {
+          button.disabled = false;
+          button.textContent = "Create Agent";
+        }
+      });
+    }
+
+    async function renderAgentDetails(id) {
+      if (getRoleName() !== "ADMIN") { navigate("/403"); return; }
+      const agent = await apiRequest(`/users/agents/${encodeURIComponent(id)}`);
+
+      renderShell(`
+        <section class="page">
+          <div class="page-header">
+            <div><button class="btn-link" onclick="navigate('/agents')">← Back to Agents</button><h1 style="margin-top:10px;">${escapeHtml(agent?.full_name || "Agent")}</h1><p>Agent account details.</p></div>
+            <div class="actions">
+              <button class="btn btn-secondary" onclick="navigate('/agents/${Number(agent.id)}/edit')">Edit</button>
+              <button class="btn ${agent.is_active === true ? "btn-danger" : "btn-success"}" onclick="confirmUserStatus('agent', ${Number(agent.id)}, ${agent.is_active !== true}, '${escapeJs(agent.full_name || agent.email || "Agent")}')">${agent.is_active === true ? "Deactivate" : "Activate"}</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h2>Agent Information</h2>${statusBadge(agent?.is_active)}</div>
+            <div class="card-body"><div class="details-grid">
+              ${detailItem("ID", agent?.id)}
+              ${detailItem("Full Name", agent?.full_name)}
+              ${detailItem("Email", agent?.email)}
+              ${detailItem("Role", roleLabel(getRoleName(agent)))}
+              ${detailItem("Company", getCompanyName(agent) !== "—" ? getCompanyName(agent) : getCompanyName(state.currentUser))}
+              ${detailItem("Created At", formatDate(agent?.created_at), true)}
+            </div></div>
+          </div>
+        </section>
+      `, "agents", "Agent Details");
+    }
+
+    async function renderAgentEdit(id) {
+      if (getRoleName() !== "ADMIN") { navigate("/403"); return; }
+      const agent = await apiRequest(`/users/agents/${encodeURIComponent(id)}`);
+      renderUserEditForm({
+        user: agent,
+        label: "Agent",
+        endpoint: `/users/agents/${encodeURIComponent(id)}`,
+        backRoute: `/agents/${id}`,
+        activeItem: "agents",
+        pageTitle: "Edit Agent"
+      });
+    }
+
+    // ------------------------------------------------------------
+    // Shared Admin / Agent update and status
+    // ------------------------------------------------------------
+
+    function renderUserEditForm({ user, label, endpoint, backRoute, activeItem, pageTitle }) {
+      renderShell(`
+        <section class="page">
+          <div class="page-header"><div><button class="btn-link" onclick="navigate('${backRoute}')">← Back</button><h1 style="margin-top:10px;">${escapeHtml(pageTitle)}</h1><p>Update ${escapeHtml(label)} name and email.</p></div></div>
+          <div class="card"><div class="card-body">
+            <form id="userEditForm">
+              <div class="error-box" id="userEditError"></div>
+              <div class="form-group"><label for="editUserName">Full Name *</label><input id="editUserName" type="text" maxlength="200" required value="${escapeHtml(user?.full_name || "")}" /></div>
+              <div class="form-group"><label for="editUserEmail">Email *</label><input id="editUserEmail" type="email" maxlength="320" required value="${escapeHtml(user?.email || "")}" /></div>
+              <div style="padding:13px 14px;border-radius:10px;background:#f8fafc;color:var(--muted);font-size:13px;line-height:1.6;">Activation is managed separately using Activate / Deactivate.</div>
+              <div class="form-actions"><button type="button" class="btn btn-secondary" onclick="navigate('${backRoute}')">Cancel</button><button type="submit" class="btn btn-primary" id="userEditBtn">Save Changes</button></div>
+            </form>
+          </div></div>
+        </section>
+      `, activeItem, pageTitle);
+
+      document.getElementById("userEditForm")?.addEventListener("submit", async event => {
+        event.preventDefault();
+        hideInlineError("userEditError");
+        const button = document.getElementById("userEditBtn");
+        button.disabled = true;
+        button.textContent = "Saving...";
+        try {
+          await apiRequest(endpoint, {
+            method: "PATCH",
+            body: {
+              full_name: document.getElementById("editUserName").value.trim(),
+              email: document.getElementById("editUserEmail").value.trim()
+            }
+          });
+          showToast(`${label} updated successfully.`, "success");
+          navigate(backRoute);
+        } catch (error) {
+          showInlineError("userEditError", error.message);
+        } finally {
+          button.disabled = false;
+          button.textContent = "Save Changes";
+        }
+      });
+    }
+
+    function confirmUserStatus(kind, id, newStatus, name) {
+      const plural = kind === "admin" ? "admins" : "agents";
+      const label = kind === "admin" ? "Admin" : "Agent";
+
+      openConfirm({
+        title: `${newStatus ? "Activate" : "Deactivate"} ${label}`,
+        message: `Are you sure you want to ${newStatus ? "activate" : "deactivate"} "${name}"?`,
+        confirmText: newStatus ? "Activate" : "Deactivate",
+        danger: !newStatus,
+        onConfirm: async () => {
+          await apiRequest(`/users/${plural}/${encodeURIComponent(id)}/status`, {
+            method: "PATCH",
+            body: { is_active: newStatus }
+          });
+          showToast(`${label} ${newStatus ? "activated" : "deactivated"} successfully.`, "success");
+          await router();
+        }
+      });
+    }
+
+    // ------------------------------------------------------------
+    // Profile
+    // ------------------------------------------------------------
+
+    function renderProfile() {
+      const user = state.currentUser;
+      const role = getRoleName(user);
+
+      renderShell(
+        `
+          <section class="page">
+            <div class="page-header">
+              <div>
+                <h1>My Profile</h1>
+                <p>Information returned by GET /users/me.</p>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-body">
+                <div class="details-grid">
+                  ${detailItem("ID", user?.id)}
+                  ${detailItem("Full Name", user?.full_name)}
+                  ${detailItem("Email", user?.email)}
+                  ${detailItem("Role", roleLabel(role))}
+                  ${detailItem("Company", getCompanyName(user))}
+                  ${detailItem("Account Status", user?.is_active === true ? "Active" : user?.is_active === false ? "Inactive" : "Unknown")}
+                </div>
+
+                <div class="form-actions">
+                  <button class="btn btn-danger" onclick="logout()">Logout</button>
+                </div>
+              </div>
+            </div>
+          </section>
+        `,
+        "profile",
+        "Profile"
+      );
+    }
+
+    // ------------------------------------------------------------
+    // Access / Not Found
+    // ------------------------------------------------------------
+
+    function render403() {
+      root.innerHTML = `
+        <section class="access-page">
+          <div class="card access-card">
+            <div class="access-code">403</div>
+            <h1 style="margin-bottom:10px;">Access Denied</h1>
+            <p style="color:var(--muted);line-height:1.7;margin-bottom:24px;">
+              You do not have permission to access this page.
+            </p>
+            <button class="btn btn-primary" onclick="goToDashboard()">
+              Back to Dashboard
+            </button>
+          </div>
+        </section>
+      `;
+    }
+
+    function renderNotFound() {
+      renderShell(
+        `
+          <section class="page">
+            <div class="card state-box">
+              <h3>404 - Page Not Found</h3>
+              <p style="margin-bottom:18px;">The page you requested does not exist.</p>
+              <button class="btn btn-primary" onclick="navigate('/dashboard')">
+                Back to Dashboard
+              </button>
+            </div>
+          </section>
+        `,
+        "",
+        "Not Found"
+      );
+    }
+
+    // ------------------------------------------------------------
+    // Confirmation Modal
+    // ------------------------------------------------------------
+
+    let pendingConfirmAction = null;
+
+    function openConfirm({
+      title = "Confirm action",
+      message = "Are you sure?",
+      confirmText = "Confirm",
+      danger = true,
+      onConfirm
+    }) {
+      pendingConfirmAction = onConfirm;
+
+      document.getElementById("confirmTitle").textContent = title;
+      document.getElementById("confirmMessage").textContent = message;
+
+      const okBtn = document.getElementById("confirmOkBtn");
+      okBtn.textContent = confirmText;
+      okBtn.className = `btn ${danger ? "btn-danger" : "btn-success"}`;
+
+      const modal = document.getElementById("confirmModal");
+      modal.style.display = "flex";
+      modal.setAttribute("aria-hidden", "false");
+    }
+
+    function closeConfirm() {
+      pendingConfirmAction = null;
+      const modal = document.getElementById("confirmModal");
+      modal.style.display = "none";
+      modal.setAttribute("aria-hidden", "true");
+    }
+
+    document.getElementById("confirmCancelBtn").addEventListener("click", closeConfirm);
+
+    document.getElementById("confirmOkBtn").addEventListener("click", async () => {
+      const action = pendingConfirmAction;
+      closeConfirm();
+
+      if (typeof action === "function") {
+        await action();
+      }
+    });
+
+    document.getElementById("confirmModal").addEventListener("click", event => {
+      if (event.target.id === "confirmModal") {
+        closeConfirm();
+      }
+    });
+  </script>
+</body>
+</html>

@@ -75,6 +75,15 @@ def get_current_user(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="User is inactive"
         )
+        
+    if (
+        user.company is not None
+        and not user.company.is_active
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Company is inactive"
+        )
 
     return user
 
@@ -86,6 +95,18 @@ def require_super_admin(
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Super Admin access required"
+        )
+
+    return current_user
+
+def require_admin(
+    current_user: User = Depends(get_current_user)
+) -> User:
+
+    if current_user.role.name != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Admin access required"
         )
 
     return current_user

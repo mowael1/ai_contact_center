@@ -31,7 +31,11 @@ from app.services.user_service import (
     create_company_admin,
 )
 
-router = APIRouter()
+router = APIRouter(
+    dependencies=[
+        Depends(require_super_admin)
+    ]
+)
 
 @router.get(
     "/",

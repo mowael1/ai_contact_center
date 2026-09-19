@@ -63,3 +63,26 @@ class CompanyAdminCreate(BaseModel):
     email: EmailStr
     password: str
     is_active: bool = True
+    
+    
+class AgentCreate(BaseModel):
+    full_name: str
+    email: EmailStr
+    password: str
+    is_active: bool = True
+    
+
+class AgentUpdate(BaseModel):
+    full_name: str | None = None
+    email: EmailStr | None = None
+
+
+class UserStatusUpdate(BaseModel):
+    is_active: bool
+    
+class AdminUpdate(BaseModel):
+    full_name: str | None = None
+    email: EmailStr | None = None
+    
+class UserStatusUpdate(BaseModel):
+    is_active: bool
