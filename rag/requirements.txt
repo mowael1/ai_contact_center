@@ -1,5 +1,4 @@
 # RAG backend runtime dependencies.
-# Versions are pinned to compatible minimums; the evaluation layer adds none.
 fastapi>=0.115
 uvicorn>=0.30
 pydantic>=2.9
@@ -11,8 +10,12 @@ beautifulsoup4>=4.12
 lxml>=5.2
 pyarrow>=17.0
 pandas>=2.2
-chromadb>=0.5.17
+chromadb>=1.5
 python-dotenv>=1.0
+
+# Agentic retrieval graph. Only langgraph itself is used; langchain-core
+# arrives as its transitive dependency and none of its abstractions are used.
+langgraph>=1.0
 
 # Tests
 pytest>=8.3
