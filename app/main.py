@@ -4,11 +4,24 @@ from fastapi import FastAPI
 from fastapi.responses import FileResponse
 
 from app.api.router import api_router
+from fastapi.staticfiles import StaticFiles
 
+
+
+BASE_DIR = Path(__file__).resolve().parent
+AUDIO_DIR = BASE_DIR / "audio"
 
 app = FastAPI(
     title="AI Contact Center API",
     version="1.0.0"
+)
+
+app.mount(
+    "/audio",
+    StaticFiles(
+        directory=str(AUDIO_DIR)
+    ),
+    name="audio",
 )
 
 

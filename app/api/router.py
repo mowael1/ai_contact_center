@@ -7,6 +7,7 @@ from app.api.routes import (
     customers,
     tickets,
     users,
+    vonage,
 )
 
 
@@ -49,4 +50,10 @@ api_router.include_router(
     calls.router,
     prefix="/calls",
     tags=["Calls"]
+)
+
+api_router.include_router(
+    vonage.router,
+    prefix="/vonage",
+    tags=["Vonage"]
 )
