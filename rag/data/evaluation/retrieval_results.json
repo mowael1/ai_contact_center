@@ -1,0 +1,5742 @@
+{
+  "summary": {
+    "evaluated_questions": 48,
+    "skipped_no_ground_truth": [
+      "oos-9869c1703b",
+      "oos-0e8c7c01cd",
+      "oos-8c73fd1d75"
+    ],
+    "top_k": 10,
+    "metrics": {
+      "HitRate@1": 0.4167,
+      "Recall@1": 0.4167,
+      "Precision@1": 0.4167,
+      "HitRate@3": 0.6667,
+      "Recall@3": 0.6667,
+      "Precision@3": 0.3125,
+      "HitRate@5": 0.75,
+      "Recall@5": 0.75,
+      "Precision@5": 0.2542,
+      "HitRate@10": 0.7917,
+      "Recall@10": 0.7917,
+      "Precision@10": 0.1687,
+      "MRR": 0.5441,
+      "nDCG@3": 0.4505,
+      "nDCG@5": 0.5096,
+      "nDCG@10": 0.583
+    },
+    "section_retrieval_accuracy": {
+      "top_1": 0.175,
+      "top_3": 0.325,
+      "top_5": 0.4,
+      "top_10": 0.425
+    },
+    "source_retrieval_accuracy": {
+      "top_1": 0.4167,
+      "top_3": 0.6667,
+      "top_5": 0.75,
+      "top_10": 0.7917
+    },
+    "latency": {
+      "total_retrieval": {
+        "count": 48,
+        "mean_ms": 953.511,
+        "median_ms": 616.863,
+        "p95_ms": 1815.216,
+        "p99_ms": 6718.468,
+        "min_ms": 419.417,
+        "max_ms": 6718.468
+      },
+      "embedding": {
+        "count": 48,
+        "mean_ms": 416.344,
+        "median_ms": 261.314,
+        "p95_ms": 567.899,
+        "p99_ms": 5634.407,
+        "min_ms": 233.581,
+        "max_ms": 5634.407
+      },
+      "vector_search": {
+        "count": 48,
+        "mean_ms": 536.792,
+        "median_ms": 318.245,
+        "p95_ms": 1475.664,
+        "p99_ms": 2361.204,
+        "min_ms": 177.208,
+        "max_ms": 2361.204
+      }
+    }
+  },
+  "per_query": [
+    {
+      "id": "faq-f27299e23d",
+      "question": "ايه المميز فى انظمة RED الجديدة عن انظمة RED القديمة ؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "latency_ms": 6718.468,
+      "metrics": {
+        "HitRate@1": 0.0,
+        "Recall@1": 0.0,
+        "Precision@1": 0.0,
+        "HitRate@3": 1.0,
+        "Recall@3": 1.0,
+        "Precision@3": 0.3333,
+        "HitRate@5": 1.0,
+        "Recall@5": 1.0,
+        "Precision@5": 0.2,
+        "HitRate@10": 1.0,
+        "Recall@10": 1.0,
+        "Precision@10": 0.3,
+        "MRR": 0.3333,
+        "nDCG@3": 0.2346,
+        "nDCG@5": 0.2346,
+        "nDCG@10": 0.5582
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "0caaf19fc06b94f5e913:2:0:988d4db3989e",
+          "score": 0.571737,
+          "source_url": "https://web.vodafone.com.eg/ar/explore",
+          "section_path": [
+            "Explore",
+            "ڤودافون Red"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "chunk_id": "490beadad66d14951b6f:8:0:f93becef249c",
+          "score": 0.565367,
+          "source_url": "https://web.vodafone.com.eg/ar/red-business",
+          "section_path": [
+            "Red Family",
+            "اعرف اكتر عن نظام RED",
+            "إيه مميزات التجوال في نظام RED الجديد ؟"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "bd76e05ac4ddd39f7086:9:0:d64fd2c6074e",
+          "score": 0.562418,
+          "source_url": "https://web.vodafone.com.eg/ar/vodafone-red1",
+          "section_path": [
+            "إستمتع بأجدد الخدمات الترفيهية المقدمة من RED",
+            "اعرف اكتر عن نظام RED",
+            "إيه مميزات التجوال في نظام RED الجديد ؟"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 4,
+          "chunk_id": "f1c5fd3ebe70ae1b96c5:0:0:da6ac75e35f1",
+          "score": 0.502366,
+          "source_url": "https://web.vodafone.com.eg/en/%D8%AE%D8%B7%D8%B7-%D8%A7%D8%B3%D8%B9%D8%A7%D8%B1-%DA%A4%D9%88%D8%AF%D8%A7%DA%A4%D9%88%D9%86",
+          "section_path": [
+            "خطط اسعار ڤودافون",
+            "خطط الأسعار",
+            "ڤودافون Red"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "7a52c16569c6f4c36f76:3:0:21017e5027e1",
+          "score": 0.501598,
+          "source_url": "https://web.vodafone.com.eg/ar/adsl-catalog",
+          "section_path": [
+            "adsl-catalog",
+            "خصومات ومزايا RED"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "bd76e05ac4ddd39f7086:7:0:95c95983d929",
+          "score": 0.501081,
+          "source_url": "https://web.vodafone.com.eg/ar/vodafone-red1",
+          "section_path": [
+            "إستمتع بأجدد الخدمات الترفيهية المقدمة من RED",
+            "اعرف اكتر عن نظام RED",
+            "ازاي ممكن أحول لنظام RED ؟"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 7,
+          "chunk_id": "bd76e05ac4ddd39f7086:0:0:bd8a3137a232",
+          "score": 0.490506,
+          "source_url": "https://web.vodafone.com.eg/ar/vodafone-red1",
+          "section_path": [
+            "إستمتع بأجدد الخدمات الترفيهية المقدمة من RED",
+            "أهلا بيك في عالم RED"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 8,
+          "chunk_id": "2b5dfe3c42c1061afcde:0:0:0d04ab751932",
+          "score": 0.483526,
+          "source_url": "https://web.vodafone.com.eg/en/red-business",
+          "section_path": [
+            "Red Family",
+            "Welcome to the World of RED Business"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "2a2e5840783aa3f510f1:1:0:46c29d233c35",
+          "score": 0.476662,
+          "source_url": "https://web.vodafone.com.eg/ar/vodafone-rate-plans_rd",
+          "section_path": [
+            "خطط اسعار ڤودافون",
+            "خطط الأسعار",
+            "أنظمة ڤودافون فليكس"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 10,
+          "chunk_id": "0df36166be29aa79ab07:0:0:dd499e891335",
+          "score": 0.464452,
+          "source_url": "https://web.vodafone.com.eg/ar/plans",
+          "section_path": [
+            "خطط أسعار البزنس"
+          ],
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "faq-231dadceae",
+      "question": "What are the major extra benefits of the new plans over the last ones ?",
+      "category": "mined_faq",
+      "language": "en",
+      "latency_ms": 459.726,
+      "metrics": {
+        "HitRate@1": 0.0,
+        "Recall@1": 0.0,
+        "Precision@1": 0.0,
+        "HitRate@3": 0.0,
+        "Recall@3": 0.0,
+        "Precision@3": 0.0,
+        "HitRate@5": 0.0,
+        "Recall@5": 0.0,
+        "Precision@5": 0.0,
+        "HitRate@10": 0.0,
+        "Recall@10": 0.0,
+        "Precision@10": 0.0,
+        "MRR": 0.0,
+        "nDCG@3": 0.0,
+        "nDCG@5": 0.0,
+        "nDCG@10": 0.0
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "f5b3b1a7ffef98128b7f:0:0:2bea6e97cb98",
+          "score": 0.491693,
+          "source_url": "https://web.vodafone.com.eg/en/vodafone-flex",
+          "section_path": [
+            "Vodafone Flex: Flexible Mobile Plans for Calls, Internet & Entertainment",
+            "Flex Bundles Got Bigger & Better"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "chunk_id": "4d7bf206abc5a4376760:0:0:fffadfd4a53e",
+          "score": 0.490703,
+          "source_url": "https://web.vodafone.com.eg/en/vodafone-rate-plans",
+          "section_path": [
+            "All Vodafone Rate plans",
+            "Rate plans",
+            "Vodafone Red"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "2bd90b75644666702245:0:0:ae517cef318a",
+          "score": 0.486566,
+          "source_url": "https://web.vodafone.com.eg/en/ntra-new",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "70d492cba937b1a0c33c:0:0:22188729f103",
+          "score": 0.485667,
+          "source_url": "https://web.vodafone.com.eg/ar/ntra-new",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "dd45fd83a27e394a6389:0:0:5f4e4cf1c465",
+          "score": 0.46601,
+          "source_url": "https://web.vodafone.com.eg/en/plans",
+          "section_path": [
+            "Vodafone Business Plans"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "a8795e6b740a6757f3da:0:0:14fb1c0c137a",
+          "score": 0.46286,
+          "source_url": "https://web.vodafone.com.eg/en/businessapp",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "dd90171e9766d5299b6c:0:0:0982ed2da7c5",
+          "score": 0.460616,
+          "source_url": "https://web.vodafone.com.eg/ar/new-liferay",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "89f4246d509b77ea9750:3:6:a4788e7c0ad5",
+          "score": 0.460253,
+          "source_url": "https://web.vodafone.com.eg/en/case-studies",
+          "section_path": [
+            "Financial Inclusion and Digital Economy through Vodafone Cash"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "77bd9b9628653eccf65a:1:0:a376e4679ff5",
+          "score": 0.457634,
+          "source_url": "https://web.vodafone.com.eg/en/lorem-1",
+          "section_path": [
+            "Vodafone Services Manage your line , your payment, balance, and all the services you need",
+            "New Card 2025"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 10,
+          "chunk_id": "b4282d832a7d6dd5100f:0:0:2f8959b5356b",
+          "score": 0.454639,
+          "source_url": "https://web.vodafone.com.eg/en/gifts-termsandconditions",
+          "section_path": null,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "faq-1be71684c5",
+      "question": "8. إيه هو Vodafone Plus Play ؟",
+      "category": "mined_faq",
+      "language": "mixed",
+      "latency_ms": 1107.145,
+      "metrics": {
+        "HitRate@1": 0.0,
+        "Recall@1": 0.0,
+        "Precision@1": 0.0,
+        "HitRate@3": 1.0,
+        "Recall@3": 1.0,
+        "Precision@3": 0.3333,
+        "HitRate@5": 1.0,
+        "Recall@5": 1.0,
+        "Precision@5": 0.2,
+        "HitRate@10": 1.0,
+        "Recall@10": 1.0,
+        "Precision@10": 0.1,
+        "MRR": 0.3333,
+        "nDCG@3": 0.5,
+        "nDCG@5": 0.5,
+        "nDCG@10": 0.5
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "9afbc6e2b81debae88cb:4:0:e3a5b2e9d3bb",
+          "score": 0.533651,
+          "source_url": "https://web.vodafone.com.eg/en/mobile-internet-bundles",
+          "section_path": [
+            "Vodafone Internet Bundles",
+            "Frequently asked questions:",
+            "4. Who can enjoy the new Plus Bundles?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "chunk_id": "6cbf0b9befe28ade6f19:2:0:a9172d6a1737",
+          "score": 0.527883,
+          "source_url": "https://web.vodafone.com.eg/ar/home-compound",
+          "section_path": [
+            ".",
+            "اكتشف باقات Home Compound",
+            "700 جيجابايت البيانات"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "4ecad22de922452b0b20:4:0:d38f97ad4d5b",
+          "score": 0.518782,
+          "source_url": "https://web.vodafone.com.eg/ar/mobile-internet-bundles",
+          "section_path": [
+            "باقات الإنترنت",
+            "الأسئلة الشائعة",
+            "4. باقات Plus متاحة لمين؟"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 4,
+          "chunk_id": "80084180c4e37a8af3bb:4:0:1dd41cb03dd3",
+          "score": 0.510129,
+          "source_url": "https://web.vodafone.com.eg/en/home",
+          "section_path": [
+            "Vodafone Egypt home page",
+            "Wi-Fi Calling",
+            "Vodafone Cash"
+          ],
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "faq-167341730f",
+      "question": "ازاي ممكن أحول لنظام RED ؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "latency_ms": 529.919,
+      "metrics": {
+        "HitRate@1": 1.0,
+        "Recall@1": 1.0,
+        "Precision@1": 1.0,
+        "HitRate@3": 1.0,
+        "Recall@3": 1.0,
+        "Precision@3": 0.6667,
+        "HitRate@5": 1.0,
+        "Recall@5": 1.0,
+        "Precision@5": 0.6,
+        "HitRate@10": 1.0,
+        "Recall@10": 1.0,
+        "Precision@10": 0.3,
+        "MRR": 1.0,
+        "nDCG@3": 0.7039,
+        "nDCG@5": 0.8855,
+        "nDCG@10": 0.8855
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "bd76e05ac4ddd39f7086:9:0:d64fd2c6074e",
+          "score": 0.589564,
+          "source_url": "https://web.vodafone.com.eg/ar/vodafone-red1",
+          "section_path": [
+            "إستمتع بأجدد الخدمات الترفيهية المقدمة من RED",
+            "اعرف اكتر عن نظام RED",
+            "إيه مميزات التجوال في نظام RED الجديد ؟"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "chunk_id": "490beadad66d14951b6f:8:0:f93becef249c",
+          "score": 0.572835,
+          "source_url": "https://web.vodafone.com.eg/ar/red-business",
+          "section_path": [
+            "Red Family",
+            "اعرف اكتر عن نظام RED",
+            "إيه مميزات التجوال في نظام RED الجديد ؟"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "bd76e05ac4ddd39f7086:7:0:95c95983d929",
+          "score": 0.567803,
+          "source_url": "https://web.vodafone.com.eg/ar/vodafone-red1",
+          "section_path": [
+            "إستمتع بأجدد الخدمات الترفيهية المقدمة من RED",
+            "اعرف اكتر عن نظام RED",
+            "ازاي ممكن أحول لنظام RED ؟"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 4,
+          "chunk_id": "0caaf19fc06b94f5e913:2:0:988d4db3989e",
+          "score": 0.518839,
+          "source_url": "https://web.vodafone.com.eg/ar/explore",
+          "section_path": [
+            "Explore",
+            "ڤودافون Red"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "bd76e05ac4ddd39f7086:0:0:bd8a3137a232",
+          "score": 0.510569,
+          "source_url": "https://web.vodafone.com.eg/ar/vodafone-red1",
+          "section_path": [
+            "إستمتع بأجدد الخدمات الترفيهية المقدمة من RED",
+            "أهلا بيك في عالم RED"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 6,
+          "chunk_id": "ae5ebcd99d41b789fba2:11:0:cb58ded25d2d",
+          "score": 0.498454,
+          "source_url": "https://web.vodafone.com.eg/en/vodafone-red1",
+          "section_path": [
+            "Enjoy the Latest Entertainment Apps in the Market that Fit your Needs",
+            "Red points partners"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "8403192be4ab17f95972:3:0:36c83f1af6e3",
+          "score": 0.498297,
+          "source_url": "https://web.vodafone.com.eg/en/esg",
+          "section_path": [
+            "Vodafone 2020 - 2022 ESG Indices",
+            "2020 - 2022 ESG Indices",
+            "Environment",
+            "31%"
+          ],
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "faq-95fdeaf54d",
+      "question": "How do I migrate to the new RED ?",
+      "category": "mined_faq",
+      "language": "en",
+      "latency_ms": 2752.103,
+      "metrics": {
+        "HitRate@1": 1.0,
+        "Recall@1": 1.0,
+        "Precision@1": 1.0,
+        "HitRate@3": 1.0,
+        "Recall@3": 1.0,
+        "Precision@3": 0.3333,
+        "HitRate@5": 1.0,
+        "Recall@5": 1.0,
+        "Precision@5": 0.2,
+        "HitRate@10": 1.0,
+        "Recall@10": 1.0,
+        "Precision@10": 0.1,
+        "MRR": 1.0,
+        "nDCG@3": 1.0,
+        "nDCG@5": 1.0,
+        "nDCG@10": 1.0
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "ae5ebcd99d41b789fba2:0:0:b526ed57f72c",
+          "score": 0.577141,
+          "source_url": "https://web.vodafone.com.eg/en/vodafone-red1",
+          "section_path": [
+            "Enjoy the Latest Entertainment Apps in the Market that Fit your Needs",
+            "Welcome to the World of RED"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "chunk_id": "459325d984a757366369:0:0:3b726924865f",
+          "score": 0.562877,
+          "source_url": "https://web.vodafone.com.eg/en/tac-migration",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "e8e07dc78aea34f5d643:0:0:36da838f55d9",
+          "score": 0.515894,
+          "source_url": "https://web.vodafone.com.eg/en/newcard",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "bd76e05ac4ddd39f7086:0:0:bd8a3137a232",
+          "score": 0.505509,
+          "source_url": "https://web.vodafone.com.eg/ar/vodafone-red1",
+          "section_path": [
+            "إستمتع بأجدد الخدمات الترفيهية المقدمة من RED",
+            "أهلا بيك في عالم RED"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "490beadad66d14951b6f:8:0:f93becef249c",
+          "score": 0.492309,
+          "source_url": "https://web.vodafone.com.eg/ar/red-business",
+          "section_path": [
+            "Red Family",
+            "اعرف اكتر عن نظام RED",
+            "إيه مميزات التجوال في نظام RED الجديد ؟"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "0fa2ad5829c341ffac3d:2:0:4209d1ba8f03",
+          "score": 0.49143,
+          "source_url": "https://advisory.vodafone.com.eg/",
+          "section_path": [
+            "Explore the Knowledge Centre"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "dca0383e009bb8eb7846:1:0:6cdbfdd6200d",
+          "score": 0.489546,
+          "source_url": "https://web.vodafone.com.eg/ar/lorem-1",
+          "section_path": [
+            "خدمات فودافون، إدارة خطك ورصيدك وكل الخدمات اللي تحتاجها",
+            "New Card 2025"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "7bb5363cf297f904d3d7:5:0:2cdcdf0f82c9",
+          "score": 0.486829,
+          "source_url": "https://advisory.vodafone.com.eg/knowledge-center/the-importance-of-business-networking",
+          "section_path": [
+            "The importance of business networking",
+            "More news and insights",
+            "Three steps to building your own online shop"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "a8795e6b740a6757f3da:0:0:14fb1c0c137a",
+          "score": 0.486522,
+          "source_url": "https://web.vodafone.com.eg/en/businessapp",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 10,
+          "chunk_id": "dd854ade38c41638069c:0:0:ce76a6b39f36",
+          "score": 0.483463,
+          "source_url": "https://web.vodafone.com.eg/ar/roamingnew",
+          "section_path": null,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "faq-f62b17f43f",
+      "question": "إيه مميزات التجوال في نظام RED الجديد ؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "latency_ms": 1146.226,
+      "metrics": {
+        "HitRate@1": 0.0,
+        "Recall@1": 0.0,
+        "Precision@1": 0.0,
+        "HitRate@3": 1.0,
+        "Recall@3": 1.0,
+        "Precision@3": 0.3333,
+        "HitRate@5": 1.0,
+        "Recall@5": 1.0,
+        "Precision@5": 0.4,
+        "HitRate@10": 1.0,
+        "Recall@10": 1.0,
+        "Precision@10": 0.3,
+        "MRR": 0.3333,
+        "nDCG@3": 0.2346,
+        "nDCG@5": 0.4367,
+        "nDCG@10": 0.6039
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "0caaf19fc06b94f5e913:2:0:988d4db3989e",
+          "score": 0.626722,
+          "source_url": "https://web.vodafone.com.eg/ar/explore",
+          "section_path": [
+            "Explore",
+            "ڤودافون Red"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "chunk_id": "490beadad66d14951b6f:8:0:f93becef249c",
+          "score": 0.58658,
+          "source_url": "https://web.vodafone.com.eg/ar/red-business",
+          "section_path": [
+            "Red Family",
+            "اعرف اكتر عن نظام RED",
+            "إيه مميزات التجوال في نظام RED الجديد ؟"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "bd76e05ac4ddd39f7086:9:0:d64fd2c6074e",
+          "score": 0.578873,
+          "source_url": "https://web.vodafone.com.eg/ar/vodafone-red1",
+          "section_path": [
+            "إستمتع بأجدد الخدمات الترفيهية المقدمة من RED",
+            "اعرف اكتر عن نظام RED",
+            "إيه مميزات التجوال في نظام RED الجديد ؟"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 4,
+          "chunk_id": "bd76e05ac4ddd39f7086:0:0:bd8a3137a232",
+          "score": 0.516885,
+          "source_url": "https://web.vodafone.com.eg/ar/vodafone-red1",
+          "section_path": [
+            "إستمتع بأجدد الخدمات الترفيهية المقدمة من RED",
+            "أهلا بيك في عالم RED"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 5,
+          "chunk_id": "7a52c16569c6f4c36f76:3:0:21017e5027e1",
+          "score": 0.509595,
+          "source_url": "https://web.vodafone.com.eg/ar/adsl-catalog",
+          "section_path": [
+            "adsl-catalog",
+            "خصومات ومزايا RED"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "bd76e05ac4ddd39f7086:7:0:95c95983d929",
+          "score": 0.498695,
+          "source_url": "https://web.vodafone.com.eg/ar/vodafone-red1",
+          "section_path": [
+            "إستمتع بأجدد الخدمات الترفيهية المقدمة من RED",
+            "اعرف اكتر عن نظام RED",
+            "ازاي ممكن أحول لنظام RED ؟"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 7,
+          "chunk_id": "2b5dfe3c42c1061afcde:0:0:0d04ab751932",
+          "score": 0.498479,
+          "source_url": "https://web.vodafone.com.eg/en/red-business",
+          "section_path": [
+            "Red Family",
+            "Welcome to the World of RED Business"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "490beadad66d14951b6f:0:0:2b7afcd67f0d",
+          "score": 0.487797,
+          "source_url": "https://web.vodafone.com.eg/ar/red-business",
+          "section_path": [
+            "Red Family",
+            "أهلا بيك في عالم RED Business"
+          ],
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "faq-593492fd34",
+      "question": "How can I add member(s) to my RED Family ?",
+      "category": "mined_faq",
+      "language": "en",
+      "latency_ms": 1400.275,
+      "metrics": {
+        "HitRate@1": 0.0,
+        "Recall@1": 0.0,
+        "Precision@1": 0.0,
+        "HitRate@3": 0.0,
+        "Recall@3": 0.0,
+        "Precision@3": 0.0,
+        "HitRate@5": 1.0,
+        "Recall@5": 1.0,
+        "Precision@5": 0.2,
+        "HitRate@10": 1.0,
+        "Recall@10": 1.0,
+        "Precision@10": 0.1,
+        "MRR": 0.25,
+        "nDCG@3": 0.0,
+        "nDCG@5": 0.4307,
+        "nDCG@10": 0.4307
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "bbade69e9d192f55c183:3:3:12e0affded43",
+          "score": 0.502803,
+          "source_url": "https://web.vodafone.com.eg/ar/329",
+          "section_path": [
+            "القاهرة – في 18 مارس 2014 :"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "chunk_id": "c68965d67509d9d7412b:0:0:6d3e6337c616",
+          "score": 0.500441,
+          "source_url": "https://web.vodafone.com.eg/en/myroadmysafety",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "3332f1691e33c5a3caec:3:0:7653851110ce",
+          "score": 0.495048,
+          "source_url": "https://advisory.vodafone.com.eg/knowledge-center/why-is-average-order-value-aov-important",
+          "section_path": [
+            "Why is Average Order Value(AOV) important",
+            "Strategies for boosting average order value"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "ae5ebcd99d41b789fba2:8:0:78bef050c3d0",
+          "score": 0.4908,
+          "source_url": "https://web.vodafone.com.eg/en/vodafone-red1",
+          "section_path": [
+            "Enjoy the Latest Entertainment Apps in the Market that Fit your Needs",
+            "Still Wondering? We thought you might still have questions",
+            "How can I add member(s) to my RED Family ?"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 5,
+          "chunk_id": "76a02807d50f1afa1d11:0:4:0143669b1fb2",
+          "score": 0.490338,
+          "source_url": "https://web.vodafone.com.eg/en/mother-day-discounts",
+          "section_path": [
+            "Mother's Day Discounts",
+            "Get up to 20% discount when you pay with Vodafone Cash on our Partners’ websites"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "0c589afc3cef3fd9f109:6:0:43bb60054f10",
+          "score": 0.489804,
+          "source_url": "https://advisory.vodafone.com.eg/knowledge-center/why-creating-a-great-brand-will-help-your-small-business-soar",
+          "section_path": [
+            "Why creating a great brand will help your small business soar",
+            "More news and insights",
+            "Top tips for increasing customer loyalty"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "0e309da3ac7a1c08901e:0:9:b963ca1d18bf",
+          "score": 0.487764,
+          "source_url": "https://web.vodafone.com.eg/en/ezayak-cooking2",
+          "section_path": [
+            "Sanitize surfaces before & after cooking. Surfaces should be washed with hot, soapy water. A solution of 1 tablespoon of unscented, liquid chlorine bleach per gallon of water can be used to sanitize surfaces."
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "29050d6e9a287227ca5b:1:0:a8d6d39def33",
+          "score": 0.484239,
+          "source_url": "https://web.vodafone.com.eg/en/vodafone-plus-ps5-offer",
+          "section_path": [
+            "Vodafone Plus PS5",
+            "Vodafone Plus PS5 Offer",
+            "Plus Battle"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "72a358d7a592e3370666:0:0:0cb18c8857fd",
+          "score": 0.481885,
+          "source_url": "https://web.vodafone.com.eg/ar/t-c-red-summer-2",
+          "section_path": [
+            "الشروط و الاحكام",
+            "Online Partner"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 10,
+          "chunk_id": "b22cb296f9e0fb151290:4:0:c9531b715465",
+          "score": 0.481051,
+          "source_url": "https://advisory.vodafone.com.eg/ar/knowledge-center/why-is-average-order-value-aov-important",
+          "section_path": [
+            "لماذا تعد القيمة المتوسطة للطلب (AOV) مهمة؟",
+            "تأثير AOV على بزنسك"
+          ],
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "faq-6638a5a2df",
+      "question": "ازاي أقدر استمتع بباقة DSL ؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "latency_ms": 529.731,
+      "metrics": {
+        "HitRate@1": 0.0,
+        "Recall@1": 0.0,
+        "Precision@1": 0.0,
+        "HitRate@3": 0.0,
+        "Recall@3": 0.0,
+        "Precision@3": 0.0,
+        "HitRate@5": 0.0,
+        "Recall@5": 0.0,
+        "Precision@5": 0.0,
+        "HitRate@10": 0.0,
+        "Recall@10": 0.0,
+        "Precision@10": 0.0,
+        "MRR": 0.0,
+        "nDCG@3": 0.0,
+        "nDCG@5": 0.0,
+        "nDCG@10": 0.0
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "80084180c4e37a8af3bb:5:0:180c47009e1d",
+          "score": 0.543832,
+          "source_url": "https://web.vodafone.com.eg/en/home",
+          "section_path": [
+            "Vodafone Egypt home page",
+            "Wi-Fi Calling",
+            "Vodafone DSL"
+          ],
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "faq-a009289764",
+      "question": "What are my Roaming Benefits ?",
+      "category": "mined_faq",
+      "language": "en",
+      "latency_ms": 462.599,
+      "metrics": {
+        "HitRate@1": 0.0,
+        "Recall@1": 0.0,
+        "Precision@1": 0.0,
+        "HitRate@3": 0.0,
+        "Recall@3": 0.0,
+        "Precision@3": 0.0,
+        "HitRate@5": 0.0,
+        "Recall@5": 0.0,
+        "Precision@5": 0.0,
+        "HitRate@10": 0.0,
+        "Recall@10": 0.0,
+        "Precision@10": 0.0,
+        "MRR": 0.0,
+        "nDCG@3": 0.0,
+        "nDCG@5": 0.0,
+        "nDCG@10": 0.0
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "d0aac4a58b946c5fc786:0:0:1556627885f7",
+          "score": 0.678406,
+          "source_url": "https://web.vodafone.com.eg/en/roaming-services",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "chunk_id": "6321f99c69d624659dfe:0:0:044a092b7c24",
+          "score": 0.668447,
+          "source_url": "https://web.vodafone.com.eg/en/roamingnew",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "0ce46de1c2913c638341:0:0:02d97c3b4b06",
+          "score": 0.622087,
+          "source_url": "https://web.vodafone.com.eg/en/roamingmanagement",
+          "section_path": [
+            "Roaming Management"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "dd45fd83a27e394a6389:1:0:f0edc4f6a830",
+          "score": 0.58678,
+          "source_url": "https://web.vodafone.com.eg/en/plans",
+          "section_path": [
+            "Vodafone Business Plans",
+            "Shared Plans"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "1be63f90932065853481:0:0:3b4ba0aef566",
+          "score": 0.574143,
+          "source_url": "https://web.vodafone.com.eg/en/vodafone-business-plans",
+          "section_path": [
+            "Vodafone Business Plans",
+            "Plans"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "1d4d86ffc0f521eab979:0:0:cb2e0fc762cb",
+          "score": 0.553484,
+          "source_url": "https://www.vodafone.com.eg/en/services",
+          "section_path": [
+            "Vodafone Services Manage your line , your payment, balance, and all the services you need",
+            "Call & Connect abroad"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "425e7b9164b86ffe7189:4:0:2adf36ea1df2",
+          "score": 0.535835,
+          "source_url": "https://web.vodafone.com.eg/en/international-roaming-rates",
+          "section_path": [
+            "International Calls price",
+            "International/Roaming changes",
+            "RED 300 Plus"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "425e7b9164b86ffe7189:2:0:74e1b720659d",
+          "score": 0.534766,
+          "source_url": "https://web.vodafone.com.eg/en/international-roaming-rates",
+          "section_path": [
+            "International Calls price",
+            "International/Roaming changes",
+            "RED Traveler"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "425e7b9164b86ffe7189:0:0:074c9314ab50",
+          "score": 0.534682,
+          "source_url": "https://web.vodafone.com.eg/en/international-roaming-rates",
+          "section_path": [
+            "International Calls price",
+            "International/Roaming changes",
+            "RED Classic"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 10,
+          "chunk_id": "425e7b9164b86ffe7189:3:0:a77453334f79",
+          "score": 0.521466,
+          "source_url": "https://web.vodafone.com.eg/en/international-roaming-rates",
+          "section_path": [
+            "International Calls price",
+            "International/Roaming changes",
+            "Red 150"
+          ],
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "faq-b96da60a92",
+      "question": "1. ايه هى باقات Plus ؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "latency_ms": 507.049,
+      "metrics": {
+        "HitRate@1": 1.0,
+        "Recall@1": 1.0,
+        "Precision@1": 1.0,
+        "HitRate@3": 1.0,
+        "Recall@3": 1.0,
+        "Precision@3": 0.3333,
+        "HitRate@5": 1.0,
+        "Recall@5": 1.0,
+        "Precision@5": 0.4,
+        "HitRate@10": 1.0,
+        "Recall@10": 1.0,
+        "Precision@10": 0.2,
+        "MRR": 1.0,
+        "nDCG@3": 0.6131,
+        "nDCG@5": 0.8772,
+        "nDCG@10": 0.8772
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "4ecad22de922452b0b20:4:0:d38f97ad4d5b",
+          "score": 0.589203,
+          "source_url": "https://web.vodafone.com.eg/ar/mobile-internet-bundles",
+          "section_path": [
+            "باقات الإنترنت",
+            "الأسئلة الشائعة",
+            "4. باقات Plus متاحة لمين؟"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "chunk_id": "b33f90088d08539591fc:0:0:86c15b17a8f6",
+          "score": 0.520026,
+          "source_url": "https://web.vodafone.com.eg/en/100-employees-123",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "8cf906c3d5d66410386b:4:0:dd74a35955da",
+          "score": 0.51977,
+          "source_url": "https://web.vodafone.com.eg/en/%D8%A7%D9%84%D9%82%D8%B7%D8%A7%D8%B9-%D8%A7%D9%84%D8%B9%D8%A7%D9%85-%D9%84%D9%84%D8%A3%D8%B9%D9%85%D8%A7%D9%84",
+          "section_path": [
+            "الصفحه الرئيسية لڤودافون مصر",
+            "افتح حساب ڤودافون بيزنس",
+            "باقات بلس بزنس"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "4ecad22de922452b0b20:3:0:b5b41e72eb30",
+          "score": 0.516105,
+          "source_url": "https://web.vodafone.com.eg/ar/mobile-internet-bundles",
+          "section_path": [
+            "باقات الإنترنت",
+            "الأسئلة الشائعة",
+            "3. باقات Plus بتتجدد كل أد إيه؟"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 5,
+          "chunk_id": "9afbc6e2b81debae88cb:1:0:3779eb7461fc",
+          "score": 0.507191,
+          "source_url": "https://web.vodafone.com.eg/en/mobile-internet-bundles",
+          "section_path": [
+            "Vodafone Internet Bundles",
+            "Frequently asked questions:",
+            "1. What are the New Plus bundles ?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "9afbc6e2b81debae88cb:4:0:e3a5b2e9d3bb",
+          "score": 0.506149,
+          "source_url": "https://web.vodafone.com.eg/en/mobile-internet-bundles",
+          "section_path": [
+            "Vodafone Internet Bundles",
+            "Frequently asked questions:",
+            "4. Who can enjoy the new Plus Bundles?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "3c0bd1f66cb84be05cb2:7:0:0895eee2b0b4",
+          "score": 0.501311,
+          "source_url": "https://web.vodafone.com.eg/en/edu-bundle",
+          "section_path": [
+            "edu_bundle",
+            "FAQs:",
+            "8.Can I use the bundle quota on any website?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "d795789bcf922f3d87ad:0:2:f3d9733a6f75",
+          "score": 0.496665,
+          "source_url": "https://www.vodafone.com.eg/ar/business-flex",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "7808aa8d588a49fecd63:4:0:81f66bcb160e",
+          "score": 0.496248,
+          "source_url": "https://web.vodafone.com.eg/en/kart-el-korout",
+          "section_path": [
+            "Different prepaid rate plans with the lowest minute rate that suits you",
+            "Kart El-Korout Rateplans",
+            "14 PT Minute/SMS"
+          ],
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "faq-ab37394132",
+      "question": "How do I enjoy my DSL Bundle ?",
+      "category": "mined_faq",
+      "language": "en",
+      "latency_ms": 691.036,
+      "metrics": {
+        "HitRate@1": 0.0,
+        "Recall@1": 0.0,
+        "Precision@1": 0.0,
+        "HitRate@3": 0.0,
+        "Recall@3": 0.0,
+        "Precision@3": 0.0,
+        "HitRate@5": 0.0,
+        "Recall@5": 0.0,
+        "Precision@5": 0.0,
+        "HitRate@10": 0.0,
+        "Recall@10": 0.0,
+        "Precision@10": 0.0,
+        "MRR": 0.0,
+        "nDCG@3": 0.0,
+        "nDCG@5": 0.0,
+        "nDCG@10": 0.0
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "232a313cc20bd3cea073:3:0:fc055f32b6b3",
+          "score": 0.648768,
+          "source_url": "https://web.vodafone.com.eg/en/adsl-catalog",
+          "section_path": [
+            "adsl-catalog",
+            "Exclusively for Red customers!"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "chunk_id": "80084180c4e37a8af3bb:5:0:180c47009e1d",
+          "score": 0.627085,
+          "source_url": "https://web.vodafone.com.eg/en/home",
+          "section_path": [
+            "Vodafone Egypt home page",
+            "Wi-Fi Calling",
+            "Vodafone DSL"
+          ],
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "faq-a1a03bc7f4",
+      "question": "3. باقات Plus بتتجدد كل أد إيه؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "latency_ms": 811.127,
+      "metrics": {
+        "HitRate@1": 1.0,
+        "Recall@1": 1.0,
+        "Precision@1": 1.0,
+        "HitRate@3": 1.0,
+        "Recall@3": 1.0,
+        "Precision@3": 0.3333,
+        "HitRate@5": 1.0,
+        "Recall@5": 1.0,
+        "Precision@5": 0.2,
+        "HitRate@10": 1.0,
+        "Recall@10": 1.0,
+        "Precision@10": 0.2,
+        "MRR": 1.0,
+        "nDCG@3": 0.6131,
+        "nDCG@5": 0.6131,
+        "nDCG@10": 0.7977
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "4ecad22de922452b0b20:4:0:d38f97ad4d5b",
+          "score": 0.641309,
+          "source_url": "https://web.vodafone.com.eg/ar/mobile-internet-bundles",
+          "section_path": [
+            "باقات الإنترنت",
+            "الأسئلة الشائعة",
+            "4. باقات Plus متاحة لمين؟"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "chunk_id": "81528c358a17130a639b:0:0:f3264d9f9c13",
+          "score": 0.603904,
+          "source_url": "https://web.vodafone.com.eg/ar/flex-365",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "4eaa1584b128d6f41a4d:0:0:f5fbfc9340e0",
+          "score": 0.597309,
+          "source_url": "https://web.vodafone.com.eg/en/flex-365",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "3b4e3e20aa42f97fb4f9:0:0:8845ff5778d6",
+          "score": 0.588373,
+          "source_url": "https://web.vodafone.com.eg/en/mass365",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "0513aa952a6d7e2611e2:3:0:b780b3d42f82",
+          "score": 0.578183,
+          "source_url": "https://web.vodafone.com.eg/ar/social",
+          "section_path": [
+            "خلق مكان أفضل للعمل من أجل موظفينا ودمج روح فودافون في طرق عملنا اليومية",
+            "Deep Inclusion and Diversity",
+            "International Women’s Day"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "c682982576834699f42c:2:0:a2b979cfcbdf",
+          "score": 0.57139,
+          "source_url": "https://web.vodafone.com.eg/en/5g-roaming",
+          "section_path": [
+            "2. حدد شبكات الهواتف المحمولة."
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "de405ea09dd60012018e:0:0:b630c2659c19",
+          "score": 0.566775,
+          "source_url": "https://web.vodafone.com.eg/en/365-play-now",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "9afbc6e2b81debae88cb:1:0:3779eb7461fc",
+          "score": 0.562554,
+          "source_url": "https://web.vodafone.com.eg/en/mobile-internet-bundles",
+          "section_path": [
+            "Vodafone Internet Bundles",
+            "Frequently asked questions:",
+            "1. What are the New Plus bundles ?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "4ecad22de922452b0b20:3:0:b5b41e72eb30",
+          "score": 0.559957,
+          "source_url": "https://web.vodafone.com.eg/ar/mobile-internet-bundles",
+          "section_path": [
+            "باقات الإنترنت",
+            "الأسئلة الشائعة",
+            "3. باقات Plus بتتجدد كل أد إيه؟"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 10,
+          "chunk_id": "7777f68c7c9962a10ef3:0:0:cb6fbeb732cc",
+          "score": 0.558265,
+          "source_url": "https://web.vodafone.com.eg/en/3ala-7esaby-app",
+          "section_path": null,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "faq-1ce67d8632",
+      "question": "1. What are the New Plus bundles ?",
+      "category": "mined_faq",
+      "language": "en",
+      "latency_ms": 898.747,
+      "metrics": {
+        "HitRate@1": 1.0,
+        "Recall@1": 1.0,
+        "Precision@1": 1.0,
+        "HitRate@3": 1.0,
+        "Recall@3": 1.0,
+        "Precision@3": 0.3333,
+        "HitRate@5": 1.0,
+        "Recall@5": 1.0,
+        "Precision@5": 0.4,
+        "HitRate@10": 1.0,
+        "Recall@10": 1.0,
+        "Precision@10": 0.3,
+        "MRR": 1.0,
+        "nDCG@3": 0.4693,
+        "nDCG@5": 0.6508,
+        "nDCG@10": 0.818
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "9afbc6e2b81debae88cb:4:0:e3a5b2e9d3bb",
+          "score": 0.560913,
+          "source_url": "https://web.vodafone.com.eg/en/mobile-internet-bundles",
+          "section_path": [
+            "Vodafone Internet Bundles",
+            "Frequently asked questions:",
+            "4. Who can enjoy the new Plus Bundles?"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "chunk_id": "f5b3b1a7ffef98128b7f:3:7:d4a988441802",
+          "score": 0.544068,
+          "source_url": "https://web.vodafone.com.eg/en/vodafone-flex",
+          "section_path": [
+            "Vodafone Flex: Flexible Mobile Plans for Calls, Internet & Entertainment",
+            "More information about Flex",
+            "Terms and Conditions"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "b33f90088d08539591fc:0:0:86c15b17a8f6",
+          "score": 0.531726,
+          "source_url": "https://web.vodafone.com.eg/en/100-employees-123",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "f5b3b1a7ffef98128b7f:0:0:2bea6e97cb98",
+          "score": 0.529948,
+          "source_url": "https://web.vodafone.com.eg/en/vodafone-flex",
+          "section_path": [
+            "Vodafone Flex: Flexible Mobile Plans for Calls, Internet & Entertainment",
+            "Flex Bundles Got Bigger & Better"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "9afbc6e2b81debae88cb:1:0:3779eb7461fc",
+          "score": 0.526958,
+          "source_url": "https://web.vodafone.com.eg/en/mobile-internet-bundles",
+          "section_path": [
+            "Vodafone Internet Bundles",
+            "Frequently asked questions:",
+            "1. What are the New Plus bundles ?"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 6,
+          "chunk_id": "9afbc6e2b81debae88cb:3:0:f7df3f1e50d5",
+          "score": 0.52264,
+          "source_url": "https://web.vodafone.com.eg/en/mobile-internet-bundles",
+          "section_path": [
+            "Vodafone Internet Bundles",
+            "Frequently asked questions:",
+            "3. When will the Plus bundles get renewed?"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 7,
+          "chunk_id": "f5b3b1a7ffef98128b7f:3:0:1698d972dafc",
+          "score": 0.517684,
+          "source_url": "https://web.vodafone.com.eg/en/vodafone-flex",
+          "section_path": [
+            "Vodafone Flex: Flexible Mobile Plans for Calls, Internet & Entertainment",
+            "More information about Flex",
+            "Terms and Conditions"
+          ],
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "faq-738adedc15",
+      "question": "5. ايه هي باقات ڤودافون Plus Apps؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "latency_ms": 457.265,
+      "metrics": {
+        "HitRate@1": 1.0,
+        "Recall@1": 1.0,
+        "Precision@1": 1.0,
+        "HitRate@3": 1.0,
+        "Recall@3": 1.0,
+        "Precision@3": 0.3333,
+        "HitRate@5": 1.0,
+        "Recall@5": 1.0,
+        "Precision@5": 0.2,
+        "HitRate@10": 1.0,
+        "Recall@10": 1.0,
+        "Precision@10": 0.1,
+        "MRR": 1.0,
+        "nDCG@3": 1.0,
+        "nDCG@5": 1.0,
+        "nDCG@10": 1.0
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "4ecad22de922452b0b20:4:0:d38f97ad4d5b",
+          "score": 0.603216,
+          "source_url": "https://web.vodafone.com.eg/ar/mobile-internet-bundles",
+          "section_path": [
+            "باقات الإنترنت",
+            "الأسئلة الشائعة",
+            "4. باقات Plus متاحة لمين؟"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "chunk_id": "aadd8d789c6d14d82159:0:0:6c9e4466c7da",
+          "score": 0.571726,
+          "source_url": "https://web.vodafone.com.eg/ar/5g-roaming",
+          "section_path": [
+            "5. قم بتحديد خيار الصوت والبيانات Voice & Data."
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "77653212c4878a12dd3d:3:0:77b92a7a436c",
+          "score": 0.548067,
+          "source_url": "https://web.vodafone.com.eg/ar/engez",
+          "section_path": [
+            "xcver",
+            "شركاء إنجز",
+            "أمان"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "9a052369a6fa7202b695:0:0:798db4b90d56",
+          "score": 0.542123,
+          "source_url": "https://web.vodafone.com.eg/ar/total-communications-main-page",
+          "section_path": [
+            "الحلول"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "bd76e05ac4ddd39f7086:8:0:202f6e5b25b1",
+          "score": 0.519633,
+          "source_url": "https://web.vodafone.com.eg/ar/vodafone-red1",
+          "section_path": [
+            "إستمتع بأجدد الخدمات الترفيهية المقدمة من RED",
+            "اعرف اكتر عن نظام RED",
+            "ازاي ممكن أضيف أفراد للعيلة ؟"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "d910084740d98314f3be:0:0:6bd77bf8b32f",
+          "score": 0.519314,
+          "source_url": "https://web.vodafone.com.eg/ar/businessapp",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "58ed77bd7f48cd2a4059:16:0:2d76286d6707",
+          "score": 0.517215,
+          "source_url": "https://digitalstore.vodafone.com.eg/ar/home",
+          "section_path": [
+            "اكتشف نظام الرد الآلي 010Hotline",
+            "طور شركتك",
+            "ڤودافون بيزنس Digital Store"
+          ],
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "faq-da98a0a891",
+      "question": "2. How can I Subscribe to the Plus Bundles?",
+      "category": "mined_faq",
+      "language": "en",
+      "latency_ms": 1815.216,
+      "metrics": {
+        "HitRate@1": 1.0,
+        "Recall@1": 1.0,
+        "Precision@1": 1.0,
+        "HitRate@3": 1.0,
+        "Recall@3": 1.0,
+        "Precision@3": 0.3333,
+        "HitRate@5": 1.0,
+        "Recall@5": 1.0,
+        "Precision@5": 0.2,
+        "HitRate@10": 1.0,
+        "Recall@10": 1.0,
+        "Precision@10": 0.1,
+        "MRR": 1.0,
+        "nDCG@3": 1.0,
+        "nDCG@5": 1.0,
+        "nDCG@10": 1.0
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "9afbc6e2b81debae88cb:2:0:391c8da240c9",
+          "score": 0.593405,
+          "source_url": "https://web.vodafone.com.eg/en/mobile-internet-bundles",
+          "section_path": [
+            "Vodafone Internet Bundles",
+            "Frequently asked questions:",
+            "2. How can I Subscribe to the Plus Bundles?"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "chunk_id": "492ffd6e2e031a1bc477:3:0:d71dd1c50f79",
+          "score": 0.556791,
+          "source_url": "https://advisory.vodafone.com.eg/knowledge-center?query_topic=money-management&query_subtopic=saving-money&query_page=1",
+          "section_path": [
+            "All articles related with Money Management",
+            "Content type",
+            "Combatting the cost of living: four tips to help businesses save"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "80084180c4e37a8af3bb:1:0:54837cd50b98",
+          "score": 0.556515,
+          "source_url": "https://web.vodafone.com.eg/en/home",
+          "section_path": [
+            "Vodafone Egypt home page",
+            "Flex Bundles Got Bigger & Better"
+          ],
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "faq-cad7627b26",
+      "question": "6. Plus Apps بشتغل أزاي مع عملاء فليكس؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "latency_ms": 981.751,
+      "metrics": {
+        "HitRate@1": 1.0,
+        "Recall@1": 1.0,
+        "Precision@1": 1.0,
+        "HitRate@3": 1.0,
+        "Recall@3": 1.0,
+        "Precision@3": 0.3333,
+        "HitRate@5": 1.0,
+        "Recall@5": 1.0,
+        "Precision@5": 0.2,
+        "HitRate@10": 1.0,
+        "Recall@10": 1.0,
+        "Precision@10": 0.2,
+        "MRR": 1.0,
+        "nDCG@3": 0.6131,
+        "nDCG@5": 0.6131,
+        "nDCG@10": 0.7904
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "4ecad22de922452b0b20:4:0:d38f97ad4d5b",
+          "score": 0.577205,
+          "source_url": "https://web.vodafone.com.eg/ar/mobile-internet-bundles",
+          "section_path": [
+            "باقات الإنترنت",
+            "الأسئلة الشائعة",
+            "4. باقات Plus متاحة لمين؟"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "chunk_id": "77653212c4878a12dd3d:6:0:150c32d7a281",
+          "score": 0.562204,
+          "source_url": "https://web.vodafone.com.eg/ar/engez",
+          "section_path": [
+            "xcver",
+            "شركاء إنجز",
+            "هيلث تاج"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "3c0bd1f66cb84be05cb2:1:0:f0179b58688c",
+          "score": 0.538645,
+          "source_url": "https://web.vodafone.com.eg/en/edu-bundle",
+          "section_path": [
+            "edu_bundle",
+            "FAQs:",
+            "1.What is the “Plus Students” Line?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "9afbc6e2b81debae88cb:4:0:e3a5b2e9d3bb",
+          "score": 0.538503,
+          "source_url": "https://web.vodafone.com.eg/en/mobile-internet-bundles",
+          "section_path": [
+            "Vodafone Internet Bundles",
+            "Frequently asked questions:",
+            "4. Who can enjoy the new Plus Bundles?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "c6caed119975770aee3d:0:4:ff32f69abb99",
+          "score": 0.534818,
+          "source_url": "https://www.vodafone.com.eg/business-flex",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "9afbc6e2b81debae88cb:1:0:3779eb7461fc",
+          "score": 0.52341,
+          "source_url": "https://web.vodafone.com.eg/en/mobile-internet-bundles",
+          "section_path": [
+            "Vodafone Internet Bundles",
+            "Frequently asked questions:",
+            "1. What are the New Plus bundles ?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "6cbf0b9befe28ade6f19:1:0:5af0aa80cd77",
+          "score": 0.522396,
+          "source_url": "https://web.vodafone.com.eg/ar/home-compound",
+          "section_path": [
+            ".",
+            "اكتشف باقات Home Compound",
+            "600 جيجابايت البيانات"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "3c0bd1f66cb84be05cb2:7:0:0895eee2b0b4",
+          "score": 0.515381,
+          "source_url": "https://web.vodafone.com.eg/en/edu-bundle",
+          "section_path": [
+            "edu_bundle",
+            "FAQs:",
+            "8.Can I use the bundle quota on any website?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "8cf906c3d5d66410386b:4:0:dd74a35955da",
+          "score": 0.515337,
+          "source_url": "https://web.vodafone.com.eg/en/%D8%A7%D9%84%D9%82%D8%B7%D8%A7%D8%B9-%D8%A7%D9%84%D8%B9%D8%A7%D9%85-%D9%84%D9%84%D8%A3%D8%B9%D9%85%D8%A7%D9%84",
+          "section_path": [
+            "الصفحه الرئيسية لڤودافون مصر",
+            "افتح حساب ڤودافون بيزنس",
+            "باقات بلس بزنس"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 10,
+          "chunk_id": "4ecad22de922452b0b20:3:0:b5b41e72eb30",
+          "score": 0.513702,
+          "source_url": "https://web.vodafone.com.eg/ar/mobile-internet-bundles",
+          "section_path": [
+            "باقات الإنترنت",
+            "الأسئلة الشائعة",
+            "3. باقات Plus بتتجدد كل أد إيه؟"
+          ],
+          "relevant": true
+        }
+      ]
+    },
+    {
+      "id": "faq-d8eeca83f5",
+      "question": "3. When will the Plus bundles get renewed?",
+      "category": "mined_faq",
+      "language": "en",
+      "latency_ms": 536.189,
+      "metrics": {
+        "HitRate@1": 1.0,
+        "Recall@1": 1.0,
+        "Precision@1": 1.0,
+        "HitRate@3": 1.0,
+        "Recall@3": 1.0,
+        "Precision@3": 1.0,
+        "HitRate@5": 1.0,
+        "Recall@5": 1.0,
+        "Precision@5": 0.6,
+        "HitRate@10": 1.0,
+        "Recall@10": 1.0,
+        "Precision@10": 0.3,
+        "MRR": 1.0,
+        "nDCG@3": 1.0,
+        "nDCG@5": 1.0,
+        "nDCG@10": 1.0
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "9afbc6e2b81debae88cb:1:0:3779eb7461fc",
+          "score": 0.613999,
+          "source_url": "https://web.vodafone.com.eg/en/mobile-internet-bundles",
+          "section_path": [
+            "Vodafone Internet Bundles",
+            "Frequently asked questions:",
+            "1. What are the New Plus bundles ?"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "chunk_id": "9afbc6e2b81debae88cb:3:0:f7df3f1e50d5",
+          "score": 0.598356,
+          "source_url": "https://web.vodafone.com.eg/en/mobile-internet-bundles",
+          "section_path": [
+            "Vodafone Internet Bundles",
+            "Frequently asked questions:",
+            "3. When will the Plus bundles get renewed?"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 3,
+          "chunk_id": "9afbc6e2b81debae88cb:4:0:e3a5b2e9d3bb",
+          "score": 0.569248,
+          "source_url": "https://web.vodafone.com.eg/en/mobile-internet-bundles",
+          "section_path": [
+            "Vodafone Internet Bundles",
+            "Frequently asked questions:",
+            "4. Who can enjoy the new Plus Bundles?"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 4,
+          "chunk_id": "81528c358a17130a639b:0:0:f3264d9f9c13",
+          "score": 0.567447,
+          "source_url": "https://web.vodafone.com.eg/ar/flex-365",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "4eaa1584b128d6f41a4d:0:0:f5fbfc9340e0",
+          "score": 0.557586,
+          "source_url": "https://web.vodafone.com.eg/en/flex-365",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "f5b3b1a7ffef98128b7f:3:7:d4a988441802",
+          "score": 0.551185,
+          "source_url": "https://web.vodafone.com.eg/en/vodafone-flex",
+          "section_path": [
+            "Vodafone Flex: Flexible Mobile Plans for Calls, Internet & Entertainment",
+            "More information about Flex",
+            "Terms and Conditions"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "de405ea09dd60012018e:0:0:b630c2659c19",
+          "score": 0.549509,
+          "source_url": "https://web.vodafone.com.eg/en/365-play-now",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "3b4e3e20aa42f97fb4f9:0:0:8845ff5778d6",
+          "score": 0.549292,
+          "source_url": "https://web.vodafone.com.eg/en/mass365",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "3c0bd1f66cb84be05cb2:5:0:69041d75b7f4",
+          "score": 0.534613,
+          "source_url": "https://web.vodafone.com.eg/en/edu-bundle",
+          "section_path": [
+            "edu_bundle",
+            "FAQs:",
+            "6.How do I renew the bundle or check my consumption?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 10,
+          "chunk_id": "f5b3b1a7ffef98128b7f:3:6:5e651939df68",
+          "score": 0.523899,
+          "source_url": "https://web.vodafone.com.eg/en/vodafone-flex",
+          "section_path": [
+            "Vodafone Flex: Flexible Mobile Plans for Calls, Internet & Entertainment",
+            "More information about Flex",
+            "Terms and Conditions"
+          ],
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "faq-c4397d1d50",
+      "question": "7. Plus Apps بشتغل أزاي مع عملاء الكارت؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "latency_ms": 489.654,
+      "metrics": {
+        "HitRate@1": 1.0,
+        "Recall@1": 1.0,
+        "Precision@1": 1.0,
+        "HitRate@3": 1.0,
+        "Recall@3": 1.0,
+        "Precision@3": 0.6667,
+        "HitRate@5": 1.0,
+        "Recall@5": 1.0,
+        "Precision@5": 0.4,
+        "HitRate@10": 1.0,
+        "Recall@10": 1.0,
+        "Precision@10": 0.2,
+        "MRR": 1.0,
+        "nDCG@3": 1.0,
+        "nDCG@5": 1.0,
+        "nDCG@10": 1.0
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "4ecad22de922452b0b20:4:0:d38f97ad4d5b",
+          "score": 0.555903,
+          "source_url": "https://web.vodafone.com.eg/ar/mobile-internet-bundles",
+          "section_path": [
+            "باقات الإنترنت",
+            "الأسئلة الشائعة",
+            "4. باقات Plus متاحة لمين؟"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "chunk_id": "4ecad22de922452b0b20:3:0:b5b41e72eb30",
+          "score": 0.524033,
+          "source_url": "https://web.vodafone.com.eg/ar/mobile-internet-bundles",
+          "section_path": [
+            "باقات الإنترنت",
+            "الأسئلة الشائعة",
+            "3. باقات Plus بتتجدد كل أد إيه؟"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 3,
+          "chunk_id": "9afbc6e2b81debae88cb:4:0:e3a5b2e9d3bb",
+          "score": 0.521825,
+          "source_url": "https://web.vodafone.com.eg/en/mobile-internet-bundles",
+          "section_path": [
+            "Vodafone Internet Bundles",
+            "Frequently asked questions:",
+            "4. Who can enjoy the new Plus Bundles?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "3c0bd1f66cb84be05cb2:1:0:f0179b58688c",
+          "score": 0.518491,
+          "source_url": "https://web.vodafone.com.eg/en/edu-bundle",
+          "section_path": [
+            "edu_bundle",
+            "FAQs:",
+            "1.What is the “Plus Students” Line?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "8cf906c3d5d66410386b:4:0:dd74a35955da",
+          "score": 0.514134,
+          "source_url": "https://web.vodafone.com.eg/en/%D8%A7%D9%84%D9%82%D8%B7%D8%A7%D8%B9-%D8%A7%D9%84%D8%B9%D8%A7%D9%85-%D9%84%D9%84%D8%A3%D8%B9%D9%85%D8%A7%D9%84",
+          "section_path": [
+            "الصفحه الرئيسية لڤودافون مصر",
+            "افتح حساب ڤودافون بيزنس",
+            "باقات بلس بزنس"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "3c0bd1f66cb84be05cb2:7:0:0895eee2b0b4",
+          "score": 0.508045,
+          "source_url": "https://web.vodafone.com.eg/en/edu-bundle",
+          "section_path": [
+            "edu_bundle",
+            "FAQs:",
+            "8.Can I use the bundle quota on any website?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "9afbc6e2b81debae88cb:1:0:3779eb7461fc",
+          "score": 0.505825,
+          "source_url": "https://web.vodafone.com.eg/en/mobile-internet-bundles",
+          "section_path": [
+            "Vodafone Internet Bundles",
+            "Frequently asked questions:",
+            "1. What are the New Plus bundles ?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "b5fa197f5e7e9fa21887:3:2:20c4e0e04798",
+          "score": 0.505423,
+          "source_url": "https://advisory.vodafone.com.eg/knowledge-center/how-to-help-protect-against-billing-and-invoice-fraud",
+          "section_path": [
+            "How to help protect against billing and invoice fraud",
+            "What’s the most effective way to prevent fraud?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "bce38ff3d3b4092b4097:1:7:5ede00557b91",
+          "score": 0.502921,
+          "source_url": "https://advisory.vodafone.com.eg/knowledge-center/this-is-what-an-app-offers-to-keep-customers-coming-back",
+          "section_path": [
+            "This is what an app offers to keep customers coming back",
+            "Here’s a breakdown of what an app can offer your business",
+            "What can an app offer your business?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 10,
+          "chunk_id": "9afbc6e2b81debae88cb:3:0:f7df3f1e50d5",
+          "score": 0.496599,
+          "source_url": "https://web.vodafone.com.eg/en/mobile-internet-bundles",
+          "section_path": [
+            "Vodafone Internet Bundles",
+            "Frequently asked questions:",
+            "3. When will the Plus bundles get renewed?"
+          ],
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "faq-4d3edf4d97",
+      "question": "5. What is Vodafone Plus Apps?",
+      "category": "mined_faq",
+      "language": "en",
+      "latency_ms": 511.483,
+      "metrics": {
+        "HitRate@1": 0.0,
+        "Recall@1": 0.0,
+        "Precision@1": 0.0,
+        "HitRate@3": 0.0,
+        "Recall@3": 0.0,
+        "Precision@3": 0.0,
+        "HitRate@5": 0.0,
+        "Recall@5": 0.0,
+        "Precision@5": 0.0,
+        "HitRate@10": 1.0,
+        "Recall@10": 1.0,
+        "Precision@10": 0.1,
+        "MRR": 0.1667,
+        "nDCG@3": 0.0,
+        "nDCG@5": 0.0,
+        "nDCG@10": 0.3562
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "aadd8d789c6d14d82159:0:0:6c9e4466c7da",
+          "score": 0.577198,
+          "source_url": "https://web.vodafone.com.eg/ar/5g-roaming",
+          "section_path": [
+            "5. قم بتحديد خيار الصوت والبيانات Voice & Data."
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "chunk_id": "fd5d94987829102beb35:0:0:5d0f809067f4",
+          "score": 0.56458,
+          "source_url": "https://web.vodafone.com.eg/en/network-locations",
+          "section_path": [
+            "H1"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "77653212c4878a12dd3d:3:0:77b92a7a436c",
+          "score": 0.541393,
+          "source_url": "https://web.vodafone.com.eg/ar/engez",
+          "section_path": [
+            "xcver",
+            "شركاء إنجز",
+            "أمان"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "c6caed119975770aee3d:0:2:be659c1783e2",
+          "score": 0.533651,
+          "source_url": "https://www.vodafone.com.eg/business-flex",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "4ecad22de922452b0b20:4:0:d38f97ad4d5b",
+          "score": 0.533591,
+          "source_url": "https://web.vodafone.com.eg/ar/mobile-internet-bundles",
+          "section_path": [
+            "باقات الإنترنت",
+            "الأسئلة الشائعة",
+            "4. باقات Plus متاحة لمين؟"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "9afbc6e2b81debae88cb:4:0:e3a5b2e9d3bb",
+          "score": 0.531086,
+          "source_url": "https://web.vodafone.com.eg/en/mobile-internet-bundles",
+          "section_path": [
+            "Vodafone Internet Bundles",
+            "Frequently asked questions:",
+            "4. Who can enjoy the new Plus Bundles?"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 7,
+          "chunk_id": "ed93bbb2c584f3ff2550:0:3:129bb0b3da23",
+          "score": 0.52764,
+          "source_url": "https://web.vodafone.com.eg/business-flex",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "2d1d0476ea9db6e14386:0:0:1a50fd8b8c2d",
+          "score": 0.525492,
+          "source_url": "https://web.vodafone.com.eg/spa/offers",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "34ce2384a3db4fa505d4:1:0:de02662604bc",
+          "score": 0.517451,
+          "source_url": "https://web.vodafone.com.eg/en/governance",
+          "section_path": [
+            "The corporate governance in Vodafone Egypt focuses on long-term business ethics, integrity and legal.",
+            "Covid-19 Response: Ongoing Agility",
+            "More about other comprehensive measures we undertook in the face of COVID-19 can be found in our previous Sustainability Report"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 10,
+          "chunk_id": "8dd5b5054d2aa1f28126:0:0:95ad27ef362c",
+          "score": 0.516654,
+          "source_url": "https://web.vodafone.com.eg/en/summer-promo-2025-tc",
+          "section_path": [
+            "Vodafone Summer 2025",
+            "Terms & Conditions"
+          ],
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "faq-3c9d1d6184",
+      "question": "ايه اللي أقدر أعمله على تطبيق أنا ڤودافون؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "latency_ms": 712.122,
+      "metrics": {
+        "HitRate@1": 0.0,
+        "Recall@1": 0.0,
+        "Precision@1": 0.0,
+        "HitRate@3": 1.0,
+        "Recall@3": 1.0,
+        "Precision@3": 0.6667,
+        "HitRate@5": 1.0,
+        "Recall@5": 1.0,
+        "Precision@5": 0.6,
+        "HitRate@10": 1.0,
+        "Recall@10": 1.0,
+        "Precision@10": 0.3,
+        "MRR": 0.5,
+        "nDCG@3": 0.5307,
+        "nDCG@5": 0.7328,
+        "nDCG@10": 0.7328
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "bd76e05ac4ddd39f7086:8:0:202f6e5b25b1",
+          "score": 0.6602,
+          "source_url": "https://web.vodafone.com.eg/ar/vodafone-red1",
+          "section_path": [
+            "إستمتع بأجدد الخدمات الترفيهية المقدمة من RED",
+            "اعرف اكتر عن نظام RED",
+            "ازاي ممكن أضيف أفراد للعيلة ؟"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "chunk_id": "970e9f34a425734af389:2:0:8d5009d84a08",
+          "score": 0.653695,
+          "source_url": "https://web.vodafone.com.eg/ar/anavodafone",
+          "section_path": [
+            "صفحه تطبيق انا فودافون",
+            "عندك سؤال عن التطبيق؟",
+            "ايه الاجهزة اللي بتدعم تطبيق أنا ڤودافون؟"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 3,
+          "chunk_id": "970e9f34a425734af389:7:0:dd31e4537901",
+          "score": 0.645082,
+          "source_url": "https://web.vodafone.com.eg/ar/anavodafone",
+          "section_path": [
+            "صفحه تطبيق انا فودافون",
+            "عندك سؤال عن التطبيق؟",
+            "عروض"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 4,
+          "chunk_id": "970e9f34a425734af389:3:0:b75887b89234",
+          "score": 0.619746,
+          "source_url": "https://web.vodafone.com.eg/ar/anavodafone",
+          "section_path": [
+            "صفحه تطبيق انا فودافون",
+            "عندك سؤال عن التطبيق؟",
+            "هل أنا ڤودافون تدعم خطط أسعار معينة؟"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 5,
+          "chunk_id": "362f9f5915351af660b9:7:0:514df88c2428",
+          "score": 0.595697,
+          "source_url": "https://web.vodafone.com.eg/ar/vodafone-cash",
+          "section_path": [
+            "إيه هى خدمات ڤودافون كاش الأخرى ؟",
+            "جدد باقتك في أي وقت وفي أي مكان"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "d910084740d98314f3be:0:0:6bd77bf8b32f",
+          "score": 0.594346,
+          "source_url": "https://web.vodafone.com.eg/ar/businessapp",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "8418330175050240ef8e:2:0:2ef13ee89003",
+          "score": 0.57548,
+          "source_url": "https://web.vodafone.com.eg/ar/business-public-sector",
+          "section_path": [
+            "الصفحه الرئيسية لڤودافون مصر",
+            "تطبيق ڤودافون بيزنس"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "da20d5235554922859d2:6:0:954c5d84de95",
+          "score": 0.574602,
+          "source_url": "https://web.vodafone.com.eg/ar/home",
+          "section_path": [
+            "الصفحه الرئيسية لڤودافون مصر",
+            "مكالمات الواي فاي",
+            "خدمات أخرى",
+            "تطبيق أنا ڤودافون"
+          ],
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "faq-bea5d2656a",
+      "question": "6. How does Vodafone Plus Apps work if I am a Flex Customer?",
+      "category": "mined_faq",
+      "language": "en",
+      "latency_ms": 492.47,
+      "metrics": {
+        "HitRate@1": 0.0,
+        "Recall@1": 0.0,
+        "Precision@1": 0.0,
+        "HitRate@3": 0.0,
+        "Recall@3": 0.0,
+        "Precision@3": 0.0,
+        "HitRate@5": 0.0,
+        "Recall@5": 0.0,
+        "Precision@5": 0.0,
+        "HitRate@10": 1.0,
+        "Recall@10": 1.0,
+        "Precision@10": 0.1,
+        "MRR": 0.1667,
+        "nDCG@3": 0.0,
+        "nDCG@5": 0.0,
+        "nDCG@10": 0.3562
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "77653212c4878a12dd3d:6:0:150c32d7a281",
+          "score": 0.569302,
+          "source_url": "https://web.vodafone.com.eg/ar/engez",
+          "section_path": [
+            "xcver",
+            "شركاء إنجز",
+            "هيلث تاج"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "chunk_id": "c6caed119975770aee3d:0:4:ff32f69abb99",
+          "score": 0.564558,
+          "source_url": "https://www.vodafone.com.eg/business-flex",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "f5b3b1a7ffef98128b7f:6:0:0fad282568d0",
+          "score": 0.56225,
+          "source_url": "https://web.vodafone.com.eg/en/vodafone-flex",
+          "section_path": [
+            "Vodafone Flex: Flexible Mobile Plans for Calls, Internet & Entertainment",
+            "More information about Flex",
+            "Flexaweya Discounts"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "b0ecfbf83f45e49672e6:7:0:06a627c902d6",
+          "score": 0.55927,
+          "source_url": "https://web.vodafone.com.eg/en/vodafone-cash",
+          "section_path": [
+            "What are VF Cash services?",
+            "Renew your bundle anytime anywhere"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "c6caed119975770aee3d:0:9:0faecd30aaa0",
+          "score": 0.554788,
+          "source_url": "https://www.vodafone.com.eg/business-flex",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "9afbc6e2b81debae88cb:4:0:e3a5b2e9d3bb",
+          "score": 0.549055,
+          "source_url": "https://web.vodafone.com.eg/en/mobile-internet-bundles",
+          "section_path": [
+            "Vodafone Internet Bundles",
+            "Frequently asked questions:",
+            "4. Who can enjoy the new Plus Bundles?"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 7,
+          "chunk_id": "c6caed119975770aee3d:0:8:9dd0e879d164",
+          "score": 0.547115,
+          "source_url": "https://www.vodafone.com.eg/business-flex",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "6cbf0b9befe28ade6f19:1:0:5af0aa80cd77",
+          "score": 0.546185,
+          "source_url": "https://web.vodafone.com.eg/ar/home-compound",
+          "section_path": [
+            ".",
+            "اكتشف باقات Home Compound",
+            "600 جيجابايت البيانات"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "76a02807d50f1afa1d11:0:4:0143669b1fb2",
+          "score": 0.545182,
+          "source_url": "https://web.vodafone.com.eg/en/mother-day-discounts",
+          "section_path": [
+            "Mother's Day Discounts",
+            "Get up to 20% discount when you pay with Vodafone Cash on our Partners’ websites"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 10,
+          "chunk_id": "33315ba3c61215ba1af7:2:0:63646d4c6f81",
+          "score": 0.545097,
+          "source_url": "https://web.vodafone.com.eg/en/business",
+          "section_path": [
+            "Vodafone Egypt home page",
+            "Vodafone Business App"
+          ],
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "faq-b31c479c72",
+      "question": "ايه الاجهزة اللي بتدعم تطبيق أنا ڤودافون؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "latency_ms": 570.171,
+      "metrics": {
+        "HitRate@1": 1.0,
+        "Recall@1": 1.0,
+        "Precision@1": 1.0,
+        "HitRate@3": 1.0,
+        "Recall@3": 1.0,
+        "Precision@3": 0.6667,
+        "HitRate@5": 1.0,
+        "Recall@5": 1.0,
+        "Precision@5": 0.6,
+        "HitRate@10": 1.0,
+        "Recall@10": 1.0,
+        "Precision@10": 0.3,
+        "MRR": 1.0,
+        "nDCG@3": 0.7039,
+        "nDCG@5": 0.906,
+        "nDCG@10": 0.906
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "970e9f34a425734af389:2:0:8d5009d84a08",
+          "score": 0.656216,
+          "source_url": "https://web.vodafone.com.eg/ar/anavodafone",
+          "section_path": [
+            "صفحه تطبيق انا فودافون",
+            "عندك سؤال عن التطبيق؟",
+            "ايه الاجهزة اللي بتدعم تطبيق أنا ڤودافون؟"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "chunk_id": "bd76e05ac4ddd39f7086:8:0:202f6e5b25b1",
+          "score": 0.654243,
+          "source_url": "https://web.vodafone.com.eg/ar/vodafone-red1",
+          "section_path": [
+            "إستمتع بأجدد الخدمات الترفيهية المقدمة من RED",
+            "اعرف اكتر عن نظام RED",
+            "ازاي ممكن أضيف أفراد للعيلة ؟"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "970e9f34a425734af389:3:0:b75887b89234",
+          "score": 0.629694,
+          "source_url": "https://web.vodafone.com.eg/ar/anavodafone",
+          "section_path": [
+            "صفحه تطبيق انا فودافون",
+            "عندك سؤال عن التطبيق؟",
+            "هل أنا ڤودافون تدعم خطط أسعار معينة؟"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 4,
+          "chunk_id": "970e9f34a425734af389:7:0:dd31e4537901",
+          "score": 0.624033,
+          "source_url": "https://web.vodafone.com.eg/ar/anavodafone",
+          "section_path": [
+            "صفحه تطبيق انا فودافون",
+            "عندك سؤال عن التطبيق؟",
+            "عروض"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 5,
+          "chunk_id": "d910084740d98314f3be:0:0:6bd77bf8b32f",
+          "score": 0.619741,
+          "source_url": "https://web.vodafone.com.eg/ar/businessapp",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "bd76e05ac4ddd39f7086:0:0:bd8a3137a232",
+          "score": 0.558898,
+          "source_url": "https://web.vodafone.com.eg/ar/vodafone-red1",
+          "section_path": [
+            "إستمتع بأجدد الخدمات الترفيهية المقدمة من RED",
+            "أهلا بيك في عالم RED"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "8418330175050240ef8e:2:0:2ef13ee89003",
+          "score": 0.556039,
+          "source_url": "https://web.vodafone.com.eg/ar/business-public-sector",
+          "section_path": [
+            "الصفحه الرئيسية لڤودافون مصر",
+            "تطبيق ڤودافون بيزنس"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "d76fd2132ef3a70557e3:0:0:0f066ada5852",
+          "score": 0.5513,
+          "source_url": "https://web.vodafone.com.eg/ar/red-business-deals",
+          "section_path": [
+            "مع بيزنس ديلز استمتع بأقوى العروض و الخصومات من اكبر المحلات فى مصر من مطاعم و محلات ملابس و الكترونيات و اكتر كتير."
+          ],
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "faq-7f16158dbd",
+      "question": "7. How does Vodafone Plus Apps work if I am a Prepaid Customer?",
+      "category": "mined_faq",
+      "language": "en",
+      "latency_ms": 548.77,
+      "metrics": {
+        "HitRate@1": 0.0,
+        "Recall@1": 0.0,
+        "Precision@1": 0.0,
+        "HitRate@3": 0.0,
+        "Recall@3": 0.0,
+        "Precision@3": 0.0,
+        "HitRate@5": 0.0,
+        "Recall@5": 0.0,
+        "Precision@5": 0.0,
+        "HitRate@10": 0.0,
+        "Recall@10": 0.0,
+        "Precision@10": 0.0,
+        "MRR": 0.0,
+        "nDCG@3": 0.0,
+        "nDCG@5": 0.0,
+        "nDCG@10": 0.0
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "76a02807d50f1afa1d11:0:4:0143669b1fb2",
+          "score": 0.56119,
+          "source_url": "https://web.vodafone.com.eg/en/mother-day-discounts",
+          "section_path": [
+            "Mother's Day Discounts",
+            "Get up to 20% discount when you pay with Vodafone Cash on our Partners’ websites"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "chunk_id": "9599ce6647bb8f446fd2:1:0:a91bccd08384",
+          "score": 0.558013,
+          "source_url": "https://web.vodafone.com.eg/en/installments-and-utilites-offer",
+          "section_path": [
+            "Privacy Policy Of Vodafone",
+            "Thank you for all the times ahead",
+            "Terms and Conditions"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "c6caed119975770aee3d:0:8:9dd0e879d164",
+          "score": 0.552125,
+          "source_url": "https://www.vodafone.com.eg/business-flex",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "c6caed119975770aee3d:0:9:0faecd30aaa0",
+          "score": 0.549086,
+          "source_url": "https://www.vodafone.com.eg/business-flex",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "c6caed119975770aee3d:0:7:e975d5075f39",
+          "score": 0.548839,
+          "source_url": "https://www.vodafone.com.eg/business-flex",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "ae5ebcd99d41b789fba2:7:0:0a2eff7c4c6a",
+          "score": 0.54678,
+          "source_url": "https://web.vodafone.com.eg/en/vodafone-red1",
+          "section_path": [
+            "Enjoy the Latest Entertainment Apps in the Market that Fit your Needs",
+            "Still Wondering? We thought you might still have questions",
+            "How do I migrate to the new RED ?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "339ffc6724a7b02c9b05:0:0:2a92601ae5a5",
+          "score": 0.544666,
+          "source_url": "https://web.vodafone.com.eg/en/bein-new",
+          "section_path": [
+            "Vodafone Plus beIN CONNECT",
+            "Max out on the number 1 Internet Destination!"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "7be9d36210b76c794d84:2:0:66fa0db0d65c",
+          "score": 0.543486,
+          "source_url": "https://web.vodafone.com.eg/en/latest-news-2017",
+          "section_path": [
+            "Latest News",
+            "Vodafone collaborates with Youm7 to create new exciting services for “Business” customers"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "ed93bbb2c584f3ff2550:0:8:6c69ffc6ca88",
+          "score": 0.542676,
+          "source_url": "https://web.vodafone.com.eg/business-flex",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 10,
+          "chunk_id": "f5f9586e3f989f9c11e2:8:0:c6bf9e938722",
+          "score": 0.541983,
+          "source_url": "https://web.vodafone.com.eg/en/ramadan",
+          "section_path": [
+            "Watch it & Yango Play for Free | Vodafone Ramadan 2026",
+            "Ramadan Plus Bundles"
+          ],
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "faq-ccfa6408ce",
+      "question": "هل أنا ڤودافون تدعم خطط أسعار معينة؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "latency_ms": 682.057,
+      "metrics": {
+        "HitRate@1": 0.0,
+        "Recall@1": 0.0,
+        "Precision@1": 0.0,
+        "HitRate@3": 1.0,
+        "Recall@3": 1.0,
+        "Precision@3": 0.3333,
+        "HitRate@5": 1.0,
+        "Recall@5": 1.0,
+        "Precision@5": 0.2,
+        "HitRate@10": 1.0,
+        "Recall@10": 1.0,
+        "Precision@10": 0.2,
+        "MRR": 0.5,
+        "nDCG@3": 0.3869,
+        "nDCG@5": 0.3869,
+        "nDCG@10": 0.5912
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "0513aa952a6d7e2611e2:35:0:f14bf65c1b88",
+          "score": 0.673736,
+          "source_url": "https://web.vodafone.com.eg/ar/social",
+          "section_path": [
+            "خلق مكان أفضل للعمل من أجل موظفينا ودمج روح فودافون في طرق عملنا اليومية",
+            "Awards",
+            "خطط أسعار ڤودافون"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "chunk_id": "970e9f34a425734af389:3:0:b75887b89234",
+          "score": 0.653321,
+          "source_url": "https://web.vodafone.com.eg/ar/anavodafone",
+          "section_path": [
+            "صفحه تطبيق انا فودافون",
+            "عندك سؤال عن التطبيق؟",
+            "هل أنا ڤودافون تدعم خطط أسعار معينة؟"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 3,
+          "chunk_id": "da20d5235554922859d2:3:0:ec4c27c1bab4",
+          "score": 0.648476,
+          "source_url": "https://web.vodafone.com.eg/ar/home",
+          "section_path": [
+            "الصفحه الرئيسية لڤودافون مصر",
+            "مكالمات الواي فاي",
+            "خطط أسعار ڤودافون"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "4fb522d6965140ef8e24:1:0:adbfd6ad2eae",
+          "score": 0.633364,
+          "source_url": "https://web.vodafone.com.eg/ar/ana-vodafone-hidden",
+          "section_path": [
+            "أنا ڤودافون .. أنجز!"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "796b9362a47cff5c7502:9:0:9a5f72ddd577",
+          "score": 0.626002,
+          "source_url": "https://web.vodafone.com.eg/ar/328",
+          "section_path": [
+            "الشركة المصرية للتتبع وفودافون يطلقا خدمة تتبع السيارات للشركات والأفراد",
+            "المهندس /حاتم دويدار : نفخر بتقديم الخدمات المتميزة للسوق المصري ونعمل على توظيف تكنولوجيا المحمول لتلبية احتياجات العملاء",
+            "فودافون تقيم عرضا خاصا لأحدث أفلام سوبر مان"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "4ecad22de922452b0b20:9:0:0ee472ad0071",
+          "score": 0.610451,
+          "source_url": "https://web.vodafone.com.eg/ar/mobile-internet-bundles",
+          "section_path": [
+            "باقات الإنترنت",
+            "MI Bundles",
+            "خدمات ال Wifi"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "970e9f34a425734af389:7:0:dd31e4537901",
+          "score": 0.602542,
+          "source_url": "https://web.vodafone.com.eg/ar/anavodafone",
+          "section_path": [
+            "صفحه تطبيق انا فودافون",
+            "عندك سؤال عن التطبيق؟",
+            "عروض"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 8,
+          "chunk_id": "4ce57bb85490e9ed60a0:0:0:da6ac75e35f1",
+          "score": 0.602016,
+          "source_url": "https://web.vodafone.com.eg/ar/vodafone-rate-plans",
+          "section_path": [
+            "خطط اسعار ڤودافون",
+            "خطط الأسعار",
+            "ڤودافون Red"
+          ],
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "faq-fea901481e",
+      "question": "8. What is Vodafone Plus Play?",
+      "category": "mined_faq",
+      "language": "en",
+      "latency_ms": 643.898,
+      "metrics": {
+        "HitRate@1": 0.0,
+        "Recall@1": 0.0,
+        "Precision@1": 0.0,
+        "HitRate@3": 1.0,
+        "Recall@3": 1.0,
+        "Precision@3": 0.3333,
+        "HitRate@5": 1.0,
+        "Recall@5": 1.0,
+        "Precision@5": 0.2,
+        "HitRate@10": 1.0,
+        "Recall@10": 1.0,
+        "Precision@10": 0.1,
+        "MRR": 0.5,
+        "nDCG@3": 0.6309,
+        "nDCG@5": 0.6309,
+        "nDCG@10": 0.6309
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "6cbf0b9befe28ade6f19:2:0:a9172d6a1737",
+          "score": 0.531611,
+          "source_url": "https://web.vodafone.com.eg/ar/home-compound",
+          "section_path": [
+            ".",
+            "اكتشف باقات Home Compound",
+            "700 جيجابايت البيانات"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "chunk_id": "9afbc6e2b81debae88cb:4:0:e3a5b2e9d3bb",
+          "score": 0.530206,
+          "source_url": "https://web.vodafone.com.eg/en/mobile-internet-bundles",
+          "section_path": [
+            "Vodafone Internet Bundles",
+            "Frequently asked questions:",
+            "4. Who can enjoy the new Plus Bundles?"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 3,
+          "chunk_id": "339ffc6724a7b02c9b05:0:0:2a92601ae5a5",
+          "score": 0.527527,
+          "source_url": "https://web.vodafone.com.eg/en/bein-new",
+          "section_path": [
+            "Vodafone Plus beIN CONNECT",
+            "Max out on the number 1 Internet Destination!"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "4ecad22de922452b0b20:4:0:d38f97ad4d5b",
+          "score": 0.510268,
+          "source_url": "https://web.vodafone.com.eg/ar/mobile-internet-bundles",
+          "section_path": [
+            "باقات الإنترنت",
+            "الأسئلة الشائعة",
+            "4. باقات Plus متاحة لمين؟"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "08be191fa9a2c69cb171:14:0:818831aaeb80",
+          "score": 0.48437,
+          "source_url": "https://digitalstore.vodafone.com.eg/en/home",
+          "section_path": [
+            "Discover 010Hotline IVR",
+            "Boost Your Business"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "11210646710ded5cea4f:0:0:def6d459e06d",
+          "score": 0.483244,
+          "source_url": "https://web.vodafone.com.eg/en/header1121page",
+          "section_path": null,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "faq-e021ac7d65",
+      "question": "هل يمكنني اقتراح أفكار للمساعدة في تطوير أنا ڤودافون؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "latency_ms": 454.02,
+      "metrics": {
+        "HitRate@1": 0.0,
+        "Recall@1": 0.0,
+        "Precision@1": 0.0,
+        "HitRate@3": 0.0,
+        "Recall@3": 0.0,
+        "Precision@3": 0.0,
+        "HitRate@5": 1.0,
+        "Recall@5": 1.0,
+        "Precision@5": 0.2,
+        "HitRate@10": 1.0,
+        "Recall@10": 1.0,
+        "Precision@10": 0.1,
+        "MRR": 0.25,
+        "nDCG@3": 0.0,
+        "nDCG@5": 0.4307,
+        "nDCG@10": 0.4307
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "3d8c62087443feb296ee:0:0:33edec895633",
+          "score": 0.561805,
+          "source_url": "https://digitalstore.vodafone.com.eg/portal/ar/accounts-security",
+          "section_path": [
+            "مرحبا بك في ڤودافون بيزنس"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "chunk_id": "bd76e05ac4ddd39f7086:8:0:202f6e5b25b1",
+          "score": 0.559275,
+          "source_url": "https://web.vodafone.com.eg/ar/vodafone-red1",
+          "section_path": [
+            "إستمتع بأجدد الخدمات الترفيهية المقدمة من RED",
+            "اعرف اكتر عن نظام RED",
+            "ازاي ممكن أضيف أفراد للعيلة ؟"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "da20d5235554922859d2:6:0:954c5d84de95",
+          "score": 0.549667,
+          "source_url": "https://web.vodafone.com.eg/ar/home",
+          "section_path": [
+            "الصفحه الرئيسية لڤودافون مصر",
+            "مكالمات الواي فاي",
+            "خدمات أخرى",
+            "تطبيق أنا ڤودافون"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "970e9f34a425734af389:7:0:dd31e4537901",
+          "score": 0.541674,
+          "source_url": "https://web.vodafone.com.eg/ar/anavodafone",
+          "section_path": [
+            "صفحه تطبيق انا فودافون",
+            "عندك سؤال عن التطبيق؟",
+            "عروض"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 5,
+          "chunk_id": "362f9f5915351af660b9:7:0:514df88c2428",
+          "score": 0.539897,
+          "source_url": "https://web.vodafone.com.eg/ar/vodafone-cash",
+          "section_path": [
+            "إيه هى خدمات ڤودافون كاش الأخرى ؟",
+            "جدد باقتك في أي وقت وفي أي مكان"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "58ed77bd7f48cd2a4059:24:0:1bd1a3623771",
+          "score": 0.53569,
+          "source_url": "https://digitalstore.vodafone.com.eg/ar/home",
+          "section_path": [
+            "هل تحتاج إلى مساعدة؟"
+          ],
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "faq-915333c9d3",
+      "question": "I don’t have good 4G network in the house?",
+      "category": "mined_faq",
+      "language": "en",
+      "latency_ms": 885.374,
+      "metrics": {
+        "HitRate@1": 1.0,
+        "Recall@1": 1.0,
+        "Precision@1": 1.0,
+        "HitRate@3": 1.0,
+        "Recall@3": 1.0,
+        "Precision@3": 0.3333,
+        "HitRate@5": 1.0,
+        "Recall@5": 1.0,
+        "Precision@5": 0.2,
+        "HitRate@10": 1.0,
+        "Recall@10": 1.0,
+        "Precision@10": 0.1,
+        "MRR": 1.0,
+        "nDCG@3": 1.0,
+        "nDCG@5": 1.0,
+        "nDCG@10": 1.0
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "289d481fe585e18124d8:7:0:6682cf10288c",
+          "score": 0.547527,
+          "source_url": "https://web.vodafone.com.eg/en/wireless-net",
+          "section_path": [
+            "More details",
+            "I don’t have good 4G network in the house?"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "chunk_id": "df3ecf3932d52a037145:7:0:9412727d3ab9",
+          "score": 0.524297,
+          "source_url": "https://web.vodafone.com.eg/en/sme",
+          "section_path": [
+            "Vodafone Egypt home page",
+            "Open a Vodafone Business Account",
+            "Office 4G"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "33315ba3c61215ba1af7:6:0:9a1ebd64041b",
+          "score": 0.513494,
+          "source_url": "https://web.vodafone.com.eg/en/business",
+          "section_path": [
+            "Vodafone Egypt home page",
+            "Open a Vodafone Business Account",
+            "IOT"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "bc76a95d246c72cb82d5:0:0:4b50da64b73a",
+          "score": 0.512329,
+          "source_url": "https://web.vodafone.com.eg/en/4g-promo",
+          "section_path": [
+            "4G-promo"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "7a281966850aa21ff076:0:0:e6134a2ae41e",
+          "score": 0.508243,
+          "source_url": "https://web.vodafone.com.eg/en/664",
+          "section_path": [
+            "Forbidden"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "6618032610e8027ae1f7:0:0:1e6148f6b647",
+          "score": 0.484516,
+          "source_url": "https://web.vodafone.com.eg/ar/4g-promo",
+          "section_path": [
+            "4G-promo"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "d20daf0e94541e25bdd5:1:0:31e7e8f5a33d",
+          "score": 0.477254,
+          "source_url": "https://web.vodafone.com.eg/en/wifi-calling",
+          "section_path": [
+            "H1",
+            "Is Wi-Fi Calling compatible with all mobile phones?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "127099e2f5701effafb2:7:0:d00bee2569a7",
+          "score": 0.475341,
+          "source_url": "https://web.vodafone.com.eg/wireless-net",
+          "section_path": [
+            "مزيد من التفاصيل",
+            "الشبكة عندي ضعيفة؟"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "2df77b340578a11b5eca:8:0:b6fd218f6755",
+          "score": 0.471691,
+          "source_url": "https://www.vodafone.com.eg/ar/sustainability-report-2023",
+          "section_path": [
+            "Vodafone Egypt Sustainability Report Leading ESG for an Inclusive Digital Egypt",
+            "الملخص التنفيذي",
+            "3.9 ألف محطة تغطية"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 10,
+          "chunk_id": "d934f7d4f0b390073a4c:1:0:308eb9dc43e5",
+          "score": 0.468043,
+          "source_url": "https://advisory.vodafone.com.eg/advice",
+          "section_path": [
+            "Digital communication",
+            "What can we help you with?"
+          ],
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "faq-02684db567",
+      "question": "كيف تستخدم سياسة الخصوصية وسياسة ملفات تعريف الارتباط ؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "latency_ms": 531.651,
+      "metrics": {
+        "HitRate@1": 1.0,
+        "Recall@1": 1.0,
+        "Precision@1": 1.0,
+        "HitRate@3": 1.0,
+        "Recall@3": 1.0,
+        "Precision@3": 0.3333,
+        "HitRate@5": 1.0,
+        "Recall@5": 1.0,
+        "Precision@5": 0.4,
+        "HitRate@10": 1.0,
+        "Recall@10": 1.0,
+        "Precision@10": 0.2,
+        "MRR": 1.0,
+        "nDCG@3": 0.6131,
+        "nDCG@5": 0.8772,
+        "nDCG@10": 0.8772
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "4a9d6457b6c292c548e0:1:0:548873a98d05",
+          "score": 0.583214,
+          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
+          "section_path": [
+            "اشعار الخصوصية",
+            "أنت في آمان",
+            "كيف تستخدم سياسة الخصوصية وسياسة ملفات تعريف الارتباط ؟"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "chunk_id": "0cace964fcdc61cafcff:1:0:c60035426578",
+          "score": 0.565839,
+          "source_url": "https://web.vodafone.com.eg/en/privacy-policy-of-vodafone-egypt",
+          "section_path": [
+            "Privacy Notice",
+            "You are secured",
+            "How to use this privacy and cookies policy?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "0cace964fcdc61cafcff:12:5:0f9a96aebc89",
+          "score": 0.531112,
+          "source_url": "https://web.vodafone.com.eg/en/privacy-policy-of-vodafone-egypt",
+          "section_path": [
+            "Privacy Notice",
+            "You are secured",
+            "How do we use cookies?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "4a9d6457b6c292c548e0:12:0:c8476c39b7c2",
+          "score": 0.524366,
+          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
+          "section_path": [
+            "اشعار الخصوصية",
+            "أنت في آمان",
+            "كيف نستخدم ملفات تعريف الارتباط؟"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 5,
+          "chunk_id": "0cace964fcdc61cafcff:12:18:aa2c5c667817",
+          "score": 0.522404,
+          "source_url": "https://web.vodafone.com.eg/en/privacy-policy-of-vodafone-egypt",
+          "section_path": [
+            "Privacy Notice",
+            "You are secured",
+            "How do we use cookies?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "41e9951c3d2c7bb3d9c5:7:0:8c0fd602276b",
+          "score": 0.521024,
+          "source_url": "https://advisory.vodafone.com.eg/ar/knowledge-center?query_topic=customer-strategy",
+          "section_path": [
+            "جميع المقالات المتعلقة ب استراتيجية العملاء",
+            "نوع المحتوى",
+            "أفضل قنوات وسائل التواصل الاجتماعي لتحسين خدمة عملائك"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "dda43173ae543cce92c2:0:0:d02745fbb65e",
+          "score": 0.51827,
+          "source_url": "https://web.vodafone.com.eg/ar/intersitial-nudge",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "46c7d8df90f5850add6a:7:0:83331a9b509e",
+          "score": 0.515262,
+          "source_url": "https://advisory.vodafone.com.eg/knowledge-center?query_topic=customer-strategy",
+          "section_path": [
+            "All articles related with Customer Strategy",
+            "Content type",
+            "The best social media channels to improve your customer service"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "e7c480c35c29c41a12f6:6:0:96074941db07",
+          "score": 0.513951,
+          "source_url": "https://advisory.vodafone.com.eg/ar/knowledge-center/staying-in-tune-with-your-customers-effective-advertising-with-spotifys",
+          "section_path": [
+            "البقاء على اتصال مع عملائك: الإعلان الفعال مع سارة كيفر من شركة Spotify",
+            "مقالات ذات صلة",
+            "جذب الانتباه إليك رغم احتدام المنافسة"
+          ],
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "faq-3f1b6b2642",
+      "question": "How to start using the Router?",
+      "category": "mined_faq",
+      "language": "en",
+      "latency_ms": 1436.627,
+      "metrics": {
+        "HitRate@1": 0.0,
+        "Recall@1": 0.0,
+        "Precision@1": 0.0,
+        "HitRate@3": 0.0,
+        "Recall@3": 0.0,
+        "Precision@3": 0.0,
+        "HitRate@5": 0.0,
+        "Recall@5": 0.0,
+        "Precision@5": 0.0,
+        "HitRate@10": 0.0,
+        "Recall@10": 0.0,
+        "Precision@10": 0.0,
+        "MRR": 0.0,
+        "nDCG@3": 0.0,
+        "nDCG@5": 0.0,
+        "nDCG@10": 0.0
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "ecdaeaaaa20c09ca8cac:3:0:a7a1ed860407",
+          "score": 0.705228,
+          "source_url": "https://web.vodafone.com.eg/en/office-4g",
+          "section_path": [
+            "at-home",
+            "Your new office ready to go with our high speed plug and play Home Wireless internet with no landline required",
+            "Usage Guide"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "chunk_id": "0b0f7ffc46ff4ebc5582:6:0:5cc77dcbba22",
+          "score": 0.563038,
+          "source_url": "https://advisory.vodafone.com.eg/ar/knowledge-center?query_topic=digital-marketing&query_subtopic=social-media-activity&query_page=1",
+          "section_path": [
+            "جميع المقالات المتعلقة ب التسويق الرقمي",
+            "نوع المحتوى",
+            "بناء وجودك الرقمي"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "39769718e261698d671d:7:0:45645f06e3fc",
+          "score": 0.554723,
+          "source_url": "https://advisory.vodafone.com.eg/ar/knowledge-center/getting-heard-above-the-noise",
+          "section_path": [
+            "جذب الانتباه إليك رغم احتدام المنافسة",
+            "مقالات ذات صلة",
+            "بناء وجودك الرقمي"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "7bb5363cf297f904d3d7:5:0:2cdcdf0f82c9",
+          "score": 0.553246,
+          "source_url": "https://advisory.vodafone.com.eg/knowledge-center/the-importance-of-business-networking",
+          "section_path": [
+            "The importance of business networking",
+            "More news and insights",
+            "Three steps to building your own online shop"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "0e07fc1ab39a1ad96459:5:0:6622a83411d1",
+          "score": 0.548694,
+          "source_url": "https://advisory.vodafone.com.eg/ar/knowledge-center/the-importance-of-business-networking",
+          "section_path": [
+            "أهمية شبكة العلاقات لدى الشركات",
+            "مقالات ذات صلة",
+            "ثلاث خطوات لبناء متجرك الإلكتروني"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "127099e2f5701effafb2:2:0:2cdacdc10912",
+          "score": 0.548431,
+          "source_url": "https://web.vodafone.com.eg/wireless-net",
+          "section_path": [
+            "ليه Home Wireless؟",
+            "حرية تنقل"
+          ],
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "faq-f02eff2300",
+      "question": "متى نقوم بجمع معلوماتك الشخصية؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "latency_ms": 706.611,
+      "metrics": {
+        "HitRate@1": 0.0,
+        "Recall@1": 0.0,
+        "Precision@1": 0.0,
+        "HitRate@3": 1.0,
+        "Recall@3": 1.0,
+        "Precision@3": 0.3333,
+        "HitRate@5": 1.0,
+        "Recall@5": 1.0,
+        "Precision@5": 0.2,
+        "HitRate@10": 1.0,
+        "Recall@10": 1.0,
+        "Precision@10": 0.2,
+        "MRR": 0.3333,
+        "nDCG@3": 0.3066,
+        "nDCG@5": 0.3066,
+        "nDCG@10": 0.5
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "1099617ac8d48641393f:5:0:7388e3a1ba43",
+          "score": 0.572847,
+          "source_url": "https://advisory.vodafone.com.eg/ar/advice",
+          "section_path": [
+            "احصل على نصائح شخصية حول المواضيع التي تهمك أكثر.",
+            "تحليلات البيانات"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "chunk_id": "d934f7d4f0b390073a4c:5:0:25a319bdae73",
+          "score": 0.526017,
+          "source_url": "https://advisory.vodafone.com.eg/advice",
+          "section_path": [
+            "Digital communication",
+            "Data analytics"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "4a9d6457b6c292c548e0:5:0:8e11bbfda8ab",
+          "score": 0.523459,
+          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
+          "section_path": [
+            "اشعار الخصوصية",
+            "أنت في آمان",
+            "ماهي المعلومات الشخصية التي نجمعها عنك؟"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 4,
+          "chunk_id": "f3c80e41dd1e66be3512:54:0:e64cceefc321",
+          "score": 0.518901,
+          "source_url": "https://web.vodafone.com.eg/en/dont-remove-the-page",
+          "section_path": [
+            "About us",
+            "What is eSIM",
+            "Multi SIM Features",
+            "Test title"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "d2c5176d66400472369f:0:0:a3f299ba1304",
+          "score": 0.517635,
+          "source_url": "https://digitalstore.vodafone.com.eg/portal/ar/products",
+          "section_path": [
+            "ڤودافون بيزنس Digital Store"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "1d4d86ffc0f521eab979:3:0:25a48360a198",
+          "score": 0.515308,
+          "source_url": "https://www.vodafone.com.eg/en/services",
+          "section_path": [
+            "Vodafone Services Manage your line , your payment, balance, and all the services you need",
+            "Great Entertainment",
+            "3alam Mama"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "19294a40accc4818b6d9:2:0:972bc7370618",
+          "score": 0.508926,
+          "source_url": "https://web.vodafone.com.eg/en/privacy-policy-of-vodafone-egypt_hid",
+          "section_path": [
+            "What personal info we collect?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "4a9d6457b6c292c548e0:5:5:c4de0f3d0bbf",
+          "score": 0.502675,
+          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
+          "section_path": [
+            "اشعار الخصوصية",
+            "أنت في آمان",
+            "ماهي المعلومات الشخصية التي نجمعها عنك؟"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 9,
+          "chunk_id": "c98aa2dd0efbfc4f8712:10:0:6d7312c648ce",
+          "score": 0.501626,
+          "source_url": "https://web.vodafone.com.eg/en/anavodafone",
+          "section_path": [
+            "Ana Vodafone app",
+            "Got a question?",
+            "Internet"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 10,
+          "chunk_id": "c6074f5871259dd74049:10:0:888fd444b9ea",
+          "score": 0.500117,
+          "source_url": "https://www.vodafone.com.eg/anavodafone",
+          "section_path": [
+            "صفحه تطبيق انا فودافون",
+            "عندك سؤال عن التطبيق؟",
+            "الإنترنت"
+          ],
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "faq-eb9a0c9ea3",
+      "question": "Is Wi-Fi Calling compatible with all mobile phones?",
+      "category": "mined_faq",
+      "language": "en",
+      "latency_ms": 419.417,
+      "metrics": {
+        "HitRate@1": 1.0,
+        "Recall@1": 1.0,
+        "Precision@1": 1.0,
+        "HitRate@3": 1.0,
+        "Recall@3": 1.0,
+        "Precision@3": 1.0,
+        "HitRate@5": 1.0,
+        "Recall@5": 1.0,
+        "Precision@5": 0.8,
+        "HitRate@10": 1.0,
+        "Recall@10": 1.0,
+        "Precision@10": 0.5,
+        "MRR": 1.0,
+        "nDCG@3": 1.0,
+        "nDCG@5": 0.8688,
+        "nDCG@10": 0.9709
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "d20daf0e94541e25bdd5:1:0:31e7e8f5a33d",
+          "score": 0.716728,
+          "source_url": "https://web.vodafone.com.eg/en/wifi-calling",
+          "section_path": [
+            "H1",
+            "Is Wi-Fi Calling compatible with all mobile phones?"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "chunk_id": "d20daf0e94541e25bdd5:5:0:96fd344f7237",
+          "score": 0.657157,
+          "source_url": "https://web.vodafone.com.eg/en/wifi-calling",
+          "section_path": [
+            "H1",
+            "What happens if i lose Wi-Fi connection?"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 3,
+          "chunk_id": "d20daf0e94541e25bdd5:2:0:e478a2929aa6",
+          "score": 0.631469,
+          "source_url": "https://web.vodafone.com.eg/en/wifi-calling",
+          "section_path": [
+            "H1",
+            "How will I be charged for Wi-Fi Call?"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 4,
+          "chunk_id": "d20daf0e94541e25bdd5:4:0:d29bb993bfce",
+          "score": 0.609685,
+          "source_url": "https://web.vodafone.com.eg/en/wifi-calling",
+          "section_path": [
+            "H1",
+            "Does Wi-Fi Calling work on Roaming calls or Emergency calls?"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 5,
+          "chunk_id": "c98aa2dd0efbfc4f8712:2:0:0910416d7e77",
+          "score": 0.510269,
+          "source_url": "https://web.vodafone.com.eg/en/anavodafone",
+          "section_path": [
+            "Ana Vodafone app",
+            "Got a question?",
+            "Which devices support Ana Vodafone app?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "b8fcc079a6f38b9602b5:0:10:f248db7bff6d",
+          "score": 0.500771,
+          "source_url": "https://www.vodafone.com.eg/en/business-flex",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "289d481fe585e18124d8:6:0:63e0d47f5544",
+          "score": 0.499543,
+          "source_url": "https://web.vodafone.com.eg/en/wireless-net",
+          "section_path": [
+            "Why Home Wireless Internet?",
+            "Connect in every corner of your Home with Super Wi-Fi !"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "3ed5565cbf37e2676005:1:0:35df1669ac16",
+          "score": 0.496007,
+          "source_url": "https://web.vodafone.com.eg/en/enhancing-coverage-for-all",
+          "section_path": [
+            "Vodafone Egypt",
+            "News",
+            "Annual Report 2023"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "d20daf0e94541e25bdd5:3:0:3f41c1abbe5c",
+          "score": 0.493013,
+          "source_url": "https://web.vodafone.com.eg/en/wifi-calling",
+          "section_path": [
+            "H1",
+            "Will Wi-Fi Calling work if I have DSL from other operators?"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 10,
+          "chunk_id": "7a69db4a448428b198ec:0:0:0299ac479292",
+          "score": 0.487359,
+          "source_url": "https://web.vodafone.com.eg/en/blackberry-service-from-vodafone",
+          "section_path": [
+            "BlackBerry ® service from vodafone"
+          ],
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "faq-c281aeafa3",
+      "question": "ماهي المعلومات الشخصية التي نجمعها عنك؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "latency_ms": 1725.796,
+      "metrics": {
+        "HitRate@1": 0.0,
+        "Recall@1": 0.0,
+        "Precision@1": 0.0,
+        "HitRate@3": 0.0,
+        "Recall@3": 0.0,
+        "Precision@3": 0.0,
+        "HitRate@5": 1.0,
+        "Recall@5": 1.0,
+        "Precision@5": 0.2,
+        "HitRate@10": 1.0,
+        "Recall@10": 1.0,
+        "Precision@10": 0.2,
+        "MRR": 0.25,
+        "nDCG@3": 0.0,
+        "nDCG@5": 0.2641,
+        "nDCG@10": 0.4575
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "19294a40accc4818b6d9:2:0:972bc7370618",
+          "score": 0.532203,
+          "source_url": "https://web.vodafone.com.eg/en/privacy-policy-of-vodafone-egypt_hid",
+          "section_path": [
+            "What personal info we collect?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "chunk_id": "19294a40accc4818b6d9:2:8:69ac6be9e13e",
+          "score": 0.521007,
+          "source_url": "https://web.vodafone.com.eg/en/privacy-policy-of-vodafone-egypt_hid",
+          "section_path": [
+            "What personal info we collect?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "19294a40accc4818b6d9:4:7:7b7e7591e02e",
+          "score": 0.518786,
+          "source_url": "https://web.vodafone.com.eg/en/privacy-policy-of-vodafone-egypt_hid",
+          "section_path": [
+            "What personal info we collect?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "4a9d6457b6c292c548e0:5:5:c4de0f3d0bbf",
+          "score": 0.507003,
+          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
+          "section_path": [
+            "اشعار الخصوصية",
+            "أنت في آمان",
+            "ماهي المعلومات الشخصية التي نجمعها عنك؟"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 5,
+          "chunk_id": "0cace964fcdc61cafcff:6:27:61fba85279d7",
+          "score": 0.505911,
+          "source_url": "https://web.vodafone.com.eg/en/privacy-policy-of-vodafone-egypt",
+          "section_path": [
+            "Privacy Notice",
+            "You are secured",
+            "How do we use your personal information?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "0cace964fcdc61cafcff:1:0:c60035426578",
+          "score": 0.498113,
+          "source_url": "https://web.vodafone.com.eg/en/privacy-policy-of-vodafone-egypt",
+          "section_path": [
+            "Privacy Notice",
+            "You are secured",
+            "How to use this privacy and cookies policy?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "19294a40accc4818b6d9:5:5:54d2e4e03a5a",
+          "score": 0.495531,
+          "source_url": "https://web.vodafone.com.eg/en/privacy-policy-of-vodafone-egypt_hid",
+          "section_path": [
+            "How do we use your personal information?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "4a9d6457b6c292c548e0:10:2:cf344e8a0b50",
+          "score": 0.490118,
+          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
+          "section_path": [
+            "اشعار الخصوصية",
+            "أنت في آمان",
+            "كيف نحافظ على أمان معلوماتك الشخصية؟"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 9,
+          "chunk_id": "f3c80e41dd1e66be3512:54:0:e64cceefc321",
+          "score": 0.489708,
+          "source_url": "https://web.vodafone.com.eg/en/dont-remove-the-page",
+          "section_path": [
+            "About us",
+            "What is eSIM",
+            "Multi SIM Features",
+            "Test title"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 10,
+          "chunk_id": "1d4d86ffc0f521eab979:3:0:25a48360a198",
+          "score": 0.489248,
+          "source_url": "https://www.vodafone.com.eg/en/services",
+          "section_path": [
+            "Vodafone Services Manage your line , your payment, balance, and all the services you need",
+            "Great Entertainment",
+            "3alam Mama"
+          ],
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "faq-d3b06a28a1",
+      "question": "How will I be charged for Wi-Fi Call?",
+      "category": "mined_faq",
+      "language": "en",
+      "latency_ms": 1358.006,
+      "metrics": {
+        "HitRate@1": 1.0,
+        "Recall@1": 1.0,
+        "Precision@1": 1.0,
+        "HitRate@3": 1.0,
+        "Recall@3": 1.0,
+        "Precision@3": 0.6667,
+        "HitRate@5": 1.0,
+        "Recall@5": 1.0,
+        "Precision@5": 0.6,
+        "HitRate@10": 1.0,
+        "Recall@10": 1.0,
+        "Precision@10": 0.3,
+        "MRR": 1.0,
+        "nDCG@3": 0.7654,
+        "nDCG@5": 0.9675,
+        "nDCG@10": 0.9675
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "d20daf0e94541e25bdd5:2:0:e478a2929aa6",
+          "score": 0.66096,
+          "source_url": "https://web.vodafone.com.eg/en/wifi-calling",
+          "section_path": [
+            "H1",
+            "How will I be charged for Wi-Fi Call?"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "chunk_id": "d20daf0e94541e25bdd5:5:0:96fd344f7237",
+          "score": 0.575454,
+          "source_url": "https://web.vodafone.com.eg/en/wifi-calling",
+          "section_path": [
+            "H1",
+            "What happens if i lose Wi-Fi connection?"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 3,
+          "chunk_id": "7808aa8d588a49fecd63:5:0:3d38a3191d01",
+          "score": 0.550487,
+          "source_url": "https://web.vodafone.com.eg/en/kart-el-korout",
+          "section_path": [
+            "Different prepaid rate plans with the lowest minute rate that suits you",
+            "Kart El-Korout Rateplans",
+            "14 PT Minute"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "d20daf0e94541e25bdd5:1:0:31e7e8f5a33d",
+          "score": 0.540948,
+          "source_url": "https://web.vodafone.com.eg/en/wifi-calling",
+          "section_path": [
+            "H1",
+            "Is Wi-Fi Calling compatible with all mobile phones?"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 5,
+          "chunk_id": "9599ce6647bb8f446fd2:1:0:a91bccd08384",
+          "score": 0.52731,
+          "source_url": "https://web.vodafone.com.eg/en/installments-and-utilites-offer",
+          "section_path": [
+            "Privacy Policy Of Vodafone",
+            "Thank you for all the times ahead",
+            "Terms and Conditions"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "4819ef68b60740a8f71c:0:2:dd298e3a4f4d",
+          "score": 0.51637,
+          "source_url": "https://web.vodafone.com.eg/en/shokran-servicesp-rd",
+          "section_path": [
+            "Shokran Services"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "8f6a8094a8d19a78fe28:0:0:778e5e0f2975",
+          "score": 0.511521,
+          "source_url": "https://web.vodafone.com.eg/en/tuition-terms-and-conditions",
+          "section_path": [
+            "Tuition Terms and Conditions",
+            "Pay School & University Tuition with Vodafone Cash and get 50% Cashback Capped at 100 EGP on your Wallet (E-Money or Telecom Units for Vodafone and Megabytes)"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "4819ef68b60740a8f71c:0:5:5181a5e75c62",
+          "score": 0.503814,
+          "source_url": "https://web.vodafone.com.eg/en/shokran-servicesp-rd",
+          "section_path": [
+            "Shokran Services"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "76a02807d50f1afa1d11:0:4:0143669b1fb2",
+          "score": 0.500123,
+          "source_url": "https://web.vodafone.com.eg/en/mother-day-discounts",
+          "section_path": [
+            "Mother's Day Discounts",
+            "Get up to 20% discount when you pay with Vodafone Cash on our Partners’ websites"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 10,
+          "chunk_id": "c98aa2dd0efbfc4f8712:5:0:736e41067a2c",
+          "score": 0.500026,
+          "source_url": "https://web.vodafone.com.eg/en/anavodafone",
+          "section_path": [
+            "Ana Vodafone app",
+            "Got a question?",
+            "Bill & Balance"
+          ],
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "faq-a499100194",
+      "question": "كيف نستخدم المعلومات الشخصية الخاصة بك؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "latency_ms": 947.14,
+      "metrics": {
+        "HitRate@1": 0.0,
+        "Recall@1": 0.0,
+        "Precision@1": 0.0,
+        "HitRate@3": 1.0,
+        "Recall@3": 1.0,
+        "Precision@3": 0.3333,
+        "HitRate@5": 1.0,
+        "Recall@5": 1.0,
+        "Precision@5": 0.4,
+        "HitRate@10": 1.0,
+        "Recall@10": 1.0,
+        "Precision@10": 0.4,
+        "MRR": 0.5,
+        "nDCG@3": 0.2961,
+        "nDCG@5": 0.4144,
+        "nDCG@10": 0.6448
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "0cace964fcdc61cafcff:1:0:c60035426578",
+          "score": 0.582596,
+          "source_url": "https://web.vodafone.com.eg/en/privacy-policy-of-vodafone-egypt",
+          "section_path": [
+            "Privacy Notice",
+            "You are secured",
+            "How to use this privacy and cookies policy?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "chunk_id": "4a9d6457b6c292c548e0:1:0:548873a98d05",
+          "score": 0.574999,
+          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
+          "section_path": [
+            "اشعار الخصوصية",
+            "أنت في آمان",
+            "كيف تستخدم سياسة الخصوصية وسياسة ملفات تعريف الارتباط ؟"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 3,
+          "chunk_id": "19294a40accc4818b6d9:5:5:54d2e4e03a5a",
+          "score": 0.567982,
+          "source_url": "https://web.vodafone.com.eg/en/privacy-policy-of-vodafone-egypt_hid",
+          "section_path": [
+            "How do we use your personal information?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "4a9d6457b6c292c548e0:5:7:8330d96e62f2",
+          "score": 0.563909,
+          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
+          "section_path": [
+            "اشعار الخصوصية",
+            "أنت في آمان",
+            "ماهي المعلومات الشخصية التي نجمعها عنك؟"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 5,
+          "chunk_id": "19294a40accc4818b6d9:4:6:ad49fb699cd7",
+          "score": 0.556801,
+          "source_url": "https://web.vodafone.com.eg/en/privacy-policy-of-vodafone-egypt_hid",
+          "section_path": [
+            "What personal info we collect?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "0cace964fcdc61cafcff:12:6:82590bd537a7",
+          "score": 0.553005,
+          "source_url": "https://web.vodafone.com.eg/en/privacy-policy-of-vodafone-egypt",
+          "section_path": [
+            "Privacy Notice",
+            "You are secured",
+            "How do we use cookies?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "0cace964fcdc61cafcff:12:2:22984b7674e7",
+          "score": 0.545492,
+          "source_url": "https://web.vodafone.com.eg/en/privacy-policy-of-vodafone-egypt",
+          "section_path": [
+            "Privacy Notice",
+            "You are secured",
+            "How do we use cookies?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "0cace964fcdc61cafcff:12:5:0f9a96aebc89",
+          "score": 0.541455,
+          "source_url": "https://web.vodafone.com.eg/en/privacy-policy-of-vodafone-egypt",
+          "section_path": [
+            "Privacy Notice",
+            "You are secured",
+            "How do we use cookies?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "4a9d6457b6c292c548e0:12:0:c8476c39b7c2",
+          "score": 0.536611,
+          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
+          "section_path": [
+            "اشعار الخصوصية",
+            "أنت في آمان",
+            "كيف نستخدم ملفات تعريف الارتباط؟"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 10,
+          "chunk_id": "4a9d6457b6c292c548e0:12:5:a189ef28e2ba",
+          "score": 0.536415,
+          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
+          "section_path": [
+            "اشعار الخصوصية",
+            "أنت في آمان",
+            "كيف نستخدم ملفات تعريف الارتباط؟"
+          ],
+          "relevant": true
+        }
+      ]
+    },
+    {
+      "id": "faq-25ce619c20",
+      "question": "Does Wi-Fi Calling work on Roaming calls or Emergency calls?",
+      "category": "mined_faq",
+      "language": "en",
+      "latency_ms": 435.092,
+      "metrics": {
+        "HitRate@1": 1.0,
+        "Recall@1": 1.0,
+        "Precision@1": 1.0,
+        "HitRate@3": 1.0,
+        "Recall@3": 1.0,
+        "Precision@3": 1.0,
+        "HitRate@5": 1.0,
+        "Recall@5": 1.0,
+        "Precision@5": 0.8,
+        "HitRate@10": 1.0,
+        "Recall@10": 1.0,
+        "Precision@10": 0.5,
+        "MRR": 1.0,
+        "nDCG@3": 1.0,
+        "nDCG@5": 0.8688,
+        "nDCG@10": 0.9668
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "d20daf0e94541e25bdd5:5:0:96fd344f7237",
+          "score": 0.690061,
+          "source_url": "https://web.vodafone.com.eg/en/wifi-calling",
+          "section_path": [
+            "H1",
+            "What happens if i lose Wi-Fi connection?"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "chunk_id": "d20daf0e94541e25bdd5:4:0:d29bb993bfce",
+          "score": 0.670575,
+          "source_url": "https://web.vodafone.com.eg/en/wifi-calling",
+          "section_path": [
+            "H1",
+            "Does Wi-Fi Calling work on Roaming calls or Emergency calls?"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 3,
+          "chunk_id": "d20daf0e94541e25bdd5:1:0:31e7e8f5a33d",
+          "score": 0.661555,
+          "source_url": "https://web.vodafone.com.eg/en/wifi-calling",
+          "section_path": [
+            "H1",
+            "Is Wi-Fi Calling compatible with all mobile phones?"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 4,
+          "chunk_id": "d20daf0e94541e25bdd5:2:0:e478a2929aa6",
+          "score": 0.647307,
+          "source_url": "https://web.vodafone.com.eg/en/wifi-calling",
+          "section_path": [
+            "H1",
+            "How will I be charged for Wi-Fi Call?"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 5,
+          "chunk_id": "0ce46de1c2913c638341:0:0:02d97c3b4b06",
+          "score": 0.55252,
+          "source_url": "https://web.vodafone.com.eg/en/roamingmanagement",
+          "section_path": [
+            "Roaming Management"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "d0aac4a58b946c5fc786:0:0:1556627885f7",
+          "score": 0.546927,
+          "source_url": "https://web.vodafone.com.eg/en/roaming-services",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "6321f99c69d624659dfe:0:0:044a092b7c24",
+          "score": 0.524605,
+          "source_url": "https://web.vodafone.com.eg/en/roamingnew",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "1d4d86ffc0f521eab979:0:0:cb2e0fc762cb",
+          "score": 0.523803,
+          "source_url": "https://www.vodafone.com.eg/en/services",
+          "section_path": [
+            "Vodafone Services Manage your line , your payment, balance, and all the services you need",
+            "Call & Connect abroad"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "dd45fd83a27e394a6389:1:0:f0edc4f6a830",
+          "score": 0.517965,
+          "source_url": "https://web.vodafone.com.eg/en/plans",
+          "section_path": [
+            "Vodafone Business Plans",
+            "Shared Plans"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 10,
+          "chunk_id": "d20daf0e94541e25bdd5:3:0:3f41c1abbe5c",
+          "score": 0.51546,
+          "source_url": "https://web.vodafone.com.eg/en/wifi-calling",
+          "section_path": [
+            "H1",
+            "Will Wi-Fi Calling work if I have DSL from other operators?"
+          ],
+          "relevant": true
+        }
+      ]
+    },
+    {
+      "id": "faq-b90325dfb0",
+      "question": "مع من نشارك معلوماتك الشخصية؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "latency_ms": 554.741,
+      "metrics": {
+        "HitRate@1": 0.0,
+        "Recall@1": 0.0,
+        "Precision@1": 0.0,
+        "HitRate@3": 1.0,
+        "Recall@3": 1.0,
+        "Precision@3": 0.3333,
+        "HitRate@5": 1.0,
+        "Recall@5": 1.0,
+        "Precision@5": 0.2,
+        "HitRate@10": 1.0,
+        "Recall@10": 1.0,
+        "Precision@10": 0.1,
+        "MRR": 0.5,
+        "nDCG@3": 0.6309,
+        "nDCG@5": 0.6309,
+        "nDCG@10": 0.6309
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "970e9f34a425734af389:7:0:dd31e4537901",
+          "score": 0.526899,
+          "source_url": "https://web.vodafone.com.eg/ar/anavodafone",
+          "section_path": [
+            "صفحه تطبيق انا فودافون",
+            "عندك سؤال عن التطبيق؟",
+            "عروض"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "chunk_id": "4a9d6457b6c292c548e0:7:7:c7b545c80b3c",
+          "score": 0.512214,
+          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
+          "section_path": [
+            "اشعار الخصوصية",
+            "أنت في آمان",
+            "مع من نشارك معلوماتك الشخصية؟"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 3,
+          "chunk_id": "19294a40accc4818b6d9:2:0:972bc7370618",
+          "score": 0.508923,
+          "source_url": "https://web.vodafone.com.eg/en/privacy-policy-of-vodafone-egypt_hid",
+          "section_path": [
+            "What personal info we collect?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "58e9a367a2065918837c:1:0:ef884ad32c0b",
+          "score": 0.50633,
+          "source_url": "https://web.vodafone.com.eg/en/foundation1",
+          "section_path": [
+            "vodaegHome",
+            "Our Team",
+            "Farah Lokma"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "0cace964fcdc61cafcff:1:0:c60035426578",
+          "score": 0.505087,
+          "source_url": "https://web.vodafone.com.eg/en/privacy-policy-of-vodafone-egypt",
+          "section_path": [
+            "Privacy Notice",
+            "You are secured",
+            "How to use this privacy and cookies policy?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "ef0f98064ae24b0a1c97:9:0:15a75ee0f53c",
+          "score": 0.502067,
+          "source_url": "https://www.vodafone.com.eg/governance",
+          "section_path": [
+            "تركز الحوكمة في فودافون مصر على أخلاقيات العمل والنزاهة القانونية على المدى الطويل",
+            "Our Code of Conduct covers the following areas",
+            "عالم ماما"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "0cace964fcdc61cafcff:7:12:e9b2ce049af1",
+          "score": 0.49798,
+          "source_url": "https://web.vodafone.com.eg/en/privacy-policy-of-vodafone-egypt",
+          "section_path": [
+            "Privacy Notice",
+            "You are secured",
+            "With whom do we share your personal information?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "19294a40accc4818b6d9:5:5:54d2e4e03a5a",
+          "score": 0.494364,
+          "source_url": "https://web.vodafone.com.eg/en/privacy-policy-of-vodafone-egypt_hid",
+          "section_path": [
+            "How do we use your personal information?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "1be63f90932065853481:0:0:3b4ba0aef566",
+          "score": 0.49408,
+          "source_url": "https://web.vodafone.com.eg/en/vodafone-business-plans",
+          "section_path": [
+            "Vodafone Business Plans",
+            "Plans"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 10,
+          "chunk_id": "b56494f06f35767a8c10:17:0:e790fabdf6e3",
+          "score": 0.488334,
+          "source_url": "https://web.vodafone.com.eg/en/carbon-new2",
+          "section_path": [
+            "Our Initiatives",
+            "Wadi Degla cleaning campaign"
+          ],
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "faq-e3901069e1",
+      "question": "What happens if i lose Wi-Fi connection?",
+      "category": "mined_faq",
+      "language": "en",
+      "latency_ms": 452.141,
+      "metrics": {
+        "HitRate@1": 1.0,
+        "Recall@1": 1.0,
+        "Precision@1": 1.0,
+        "HitRate@3": 1.0,
+        "Recall@3": 1.0,
+        "Precision@3": 0.6667,
+        "HitRate@5": 1.0,
+        "Recall@5": 1.0,
+        "Precision@5": 0.6,
+        "HitRate@10": 1.0,
+        "Recall@10": 1.0,
+        "Precision@10": 0.4,
+        "MRR": 1.0,
+        "nDCG@3": 0.7654,
+        "nDCG@5": 0.8048,
+        "nDCG@10": 0.9439
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "d20daf0e94541e25bdd5:5:0:96fd344f7237",
+          "score": 0.539369,
+          "source_url": "https://web.vodafone.com.eg/en/wifi-calling",
+          "section_path": [
+            "H1",
+            "What happens if i lose Wi-Fi connection?"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "chunk_id": "d20daf0e94541e25bdd5:2:0:e478a2929aa6",
+          "score": 0.486799,
+          "source_url": "https://web.vodafone.com.eg/en/wifi-calling",
+          "section_path": [
+            "H1",
+            "How will I be charged for Wi-Fi Call?"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 3,
+          "chunk_id": "289d481fe585e18124d8:7:0:6682cf10288c",
+          "score": 0.478756,
+          "source_url": "https://web.vodafone.com.eg/en/wireless-net",
+          "section_path": [
+            "More details",
+            "I don’t have good 4G network in the house?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "d20daf0e94541e25bdd5:3:0:3f41c1abbe5c",
+          "score": 0.477412,
+          "source_url": "https://web.vodafone.com.eg/en/wifi-calling",
+          "section_path": [
+            "H1",
+            "Will Wi-Fi Calling work if I have DSL from other operators?"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 5,
+          "chunk_id": "a765cec1278cf0e611fd:0:0:314137b5b4c4",
+          "score": 0.474797,
+          "source_url": "https://web.vodafone.com.eg/en/c-nam",
+          "section_path": [
+            "• The company name will be the trade name or trademark registered in the company's commercial register."
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "d20daf0e94541e25bdd5:1:0:31e7e8f5a33d",
+          "score": 0.466511,
+          "source_url": "https://web.vodafone.com.eg/en/wifi-calling",
+          "section_path": [
+            "H1",
+            "Is Wi-Fi Calling compatible with all mobile phones?"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 7,
+          "chunk_id": "b183a75bb9ade1e94149:3:0:74d257725fa1",
+          "score": 0.461399,
+          "source_url": "https://web.vodafone.com.eg/en/exposure-from-mobiles",
+          "section_path": [
+            "Exposure From Mobiles",
+            "Exposure From Mobiles",
+            "The landscape between the user and the base station"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "08be191fa9a2c69cb171:4:0:0d23f235a3c4",
+          "score": 0.459614,
+          "source_url": "https://digitalstore.vodafone.com.eg/en/home",
+          "section_path": [
+            "Discover 010Hotline IVR",
+            "Vodafone Business Solutions",
+            "Connectivity"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "288b6390ab896e5e05ef:6:3:5b3670c65f88",
+          "score": 0.459341,
+          "source_url": "https://web.vodafone.com.eg/en/revamp-vodaegabout",
+          "section_path": [
+            "Our Ambition",
+            "OUR AMBITION"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 10,
+          "chunk_id": "8d9693978a40fc3b471b:11:0:13da003ff16e",
+          "score": 0.456411,
+          "source_url": "https://digitalstore.vodafone.com.eg/portal/en/products",
+          "section_path": [
+            "Vodafone Business Digital Store",
+            "Connectivity"
+          ],
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "faq-8de14f5914",
+      "question": "إلى متى نحتفظ بمعلوماتك الشخصية؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "latency_ms": 564.981,
+      "metrics": {
+        "HitRate@1": 0.0,
+        "Recall@1": 0.0,
+        "Precision@1": 0.0,
+        "HitRate@3": 1.0,
+        "Recall@3": 1.0,
+        "Precision@3": 0.3333,
+        "HitRate@5": 1.0,
+        "Recall@5": 1.0,
+        "Precision@5": 0.2,
+        "HitRate@10": 1.0,
+        "Recall@10": 1.0,
+        "Precision@10": 0.2,
+        "MRR": 0.3333,
+        "nDCG@3": 0.3066,
+        "nDCG@5": 0.3066,
+        "nDCG@10": 0.525
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "f3c80e41dd1e66be3512:54:0:e64cceefc321",
+          "score": 0.573837,
+          "source_url": "https://web.vodafone.com.eg/en/dont-remove-the-page",
+          "section_path": [
+            "About us",
+            "What is eSIM",
+            "Multi SIM Features",
+            "Test title"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "chunk_id": "1d4d86ffc0f521eab979:3:0:25a48360a198",
+          "score": 0.571776,
+          "source_url": "https://www.vodafone.com.eg/en/services",
+          "section_path": [
+            "Vodafone Services Manage your line , your payment, balance, and all the services you need",
+            "Great Entertainment",
+            "3alam Mama"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "4a9d6457b6c292c548e0:7:0:9ddffb6dcca4",
+          "score": 0.54646,
+          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
+          "section_path": [
+            "اشعار الخصوصية",
+            "أنت في آمان",
+            "مع من نشارك معلوماتك الشخصية؟"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 4,
+          "chunk_id": "1099617ac8d48641393f:5:0:7388e3a1ba43",
+          "score": 0.534477,
+          "source_url": "https://advisory.vodafone.com.eg/ar/advice",
+          "section_path": [
+            "احصل على نصائح شخصية حول المواضيع التي تهمك أكثر.",
+            "تحليلات البيانات"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "65c583be754e059bae70:10:0:0a90e74231bc",
+          "score": 0.528791,
+          "source_url": "https://web.vodafone.com.eg/en/economic",
+          "section_path": [
+            "Vodafone Economic",
+            "Tax Strategy Key Components",
+            "Compliance"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "4a9d6457b6c292c548e0:5:0:8e11bbfda8ab",
+          "score": 0.520549,
+          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
+          "section_path": [
+            "اشعار الخصوصية",
+            "أنت في آمان",
+            "ماهي المعلومات الشخصية التي نجمعها عنك؟"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 7,
+          "chunk_id": "19294a40accc4818b6d9:2:0:972bc7370618",
+          "score": 0.520497,
+          "source_url": "https://web.vodafone.com.eg/en/privacy-policy-of-vodafone-egypt_hid",
+          "section_path": [
+            "What personal info we collect?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "19294a40accc4818b6d9:4:7:7b7e7591e02e",
+          "score": 0.510036,
+          "source_url": "https://web.vodafone.com.eg/en/privacy-policy-of-vodafone-egypt_hid",
+          "section_path": [
+            "What personal info we collect?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "0cace964fcdc61cafcff:6:0:6a134fec00b8",
+          "score": 0.509295,
+          "source_url": "https://web.vodafone.com.eg/en/privacy-policy-of-vodafone-egypt",
+          "section_path": [
+            "Privacy Notice",
+            "You are secured",
+            "How do we use your personal information?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 10,
+          "chunk_id": "19294a40accc4818b6d9:2:8:69ac6be9e13e",
+          "score": 0.506211,
+          "source_url": "https://web.vodafone.com.eg/en/privacy-policy-of-vodafone-egypt_hid",
+          "section_path": [
+            "What personal info we collect?"
+          ],
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "faq-4bba2f5a98",
+      "question": "What can I do on the App?",
+      "category": "mined_faq",
+      "language": "en",
+      "latency_ms": 1382.695,
+      "metrics": {
+        "HitRate@1": 0.0,
+        "Recall@1": 0.0,
+        "Precision@1": 0.0,
+        "HitRate@3": 0.0,
+        "Recall@3": 0.0,
+        "Precision@3": 0.0,
+        "HitRate@5": 0.0,
+        "Recall@5": 0.0,
+        "Precision@5": 0.0,
+        "HitRate@10": 0.0,
+        "Recall@10": 0.0,
+        "Precision@10": 0.0,
+        "MRR": 0.0,
+        "nDCG@3": 0.0,
+        "nDCG@5": 0.0,
+        "nDCG@10": 0.0
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "d9134b7ecf5442896072:0:0:ec27c58eacfd",
+          "score": 0.596336,
+          "source_url": "https://web.vodafone.com.eg/en/setup-vodafone-guardianapp",
+          "section_path": [
+            "Vodafone Guardian app",
+            "How to... set up the Vodafone Guardian app"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "chunk_id": "f9e4a5c46d10768b23ab:5:0:e64cb2c3bf6b",
+          "score": 0.554673,
+          "source_url": "https://web.vodafone.com.eg/ar/business",
+          "section_path": [
+            "الصفحه الرئيسية لڤودافون مصر",
+            "افتح حساب ڤودافون بيزنس",
+            "إنترنت الأشياء"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "970e9f34a425734af389:7:0:dd31e4537901",
+          "score": 0.55267,
+          "source_url": "https://web.vodafone.com.eg/ar/anavodafone",
+          "section_path": [
+            "صفحه تطبيق انا فودافون",
+            "عندك سؤال عن التطبيق؟",
+            "عروض"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "f5f9586e3f989f9c11e2:2:5:bda53e7e2420",
+          "score": 0.550702,
+          "source_url": "https://web.vodafone.com.eg/en/ramadan",
+          "section_path": [
+            "Watch it & Yango Play for Free | Vodafone Ramadan 2026",
+            "This Ramadan, We Light Up Together",
+            "Terms & Conditions"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "970e9f34a425734af389:2:0:8d5009d84a08",
+          "score": 0.538446,
+          "source_url": "https://web.vodafone.com.eg/ar/anavodafone",
+          "section_path": [
+            "صفحه تطبيق انا فودافون",
+            "عندك سؤال عن التطبيق؟",
+            "ايه الاجهزة اللي بتدعم تطبيق أنا ڤودافون؟"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "2b5dfe3c42c1061afcde:0:0:0d04ab751932",
+          "score": 0.52998,
+          "source_url": "https://web.vodafone.com.eg/en/red-business",
+          "section_path": [
+            "Red Family",
+            "Welcome to the World of RED Business"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "bd76e05ac4ddd39f7086:8:0:202f6e5b25b1",
+          "score": 0.528643,
+          "source_url": "https://web.vodafone.com.eg/ar/vodafone-red1",
+          "section_path": [
+            "إستمتع بأجدد الخدمات الترفيهية المقدمة من RED",
+            "اعرف اكتر عن نظام RED",
+            "ازاي ممكن أضيف أفراد للعيلة ؟"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "aba66be1bc016a0242af:0:8:84022e4ecfc9",
+          "score": 0.523313,
+          "source_url": "https://web.vodafone.com.eg/en/t-c-mass",
+          "section_path": [
+            "Vodafone Ramadan 2026",
+            "Ramadan T&C"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "1cf6445bba9034638afc:0:0:6d18df3594d5",
+          "score": 0.522329,
+          "source_url": "https://web.vodafone.com.eg/en/business-solutions",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 10,
+          "chunk_id": "a2b973501a90850def81:2:0:232b77197672",
+          "score": 0.521205,
+          "source_url": "https://advisory.vodafone.com.eg/knowledge-center/reading-this-will-help-you-decide-if-your-business-needs-a-mobile-app",
+          "section_path": [
+            "Reading this will help you decide if your business needs a mobile app",
+            "Deciding if your business needs an app starts here",
+            "Apps are a direct channel between you and your customer"
+          ],
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "faq-e9a45d9eeb",
+      "question": "كيف نحافظ على أمان معلوماتك الشخصية؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "latency_ms": 847.275,
+      "metrics": {
+        "HitRate@1": 0.0,
+        "Recall@1": 0.0,
+        "Precision@1": 0.0,
+        "HitRate@3": 0.0,
+        "Recall@3": 0.0,
+        "Precision@3": 0.0,
+        "HitRate@5": 0.0,
+        "Recall@5": 0.0,
+        "Precision@5": 0.0,
+        "HitRate@10": 0.0,
+        "Recall@10": 0.0,
+        "Precision@10": 0.0,
+        "MRR": 0.0,
+        "nDCG@3": 0.0,
+        "nDCG@5": 0.0,
+        "nDCG@10": 0.0
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "38a31c9c40246931f91d:3:5:36aad915b185",
+          "score": 0.618689,
+          "source_url": "https://advisory.vodafone.com.eg/knowledge-center/why-you-need-to-take-cybersecurity-seriously-before-its-too-late",
+          "section_path": [
+            "Why you need to take cybersecurity seriously – before it’s too late",
+            "What, why and how: a complete guide to cybersecurity compliance",
+            "How can I become compliant?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "chunk_id": "0cace964fcdc61cafcff:10:0:a1c86d49537c",
+          "score": 0.59376,
+          "source_url": "https://web.vodafone.com.eg/en/privacy-policy-of-vodafone-egypt",
+          "section_path": [
+            "Privacy Notice",
+            "You are secured",
+            "How do we keep your personal information secure?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "d934f7d4f0b390073a4c:7:0:ab175527ac90",
+          "score": 0.565761,
+          "source_url": "https://advisory.vodafone.com.eg/advice",
+          "section_path": [
+            "Digital communication",
+            "Digital security"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "268621b60d3a6192dbea:5:0:2826534b0fec",
+          "score": 0.562013,
+          "source_url": "https://web.vodafone.com.eg/en/sha7neteleid",
+          "section_path": [
+            "## Security"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "38a31c9c40246931f91d:3:8:bcbe2b6e4d72",
+          "score": 0.561391,
+          "source_url": "https://advisory.vodafone.com.eg/knowledge-center/why-you-need-to-take-cybersecurity-seriously-before-its-too-late",
+          "section_path": [
+            "Why you need to take cybersecurity seriously – before it’s too late",
+            "What, why and how: a complete guide to cybersecurity compliance",
+            "How can I become compliant?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "38a31c9c40246931f91d:3:6:6b7e6985a021",
+          "score": 0.555805,
+          "source_url": "https://advisory.vodafone.com.eg/knowledge-center/why-you-need-to-take-cybersecurity-seriously-before-its-too-late",
+          "section_path": [
+            "Why you need to take cybersecurity seriously – before it’s too late",
+            "What, why and how: a complete guide to cybersecurity compliance",
+            "How can I become compliant?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "b5fa197f5e7e9fa21887:0:0:38eba5cb965b",
+          "score": 0.54215,
+          "source_url": "https://advisory.vodafone.com.eg/knowledge-center/how-to-help-protect-against-billing-and-invoice-fraud",
+          "section_path": [
+            "How to help protect against billing and invoice fraud",
+            "How to help protect against billing and invoice fraud"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "a1525cfc5fde3ebdb43a:3:0:5440439f554a",
+          "score": 0.539612,
+          "source_url": "https://advisory.vodafone.com.eg/knowledge-center/five-critical-steps-to-take-in-the-event-of-a-data-breach",
+          "section_path": [
+            "Five critical steps to take in the event of a data breach",
+            "How you should respond in the event of a data breach",
+            "3. Test your new short-term security fix"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "232a313cc20bd3cea073:1:12:301a29ed6967",
+          "score": 0.539331,
+          "source_url": "https://web.vodafone.com.eg/en/adsl-catalog",
+          "section_path": [
+            "adsl-catalog",
+            "Routers"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 10,
+          "chunk_id": "0cace964fcdc61cafcff:10:2:343c84fcdf59",
+          "score": 0.536966,
+          "source_url": "https://web.vodafone.com.eg/en/privacy-policy-of-vodafone-egypt",
+          "section_path": [
+            "Privacy Notice",
+            "You are secured",
+            "How do we keep your personal information secure?"
+          ],
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "curated-6bf26575db",
+      "question": "ازاي أجدد باقة الفليكس بتاعتي؟",
+      "category": "arabic_faq",
+      "language": "ar",
+      "latency_ms": 561.987,
+      "metrics": {
+        "HitRate@1": 0.0,
+        "Recall@1": 0.0,
+        "Precision@1": 0.0,
+        "HitRate@3": 1.0,
+        "Recall@3": 1.0,
+        "Precision@3": 0.3333,
+        "HitRate@5": 1.0,
+        "Recall@5": 1.0,
+        "Precision@5": 0.2,
+        "HitRate@10": 1.0,
+        "Recall@10": 1.0,
+        "Precision@10": 0.1,
+        "MRR": 0.3333,
+        "nDCG@3": 0.5,
+        "nDCG@5": 0.5,
+        "nDCG@10": 0.5
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "362f9f5915351af660b9:7:0:514df88c2428",
+          "score": 0.560587,
+          "source_url": "https://web.vodafone.com.eg/ar/vodafone-cash",
+          "section_path": [
+            "إيه هى خدمات ڤودافون كاش الأخرى ؟",
+            "جدد باقتك في أي وقت وفي أي مكان"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "chunk_id": "c98aa2dd0efbfc4f8712:8:0:feb02b78209c",
+          "score": 0.553205,
+          "source_url": "https://web.vodafone.com.eg/en/anavodafone",
+          "section_path": [
+            "Ana Vodafone app",
+            "Got a question?",
+            "Store Locator"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "24df1ab008184825c3ca:0:0:e0b8f08bb359",
+          "score": 0.546351,
+          "source_url": "https://web.vodafone.com.eg/ar/vodafone-flex",
+          "section_path": [
+            "فودافون فليكس: فليكسات للمكالمات والإنترنت والتطبيقات الترفيهية",
+            "فليكس بقى أكبر وأسهل بزيادة"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 4,
+          "chunk_id": "970e9f34a425734af389:10:0:888fd444b9ea",
+          "score": 0.541755,
+          "source_url": "https://web.vodafone.com.eg/ar/anavodafone",
+          "section_path": [
+            "صفحه تطبيق انا فودافون",
+            "عندك سؤال عن التطبيق؟",
+            "الإنترنت"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "4ecad22de922452b0b20:9:0:0ee472ad0071",
+          "score": 0.537919,
+          "source_url": "https://web.vodafone.com.eg/ar/mobile-internet-bundles",
+          "section_path": [
+            "باقات الإنترنت",
+            "MI Bundles",
+            "خدمات ال Wifi"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "4ecad22de922452b0b20:4:0:d38f97ad4d5b",
+          "score": 0.528422,
+          "source_url": "https://web.vodafone.com.eg/ar/mobile-internet-bundles",
+          "section_path": [
+            "باقات الإنترنت",
+            "الأسئلة الشائعة",
+            "4. باقات Plus متاحة لمين؟"
+          ],
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "curated-a7ed8036f2",
+      "question": "How do I renew my Flex bundle?",
+      "category": "english_faq",
+      "language": "en",
+      "latency_ms": 587.687,
+      "metrics": {
+        "HitRate@1": 1.0,
+        "Recall@1": 1.0,
+        "Precision@1": 1.0,
+        "HitRate@3": 1.0,
+        "Recall@3": 1.0,
+        "Precision@3": 0.6667,
+        "HitRate@5": 1.0,
+        "Recall@5": 1.0,
+        "Precision@5": 0.4,
+        "HitRate@10": 1.0,
+        "Recall@10": 1.0,
+        "Precision@10": 0.4,
+        "MRR": 1.0,
+        "nDCG@3": 0.7039,
+        "nDCG@5": 0.5856,
+        "nDCG@10": 0.8216
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "f5b3b1a7ffef98128b7f:2:0:05220640634c",
+          "score": 0.633062,
+          "source_url": "https://web.vodafone.com.eg/en/vodafone-flex",
+          "section_path": [
+            "Vodafone Flex: Flexible Mobile Plans for Calls, Internet & Entertainment",
+            "More information about Flex",
+            "Renew Your Bundle"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "chunk_id": "a461b173419aab960218:0:0:8a7d732de3cc",
+          "score": 0.630047,
+          "source_url": "https://web.vodafone.com.eg/en/renew",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "f5b3b1a7ffef98128b7f:3:5:7421f14edb74",
+          "score": 0.628303,
+          "source_url": "https://web.vodafone.com.eg/en/vodafone-flex",
+          "section_path": [
+            "Vodafone Flex: Flexible Mobile Plans for Calls, Internet & Entertainment",
+            "More information about Flex",
+            "Terms and Conditions"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 4,
+          "chunk_id": "95eb52844a9412872fe0:0:11:e681af13ff45",
+          "score": 0.610883,
+          "source_url": "https://web.vodafone.com.eg/en/recharge-bill-payment",
+          "section_path": [
+            "How To Recharge ?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "f5f9586e3f989f9c11e2:2:2:cda2a7c9928c",
+          "score": 0.596059,
+          "source_url": "https://web.vodafone.com.eg/en/ramadan",
+          "section_path": [
+            "Watch it & Yango Play for Free | Vodafone Ramadan 2026",
+            "This Ramadan, We Light Up Together",
+            "Terms & Conditions"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "95eb52844a9412872fe0:0:10:5a0c69a98fcf",
+          "score": 0.590734,
+          "source_url": "https://web.vodafone.com.eg/en/recharge-bill-payment",
+          "section_path": [
+            "How To Recharge ?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "aba66be1bc016a0242af:0:5:08e84e61cab0",
+          "score": 0.588433,
+          "source_url": "https://web.vodafone.com.eg/en/t-c-mass",
+          "section_path": [
+            "Vodafone Ramadan 2026",
+            "Ramadan T&C"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "f5b3b1a7ffef98128b7f:0:0:2bea6e97cb98",
+          "score": 0.587096,
+          "source_url": "https://web.vodafone.com.eg/en/vodafone-flex",
+          "section_path": [
+            "Vodafone Flex: Flexible Mobile Plans for Calls, Internet & Entertainment",
+            "Flex Bundles Got Bigger & Better"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 9,
+          "chunk_id": "9afbc6e2b81debae88cb:3:0:f7df3f1e50d5",
+          "score": 0.58411,
+          "source_url": "https://web.vodafone.com.eg/en/mobile-internet-bundles",
+          "section_path": [
+            "Vodafone Internet Bundles",
+            "Frequently asked questions:",
+            "3. When will the Plus bundles get renewed?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 10,
+          "chunk_id": "f5b3b1a7ffef98128b7f:3:6:5e651939df68",
+          "score": 0.573655,
+          "source_url": "https://web.vodafone.com.eg/en/vodafone-flex",
+          "section_path": [
+            "Vodafone Flex: Flexible Mobile Plans for Calls, Internet & Entertainment",
+            "More information about Flex",
+            "Terms and Conditions"
+          ],
+          "relevant": true
+        }
+      ]
+    },
+    {
+      "id": "curated-4368bfeb19",
+      "question": "عايز أعرف إيه هي مزايا باقة RED الجديدة؟",
+      "category": "arabic_factual",
+      "language": "ar",
+      "latency_ms": 572.919,
+      "metrics": {
+        "HitRate@1": 0.0,
+        "Recall@1": 0.0,
+        "Precision@1": 0.0,
+        "HitRate@3": 0.0,
+        "Recall@3": 0.0,
+        "Precision@3": 0.0,
+        "HitRate@5": 1.0,
+        "Recall@5": 1.0,
+        "Precision@5": 0.2,
+        "HitRate@10": 1.0,
+        "Recall@10": 1.0,
+        "Precision@10": 0.2,
+        "MRR": 0.2,
+        "nDCG@3": 0.0,
+        "nDCG@5": 0.2372,
+        "nDCG@10": 0.4144
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "7a52c16569c6f4c36f76:3:0:21017e5027e1",
+          "score": 0.617775,
+          "source_url": "https://web.vodafone.com.eg/ar/adsl-catalog",
+          "section_path": [
+            "adsl-catalog",
+            "خصومات ومزايا RED"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "chunk_id": "0caaf19fc06b94f5e913:2:0:988d4db3989e",
+          "score": 0.558974,
+          "source_url": "https://web.vodafone.com.eg/ar/explore",
+          "section_path": [
+            "Explore",
+            "ڤودافون Red"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "6dadef903519b512cedf:0:0:9a11ee836fa9",
+          "score": 0.531995,
+          "source_url": "https://web.vodafone.com.eg/en/red-festive-23",
+          "section_path": [
+            "RED Festive 23"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "490beadad66d14951b6f:8:0:f93becef249c",
+          "score": 0.530793,
+          "source_url": "https://web.vodafone.com.eg/ar/red-business",
+          "section_path": [
+            "Red Family",
+            "اعرف اكتر عن نظام RED",
+            "إيه مميزات التجوال في نظام RED الجديد ؟"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "bd76e05ac4ddd39f7086:9:0:d64fd2c6074e",
+          "score": 0.511268,
+          "source_url": "https://web.vodafone.com.eg/ar/vodafone-red1",
+          "section_path": [
+            "إستمتع بأجدد الخدمات الترفيهية المقدمة من RED",
+            "اعرف اكتر عن نظام RED",
+            "إيه مميزات التجوال في نظام RED الجديد ؟"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 6,
+          "chunk_id": "4ecad22de922452b0b20:4:0:d38f97ad4d5b",
+          "score": 0.510535,
+          "source_url": "https://web.vodafone.com.eg/ar/mobile-internet-bundles",
+          "section_path": [
+            "باقات الإنترنت",
+            "الأسئلة الشائعة",
+            "4. باقات Plus متاحة لمين؟"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "f5306a29d32d75c856f5:0:0:fc8cb0ecb2f3",
+          "score": 0.509992,
+          "source_url": "https://web.vodafone.com.eg/ar/red-festive-23",
+          "section_path": [
+            "RED Festive 23"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "2b5dfe3c42c1061afcde:0:0:0d04ab751932",
+          "score": 0.508959,
+          "source_url": "https://web.vodafone.com.eg/en/red-business",
+          "section_path": [
+            "Red Family",
+            "Welcome to the World of RED Business"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "7d78eb52f33c7f9be58c:2:0:529f11811fd1",
+          "score": 0.508947,
+          "source_url": "https://advisory.vodafone.com.eg/ar",
+          "section_path": [
+            "استكشف مركز المعرفة"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 10,
+          "chunk_id": "bd76e05ac4ddd39f7086:0:0:bd8a3137a232",
+          "score": 0.508728,
+          "source_url": "https://web.vodafone.com.eg/ar/vodafone-red1",
+          "section_path": [
+            "إستمتع بأجدد الخدمات الترفيهية المقدمة من RED",
+            "أهلا بيك في عالم RED"
+          ],
+          "relevant": true
+        }
+      ]
+    },
+    {
+      "id": "curated-e9ed25d318",
+      "question": "What are the benefits of the new RED plans?",
+      "category": "english_factual",
+      "language": "en",
+      "latency_ms": 1592.088,
+      "metrics": {
+        "HitRate@1": 1.0,
+        "Recall@1": 1.0,
+        "Precision@1": 1.0,
+        "HitRate@3": 1.0,
+        "Recall@3": 1.0,
+        "Precision@3": 0.3333,
+        "HitRate@5": 1.0,
+        "Recall@5": 1.0,
+        "Precision@5": 0.2,
+        "HitRate@10": 1.0,
+        "Recall@10": 1.0,
+        "Precision@10": 0.1,
+        "MRR": 1.0,
+        "nDCG@3": 1.0,
+        "nDCG@5": 1.0,
+        "nDCG@10": 1.0
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "ae5ebcd99d41b789fba2:0:0:b526ed57f72c",
+          "score": 0.508687,
+          "source_url": "https://web.vodafone.com.eg/en/vodafone-red1",
+          "section_path": [
+            "Enjoy the Latest Entertainment Apps in the Market that Fit your Needs",
+            "Welcome to the World of RED"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "chunk_id": "7a52c16569c6f4c36f76:3:0:21017e5027e1",
+          "score": 0.501866,
+          "source_url": "https://web.vodafone.com.eg/ar/adsl-catalog",
+          "section_path": [
+            "adsl-catalog",
+            "خصومات ومزايا RED"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "a8795e6b740a6757f3da:0:0:14fb1c0c137a",
+          "score": 0.499186,
+          "source_url": "https://web.vodafone.com.eg/en/businessapp",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "490beadad66d14951b6f:8:0:f93becef249c",
+          "score": 0.494128,
+          "source_url": "https://web.vodafone.com.eg/ar/red-business",
+          "section_path": [
+            "Red Family",
+            "اعرف اكتر عن نظام RED",
+            "إيه مميزات التجوال في نظام RED الجديد ؟"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "e8e07dc78aea34f5d643:0:0:36da838f55d9",
+          "score": 0.486542,
+          "source_url": "https://web.vodafone.com.eg/en/newcard",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "2b5dfe3c42c1061afcde:0:0:0d04ab751932",
+          "score": 0.484915,
+          "source_url": "https://web.vodafone.com.eg/en/red-business",
+          "section_path": [
+            "Red Family",
+            "Welcome to the World of RED Business"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "dca0383e009bb8eb7846:1:0:6cdbfdd6200d",
+          "score": 0.481982,
+          "source_url": "https://web.vodafone.com.eg/ar/lorem-1",
+          "section_path": [
+            "خدمات فودافون، إدارة خطك ورصيدك وكل الخدمات اللي تحتاجها",
+            "New Card 2025"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "0caaf19fc06b94f5e913:2:0:988d4db3989e",
+          "score": 0.469046,
+          "source_url": "https://web.vodafone.com.eg/ar/explore",
+          "section_path": [
+            "Explore",
+            "ڤودافون Red"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "a36525fc4948bb758d46:0:0:57d3a94d5779",
+          "score": 0.461602,
+          "source_url": "https://web.vodafone.com.eg/en/maft-cs",
+          "section_path": [
+            "MAF T&Cs"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 10,
+          "chunk_id": "33315ba3c61215ba1af7:0:0:ae77e6e7d6bd",
+          "score": 0.46132,
+          "source_url": "https://web.vodafone.com.eg/en/business",
+          "section_path": [
+            "Vodafone Egypt home page",
+            "New World of RED Business !"
+          ],
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "curated-402be20084",
+      "question": "ايه هو Vodafone Cash وازاي أستخدمه؟",
+      "category": "mixed_language",
+      "language": "mixed",
+      "latency_ms": 735.579,
+      "metrics": {
+        "HitRate@1": 0.0,
+        "Recall@1": 0.0,
+        "Precision@1": 0.0,
+        "HitRate@3": 0.0,
+        "Recall@3": 0.0,
+        "Precision@3": 0.0,
+        "HitRate@5": 0.0,
+        "Recall@5": 0.0,
+        "Precision@5": 0.0,
+        "HitRate@10": 0.0,
+        "Recall@10": 0.0,
+        "Precision@10": 0.0,
+        "MRR": 0.0,
+        "nDCG@3": 0.0,
+        "nDCG@5": 0.0,
+        "nDCG@10": 0.0
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "80084180c4e37a8af3bb:4:0:1dd41cb03dd3",
+          "score": 0.626397,
+          "source_url": "https://web.vodafone.com.eg/en/home",
+          "section_path": [
+            "Vodafone Egypt home page",
+            "Wi-Fi Calling",
+            "Vodafone Cash"
+          ],
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "curated-0a142fc293",
+      "question": "What is Vodafone DSL and what speeds are available?",
+      "category": "english_factual",
+      "language": "en",
+      "latency_ms": 589.828,
+      "metrics": {
+        "HitRate@1": 1.0,
+        "Recall@1": 1.0,
+        "Precision@1": 1.0,
+        "HitRate@3": 1.0,
+        "Recall@3": 1.0,
+        "Precision@3": 0.3333,
+        "HitRate@5": 1.0,
+        "Recall@5": 1.0,
+        "Precision@5": 0.2,
+        "HitRate@10": 1.0,
+        "Recall@10": 1.0,
+        "Precision@10": 0.1,
+        "MRR": 1.0,
+        "nDCG@3": 1.0,
+        "nDCG@5": 1.0,
+        "nDCG@10": 1.0
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "80084180c4e37a8af3bb:5:0:180c47009e1d",
+          "score": 0.611789,
+          "source_url": "https://web.vodafone.com.eg/en/home",
+          "section_path": [
+            "Vodafone Egypt home page",
+            "Wi-Fi Calling",
+            "Vodafone DSL"
+          ],
+          "relevant": true
+        }
+      ]
+    },
+    {
+      "id": "curated-df887471ff",
+      "question": "ازاي أشترك في كارت الفكة؟",
+      "category": "arabic_factual",
+      "language": "ar",
+      "latency_ms": 573.002,
+      "metrics": {
+        "HitRate@1": 0.0,
+        "Recall@1": 0.0,
+        "Precision@1": 0.0,
+        "HitRate@3": 0.0,
+        "Recall@3": 0.0,
+        "Precision@3": 0.0,
+        "HitRate@5": 0.0,
+        "Recall@5": 0.0,
+        "Precision@5": 0.0,
+        "HitRate@10": 0.0,
+        "Recall@10": 0.0,
+        "Precision@10": 0.0,
+        "MRR": 0.0,
+        "nDCG@3": 0.0,
+        "nDCG@5": 0.0,
+        "nDCG@10": 0.0
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "d9ec68f0fd05fba291ea:4:0:4423690b241c",
+          "score": 0.564303,
+          "source_url": "https://web.vodafone.com.eg/ar/services",
+          "section_path": [
+            "خدمات فودافون، إدارة خطك ورصيدك وكل الخدمات اللي تحتاجها",
+            "ترفيه بلا حدود",
+            "عالم هنيدي"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "chunk_id": "171f1719c29b597c0195:0:0:56052b51a803",
+          "score": 0.526085,
+          "source_url": "https://web.vodafone.com.eg/en/click-for-a-line",
+          "section_path": [
+            "buy business line",
+            "Click for a Line"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "d9ec68f0fd05fba291ea:2:0:fa5891fe11dd",
+          "score": 0.518505,
+          "source_url": "https://web.vodafone.com.eg/ar/services",
+          "section_path": [
+            "خدمات فودافون، إدارة خطك ورصيدك وكل الخدمات اللي تحتاجها",
+            "ترفيه بلا حدود",
+            "عالم محمد صلاح"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "chunk_id": "362f9f5915351af660b9:5:0:b7eedcfe38f2",
+          "score": 0.513877,
+          "source_url": "https://web.vodafone.com.eg/ar/vodafone-cash",
+          "section_path": [
+            "إيه هى خدمات ڤودافون كاش الأخرى ؟",
+            "خدمة إيداع بالكارت"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "0caaf19fc06b94f5e913:0:0:7f93df795d4e",
+          "score": 0.502585,
+          "source_url": "https://web.vodafone.com.eg/ar/explore",
+          "section_path": [
+            "Explore",
+            "ڤودافون DSL"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "0c589afc3cef3fd9f109:6:0:43bb60054f10",
+          "score": 0.499701,
+          "source_url": "https://advisory.vodafone.com.eg/knowledge-center/why-creating-a-great-brand-will-help-your-small-business-soar",
+          "section_path": [
+            "Why creating a great brand will help your small business soar",
+            "More news and insights",
+            "Top tips for increasing customer loyalty"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "2a2e5840783aa3f510f1:1:0:46c29d233c35",
+          "score": 0.499159,
+          "source_url": "https://web.vodafone.com.eg/ar/vodafone-rate-plans_rd",
+          "section_path": [
+            "خطط اسعار ڤودافون",
+            "خطط الأسعار",
+            "أنظمة ڤودافون فليكس"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "0caaf19fc06b94f5e913:1:0:fcf24b65a30d",
+          "score": 0.494839,
+          "source_url": "https://web.vodafone.com.eg/ar/explore",
+          "section_path": [
+            "Explore",
+            "أنظمة الكارت"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "0fa2ad5829c341ffac3d:2:0:4209d1ba8f03",
+          "score": 0.492963,
+          "source_url": "https://advisory.vodafone.com.eg/",
+          "section_path": [
+            "Explore the Knowledge Centre"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 10,
+          "chunk_id": "4ecad22de922452b0b20:2:0:fcb17d119260",
+          "score": 0.488972,
+          "source_url": "https://web.vodafone.com.eg/ar/mobile-internet-bundles",
+          "section_path": [
+            "باقات الإنترنت",
+            "الأسئلة الشائعة",
+            "2. ازاي ممكن اشترك في باقات Plus ؟"
+          ],
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "curated-d4b2ed5c9b",
+      "question": "Tell me about Fakka cards and how to recharge them",
+      "category": "english_factual",
+      "language": "en",
+      "latency_ms": 1398.695,
+      "metrics": {
+        "HitRate@1": 0.0,
+        "Recall@1": 0.0,
+        "Precision@1": 0.0,
+        "HitRate@3": 1.0,
+        "Recall@3": 1.0,
+        "Precision@3": 0.3333,
+        "HitRate@5": 1.0,
+        "Recall@5": 1.0,
+        "Precision@5": 0.2,
+        "HitRate@10": 1.0,
+        "Recall@10": 1.0,
+        "Precision@10": 0.1,
+        "MRR": 0.3333,
+        "nDCG@3": 0.5,
+        "nDCG@5": 0.5,
+        "nDCG@10": 0.5
+      },
+      "retrieved": [
+        {
+          "rank": 1,
+          "chunk_id": "3192ec44a1222a05ae3b:0:0:5100428bb843",
+          "score": 0.550861,
+          "source_url": "https://web.vodafone.com.eg/en/red-summer-promo",
+          "section_path": [
+            "summer promo",
+            "Share your Summer Happiness"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "chunk_id": "befd85a4bdcab87e0262:0:0:59fcabe0a831",
+          "score": 0.543155,
+          "source_url": "https://web.vodafone.com.eg/en/eid-promo23",
+          "section_path": [
+            "Eid Promo 2023 from Vodafone",
+            "This Eid Vodafone is giving you free TikTok megabytes!"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "chunk_id": "7808aa8d588a49fecd63:0:0:3b935c303e0f",
+          "score": 0.543033,
+          "source_url": "https://web.vodafone.com.eg/en/kart-el-korout",
+          "section_path": [
+            "Different prepaid rate plans with the lowest minute rate that suits you",
+            "Kart El-Korout Rateplans",
+            "Fakka Card 26 EGP"
+          ],
+          "relevant": true
+        },
+        {
+          "rank": 4,
+          "chunk_id": "970e9f34a425734af389:5:0:ae7248246081",
+          "score": 0.514117,
+          "source_url": "https://web.vodafone.com.eg/ar/anavodafone",
+          "section_path": [
+            "صفحه تطبيق انا فودافون",
+            "عندك سؤال عن التطبيق؟",
+            "فاتورتي"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "chunk_id": "3eb10c88e4cf9106c493:0:0:1ef873666bd6",
+          "score": 0.511929,
+          "source_url": "https://web.vodafone.com.eg/en/eid-terms-and-conditions",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 6,
+          "chunk_id": "3192ec44a1222a05ae3b:1:4:43d8f66070a2",
+          "score": 0.504257,
+          "source_url": "https://web.vodafone.com.eg/en/red-summer-promo",
+          "section_path": [
+            "summer promo",
+            "Share your Summer Happiness",
+            "Terms & Conditions"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 7,
+          "chunk_id": "3192ec44a1222a05ae3b:1:0:464203e0a67a",
+          "score": 0.49948,
+          "source_url": "https://web.vodafone.com.eg/en/red-summer-promo",
+          "section_path": [
+            "summer promo",
+            "Share your Summer Happiness",
+            "Terms & Conditions"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 8,
+          "chunk_id": "c23fb01af23946014ddb:0:0:d012931dfb9d",
+          "score": 0.497821,
+          "source_url": "https://www.vodafone.com.eg/en/recharge",
+          "section_path": null,
+          "relevant": false
+        },
+        {
+          "rank": 9,
+          "chunk_id": "95eb52844a9412872fe0:0:4:2f0ff08feb65",
+          "score": 0.491965,
+          "source_url": "https://web.vodafone.com.eg/en/recharge-bill-payment",
+          "section_path": [
+            "How To Recharge ?"
+          ],
+          "relevant": false
+        },
+        {
+          "rank": 10,
+          "chunk_id": "e67d1bdd0580cbb9b8d7:0:0:78d0940510d2",
+          "score": 0.491887,
+          "source_url": "https://web.vodafone.com.eg/recharge",
+          "section_path": null,
+          "relevant": false
+        }
+      ]
+    }
+  ]
+}
