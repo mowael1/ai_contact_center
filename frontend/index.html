@@ -732,6 +732,62 @@
       to { transform: translateY(0); opacity: 1; }
     }
 
+    /* TICKETS / CALLING */
+    .badge-warning {
+      color: var(--warning);
+      background: var(--warning-bg);
+    }
+
+    .badge-neutral {
+      color: #475569;
+      background: #e2e8f0;
+    }
+
+    .stat-note {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 8px;
+    }
+
+    .call-btn {
+      white-space: nowrap;
+    }
+
+    .call-live {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      margin-top: 16px;
+      border-radius: 10px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      font-size: 14px;
+    }
+
+    .pulse-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: currentColor;
+      animation: pulse 1.2s ease-in-out infinite;
+      flex: 0 0 auto;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: .35; transform: scale(.8); }
+      50% { opacity: 1; transform: scale(1.15); }
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .text-block {
+      white-space: pre-wrap;
+      line-height: 1.65;
+    }
+
     /* RESPONSIVE */
     @media (max-width: 900px) {
       .login-page {
@@ -853,11 +909,15 @@
       admins: [],
       agents: [],
       customers: [],
+      tickets: [],
+      followUps: [],
       currentCompany: null,
       companySearch: "",
       adminSearch: "",
       agentSearch: "",
       customerSearch: "",
+      ticketSearch: "",
+      followUpSearch: "",
       loadingCount: 0
     };
 
@@ -975,6 +1035,8 @@
       state.admins = [];
       state.agents = [];
       state.customers = [];
+      state.tickets = [];
+      state.followUps = [];
       state.currentCompany = null;
     }
 
@@ -1133,6 +1195,18 @@
         return role === "ADMIN";
       }
 
+      if (route === "/tickets" || route === "/tickets/new") {
+        return role === "ADMIN";
+      }
+
+      if (/^\/tickets\/\d+$/.test(route)) {
+        return role === "ADMIN" || role === "AGENT";
+      }
+
+      if (route.startsWith("/follow-ups")) {
+        return role === "AGENT";
+      }
+
       return ["SUPER_ADMIN", "ADMIN", "AGENT"].includes(role);
     }
 
@@ -1233,6 +1307,17 @@
           const id = route.split("/")[2];
           await renderCustomerDetails(id);
 
+        } else if (route === "/tickets") {
+          await renderTickets();
+        } else if (route === "/tickets/new") {
+          await renderTicketCreate();
+        } else if (/^\/tickets\/\d+$/.test(route)) {
+          const id = route.split("/")[2];
+          await renderTicketDetails(id);
+
+        } else if (route === "/follow-ups") {
+          await renderFollowUps();
+
         } else {
           renderNotFound();
         }
@@ -1297,6 +1382,26 @@
         `
         : "";
 
+      const ticketsNav = role === "ADMIN"
+        ? `
+          <button class="nav-btn ${activeItem === "tickets" ? "active" : ""}"
+                  onclick="navigate('/tickets')">
+            <span>🎫</span>
+            <span>Tickets</span>
+          </button>
+        `
+        : "";
+
+      const followUpsNav = role === "AGENT"
+        ? `
+          <button class="nav-btn ${activeItem === "follow-ups" ? "active" : ""}"
+                  onclick="navigate('/follow-ups')">
+            <span>☎</span>
+            <span>My Follow-ups</span>
+          </button>
+        `
+        : "";
+
       root.innerHTML = `
         <div class="shell">
           <aside class="sidebar" id="sidebar">
@@ -1319,6 +1424,8 @@
               ${adminsNav}
               ${agentsNav}
               ${customersNav}
+              ${ticketsNav}
+              ${followUpsNav}
 
               <button class="nav-btn ${activeItem === "profile" ? "active" : ""}"
                       onclick="navigate('/profile')">
@@ -1391,8 +1498,8 @@
             <div class="brand-mark">AI</div>
             <h1>AI Contact Center</h1>
             <p>
-              Secure role-based workspace for platform administrators,
-              company administrators and agents.
+              Multi-tenant AI contact center with company administration,
+              ticket assignment and real Arabic AI follow-up calls.
             </p>
           </div>
 
@@ -1476,7 +1583,7 @@
       }
 
       if (role === "AGENT") {
-        renderAgentDashboard();
+        await renderAgentDashboard();
         return;
       }
 
@@ -1516,6 +1623,18 @@
       const data = await apiRequest("/customers");
       state.customers = unwrapList(data);
       return state.customers;
+    }
+
+    async function loadTickets() {
+      const data = await apiRequest("/tickets");
+      state.tickets = unwrapList(data);
+      return state.tickets;
+    }
+
+    async function loadFollowUps() {
+      const data = await apiRequest("/tickets/my-follow-ups");
+      state.followUps = unwrapList(data);
+      return state.followUps;
     }
 
     async function renderSuperAdminDashboard() {
@@ -1632,14 +1751,17 @@
       const user = state.currentUser;
       const name = user?.full_name || user?.email || "Admin";
 
-      const [agents, customers] = await Promise.all([
+      const [agents, customers, tickets] = await Promise.all([
         loadAgents(),
-        loadCustomers()
+        loadCustomers(),
+        loadTickets()
       ]);
 
       const activeAgents = agents.filter(agent => agent.is_active === true).length;
       const activeCustomers = customers.filter(customer => customer.is_active === true).length;
-      const inactiveCustomers = customers.filter(customer => customer.is_active === false).length;
+      const pendingTickets = tickets.filter(ticket => ticket.status === "pending_follow_up").length;
+      const needsAgent = tickets.filter(ticket => ticket.status === "needs_agent").length;
+      const resolved = tickets.filter(ticket => ticket.status === "resolved").length;
 
       renderShell(`
         <section class="page">
@@ -1651,13 +1773,14 @@
 
             <div class="actions">
               <button class="btn btn-secondary" onclick="navigate('/agents/new')">+ Add Agent</button>
-              <button class="btn btn-primary" onclick="navigate('/customers/new')">+ Add Customer</button>
+              <button class="btn btn-secondary" onclick="navigate('/customers/new')">+ Add Customer</button>
+              <button class="btn btn-primary" onclick="navigate('/tickets/new')">+ Create Ticket</button>
             </div>
           </div>
 
           <div class="stats">
             <div class="card stat-card">
-              <div class="stat-label">Total Agents</div>
+              <div class="stat-label">Agents</div>
               <div class="stat-value">${agents.length}</div>
               <div class="stat-note">${activeAgents} active</div>
             </div>
@@ -1669,31 +1792,54 @@
             </div>
 
             <div class="card stat-card">
-              <div class="stat-label">Inactive Customers</div>
-              <div class="stat-value">${inactiveCustomers}</div>
+              <div class="stat-label">Follow-up Tickets</div>
+              <div class="stat-value">${pendingTickets}</div>
+              <div class="stat-note">${needsAgent} need agent · ${resolved} resolved</div>
             </div>
           </div>
 
           <div class="card">
-            <div class="card-body">
-              <h2 style="margin-bottom:10px;">Company: ${escapeHtml(getCompanyName(user))}</h2>
-              <p style="color:var(--muted);line-height:1.7;">
-                Agents and Customers are scoped to your company by the backend. The frontend never sends
-                a company_id when creating or updating a Customer.
-              </p>
-              <div class="actions" style="margin-top:20px;">
-                <button class="btn btn-secondary" onclick="navigate('/agents')">Manage Agents</button>
-                <button class="btn btn-primary" onclick="navigate('/customers')">Manage Customers</button>
+            <div class="card-header">
+              <div>
+                <h2>Operational Flow</h2>
+                <div class="stat-note">Customer → Ticket → Assigned Agent → AI Follow-up Call</div>
               </div>
+              <button class="btn btn-primary btn-sm" onclick="navigate('/tickets')">Manage Tickets</button>
+            </div>
+            <div class="card-body">
+              <p style="color:var(--muted);line-height:1.7;">
+                Tickets are scoped to <strong>${escapeHtml(getCompanyName(user))}</strong>. Assign each follow-up ticket to an Agent;
+                the Agent can then launch the real AI-powered Vonage call from My Follow-ups.
+              </p>
             </div>
           </div>
         </section>
       `, "dashboard", "Dashboard");
     }
 
-    function renderAgentDashboard() {
+    async function renderAgentDashboard() {
       const user = state.currentUser;
       const name = user?.full_name || user?.email || "Agent";
+      const followUps = await loadFollowUps();
+
+      const rows = followUps.slice(0, 5).map(ticket => {
+        const customer = ticket.customer || {};
+        return `
+          <tr>
+            <td><strong>#${escapeHtml(ticket.id)}</strong></td>
+            <td>${escapeHtml(customer.full_name || `Customer #${ticket.customer_id ?? "—"}`)}</td>
+            <td>${escapeHtml(customer.phone || "—")}</td>
+            <td>${escapeHtml(ticket.subject || "—")}</td>
+            <td>${ticketStatusBadge(ticket.status)}</td>
+            <td>
+              <button class="btn btn-success btn-sm call-btn"
+                      onclick="confirmStartCall(${Number(ticket.id)}, '${escapeJs(customer.full_name || ticket.subject || `Ticket #${ticket.id}`)}')">
+                ☎ Start AI Call
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join("");
 
       renderShell(
         `
@@ -1701,38 +1847,45 @@
             <div class="page-header">
               <div>
                 <h1>Welcome, ${escapeHtml(name)}</h1>
-                <p>Your agent workspace.</p>
+                <p>Your assigned AI follow-up calls.</p>
               </div>
+              <button class="btn btn-primary" onclick="navigate('/follow-ups')">View All Follow-ups</button>
             </div>
 
             <div class="stats">
               <div class="card stat-card">
-                <div class="stat-label">Role</div>
-                <div class="stat-value" style="font-size:24px;">Agent</div>
+                <div class="stat-label">Pending Follow-ups</div>
+                <div class="stat-value">${followUps.length}</div>
               </div>
 
               <div class="card stat-card">
                 <div class="stat-label">Company</div>
-                <div class="stat-value" style="font-size:24px;">
-                  ${escapeHtml(getCompanyName())}
-                </div>
+                <div class="stat-value" style="font-size:24px;">${escapeHtml(getCompanyName())}</div>
               </div>
 
               <div class="card stat-card">
-                <div class="stat-label">Account Status</div>
-                <div style="margin-top:8px;">
-                  ${statusBadge(user?.is_active)}
-                </div>
+                <div class="stat-label">AI Calling</div>
+                <div style="margin-top:8px;"><span class="badge badge-success">Ready</span></div>
+                <div class="stat-note">Vonage + Arabic STT + Groq LLM</div>
               </div>
             </div>
 
             <div class="card">
-              <div class="card-body">
-                <h2 style="margin-bottom:10px;">Agent Workspace</h2>
-                <p style="color:var(--muted);line-height:1.7;">
-                  This area is ready for assigned customers, calls, tickets and escalations once
-                  those backend endpoints are available.
-                </p>
+              <div class="card-header">
+                <div>
+                  <h2>Next Follow-ups</h2>
+                  <div class="stat-note">Calls use the customer's saved phone number.</div>
+                </div>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr><th>Ticket</th><th>Customer</th><th>Phone</th><th>Subject</th><th>Status</th><th>Action</th></tr>
+                  </thead>
+                  <tbody>
+                    ${rows || `<tr><td colspan="6"><div class="state-box"><h3>No pending follow-ups</h3><p>Nothing is currently assigned to you.</p></div></td></tr>`}
+                  </tbody>
+                </table>
               </div>
             </div>
           </section>
@@ -3026,6 +3179,503 @@
           await router();
         }
       });
+    }
+
+    // ------------------------------------------------------------
+    // Tickets / Agent Follow-ups / Real AI Calling
+    // ------------------------------------------------------------
+
+    function ticketStatusLabel(status) {
+      const labels = {
+        pending_follow_up: "Pending Follow-up",
+        needs_agent: "Needs Agent",
+        resolved: "Resolved"
+      };
+      return labels[status] || status || "Unknown";
+    }
+
+    function ticketStatusBadge(status) {
+      const label = escapeHtml(ticketStatusLabel(status));
+      if (status === "resolved") return `<span class="badge badge-success">${label}</span>`;
+      if (status === "needs_agent") return `<span class="badge badge-danger">${label}</span>`;
+      if (status === "pending_follow_up") return `<span class="badge badge-warning">${label}</span>`;
+      return `<span class="badge badge-neutral">${label}</span>`;
+    }
+
+    function callStatusBadge(status) {
+      const label = escapeHtml(String(status || "initiating").replaceAll("_", " "));
+      if (status === "completed") return `<span class="badge badge-success">${label}</span>`;
+      if (["failed", "no_answer", "busy"].includes(status)) return `<span class="badge badge-danger">${label}</span>`;
+      return `<span class="badge badge-info">${label}</span>`;
+    }
+
+    function findCustomerForTicket(ticket) {
+      if (ticket?.customer) return ticket.customer;
+      return state.customers.find(customer => String(customer.id) === String(ticket?.customer_id)) || null;
+    }
+
+    function findAgentForTicket(ticket) {
+      if (ticket?.assigned_agent) return ticket.assigned_agent;
+      if (ticket?.agent) return ticket.agent;
+      return state.agents.find(agent => String(agent.id) === String(ticket?.assigned_agent_id)) || null;
+    }
+
+    async function renderTickets() {
+      if (getRoleName() !== "ADMIN") { navigate("/403"); return; }
+
+      await Promise.all([
+        loadTickets(),
+        loadCustomers(),
+        loadAgents()
+      ]);
+
+      renderShell(`
+        <section class="page">
+          <div class="page-header">
+            <div>
+              <h1>Tickets</h1>
+              <p>Create and assign customer follow-up tickets to Agents.</p>
+            </div>
+            <button class="btn btn-primary" onclick="navigate('/tickets/new')">+ Create Ticket</button>
+          </div>
+
+          <div class="stats">
+            <div class="card stat-card">
+              <div class="stat-label">Pending Follow-up</div>
+              <div class="stat-value">${state.tickets.filter(t => t.status === "pending_follow_up").length}</div>
+            </div>
+            <div class="card stat-card">
+              <div class="stat-label">Needs Agent</div>
+              <div class="stat-value">${state.tickets.filter(t => t.status === "needs_agent").length}</div>
+            </div>
+            <div class="card stat-card">
+              <div class="stat-label">Resolved</div>
+              <div class="stat-value">${state.tickets.filter(t => t.status === "resolved").length}</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="toolbar">
+              <div class="search-box">
+                <input id="ticketSearch" type="search" placeholder="Search by ticket, customer, agent or subject..." value="${escapeHtml(state.ticketSearch)}" />
+              </div>
+              <div class="muted" style="font-size:14px;align-self:center;"><span id="ticketResultCount"></span></div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>ID</th><th>Customer</th><th>Assigned Agent</th><th>Subject</th><th>Status</th><th>Created</th><th>Action</th></tr></thead>
+                <tbody id="ticketsTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      `, "tickets", "Tickets");
+
+      document.getElementById("ticketSearch")?.addEventListener("input", event => {
+        state.ticketSearch = event.target.value;
+        drawTicketsTable();
+      });
+
+      drawTicketsTable();
+    }
+
+    function drawTicketsTable() {
+      const tbody = document.getElementById("ticketsTableBody");
+      const count = document.getElementById("ticketResultCount");
+      if (!tbody) return;
+
+      const query = state.ticketSearch.trim().toLowerCase();
+      const filtered = state.tickets.filter(ticket => {
+        const customer = findCustomerForTicket(ticket);
+        const agent = findAgentForTicket(ticket);
+        const haystack = [
+          ticket.id,
+          ticket.subject,
+          ticket.status,
+          customer?.full_name,
+          customer?.phone,
+          agent?.full_name,
+          agent?.email
+        ].filter(Boolean).join(" ").toLowerCase();
+        return haystack.includes(query);
+      });
+
+      if (count) count.textContent = `${filtered.length} result${filtered.length === 1 ? "" : "s"}`;
+
+      tbody.innerHTML = filtered.length ? filtered.map(ticket => {
+        const customer = findCustomerForTicket(ticket);
+        const agent = findAgentForTicket(ticket);
+        return `
+          <tr>
+            <td><strong>#${escapeHtml(ticket.id)}</strong></td>
+            <td>${escapeHtml(customer?.full_name || `Customer #${ticket.customer_id ?? "—"}`)}</td>
+            <td>${escapeHtml(agent?.full_name || `Agent #${ticket.assigned_agent_id ?? "—"}`)}</td>
+            <td>${escapeHtml(ticket.subject || "—")}</td>
+            <td>${ticketStatusBadge(ticket.status)}</td>
+            <td>${formatDate(ticket.created_at)}</td>
+            <td><button class="btn btn-secondary btn-sm" onclick="navigate('/tickets/${Number(ticket.id)}')">View</button></td>
+          </tr>
+        `;
+      }).join("") : `<tr><td colspan="7"><div class="state-box"><h3>${state.tickets.length ? "No matching tickets" : "No tickets yet"}</h3><p>${state.tickets.length ? "Try another search term." : "Create the first follow-up ticket."}</p></div></td></tr>`;
+    }
+
+    async function renderTicketCreate() {
+      if (getRoleName() !== "ADMIN") { navigate("/403"); return; }
+
+      const [customers, agents] = await Promise.all([
+        loadCustomers(),
+        loadAgents()
+      ]);
+
+      const activeCustomers = customers.filter(customer => customer.is_active === true);
+      const activeAgents = agents.filter(agent => agent.is_active === true);
+
+      const customerOptions = activeCustomers.map(customer => `
+        <option value="${Number(customer.id)}">${escapeHtml(customer.full_name || `Customer #${customer.id}`)} — ${escapeHtml(customer.phone || "No phone")}</option>
+      `).join("");
+
+      const agentOptions = activeAgents.map(agent => `
+        <option value="${Number(agent.id)}">${escapeHtml(agent.full_name || agent.email || `Agent #${agent.id}`)}</option>
+      `).join("");
+
+      renderShell(`
+        <section class="page">
+          <div class="page-header">
+            <div>
+              <button class="btn-link" onclick="navigate('/tickets')">← Back to Tickets</button>
+              <h1 style="margin-top:10px;">Create Follow-up Ticket</h1>
+              <p>Assign an active Customer to an active Agent.</p>
+            </div>
+          </div>
+
+          <div class="card"><div class="card-body">
+            <form id="ticketCreateForm">
+              <div class="error-box" id="ticketCreateError"></div>
+
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="ticketCustomer">Customer *</label>
+                  <select id="ticketCustomer" required ${activeCustomers.length ? "" : "disabled"}>
+                    <option value="">Select customer</option>
+                    ${customerOptions || '<option value="">No active customers available</option>'}
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="ticketAgent">Assigned Agent *</label>
+                  <select id="ticketAgent" required ${activeAgents.length ? "" : "disabled"}>
+                    <option value="">Select agent</option>
+                    ${agentOptions || '<option value="">No active agents available</option>'}
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="ticketSubject">Subject *</label>
+                <input id="ticketSubject" type="text" maxlength="200" required placeholder="Previous support issue" />
+              </div>
+
+              <div class="form-group">
+                <label for="ticketDescription">Description</label>
+                <textarea id="ticketDescription" rows="4" style="width:100%;border:1px solid #d7dde7;border-radius:10px;padding:12px 13px;font:inherit;resize:vertical;" placeholder="What happened in the original support interaction?"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="ticketProcedureSteps">Procedure Steps</label>
+                <textarea id="ticketProcedureSteps" rows="4" style="width:100%;border:1px solid #d7dde7;border-radius:10px;padding:12px 13px;font:inherit;resize:vertical;" placeholder="Steps previously given to the customer..."></textarea>
+              </div>
+
+              <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="navigate('/tickets')">Cancel</button>
+                <button type="submit" class="btn btn-primary" id="ticketCreateBtn" ${activeCustomers.length && activeAgents.length ? "" : "disabled"}>Create Ticket</button>
+              </div>
+            </form>
+          </div></div>
+        </section>
+      `, "tickets", "Create Ticket");
+
+      document.getElementById("ticketCreateForm")?.addEventListener("submit", async event => {
+        event.preventDefault();
+        hideInlineError("ticketCreateError");
+        const button = document.getElementById("ticketCreateBtn");
+        button.disabled = true;
+        button.textContent = "Creating...";
+
+        try {
+          const created = await apiRequest("/tickets", {
+            method: "POST",
+            body: {
+              customer_id: Number(document.getElementById("ticketCustomer").value),
+              assigned_agent_id: Number(document.getElementById("ticketAgent").value),
+              subject: document.getElementById("ticketSubject").value.trim(),
+              description: document.getElementById("ticketDescription").value.trim() || null,
+              procedure_steps: document.getElementById("ticketProcedureSteps").value.trim() || null
+            }
+          });
+
+          showToast("Ticket created and assigned successfully.", "success");
+          navigate(created?.id ? `/tickets/${created.id}` : "/tickets");
+        } catch (error) {
+          showInlineError("ticketCreateError", error.message);
+        } finally {
+          button.disabled = false;
+          button.textContent = "Create Ticket";
+        }
+      });
+    }
+
+    async function renderTicketDetails(id) {
+      const role = getRoleName();
+      if (!["ADMIN", "AGENT"].includes(role)) { navigate("/403"); return; }
+
+      if (role === "ADMIN") {
+        await Promise.all([loadCustomers(), loadAgents()]);
+      }
+
+      const ticket = await apiRequest(`/tickets/${encodeURIComponent(id)}`);
+      const customer = findCustomerForTicket(ticket);
+      const agent = findAgentForTicket(ticket);
+      const canCall = role === "AGENT" && ticket.status === "pending_follow_up";
+
+      renderShell(`
+        <section class="page">
+          <div class="page-header">
+            <div>
+              <button class="btn-link" onclick="navigate('${role === "AGENT" ? "/follow-ups" : "/tickets"}')">← Back</button>
+              <h1 style="margin-top:10px;">Ticket #${escapeHtml(ticket.id)}</h1>
+              <p>${escapeHtml(ticket.subject || "Follow-up ticket")}</p>
+            </div>
+            <div class="actions">
+              ${canCall ? `<button class="btn btn-success" onclick="confirmStartCall(${Number(ticket.id)}, '${escapeJs(customer?.full_name || ticket.subject || `Ticket #${ticket.id}`)}')">☎ Start AI Call</button>` : ""}
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><h2>Ticket Information</h2>${ticketStatusBadge(ticket.status)}</div>
+            <div class="card-body">
+              <div class="details-grid">
+                ${detailItem("Ticket ID", ticket.id)}
+                ${detailItem("Status", ticketStatusLabel(ticket.status))}
+                ${detailItem("Customer", customer?.full_name || `Customer #${ticket.customer_id ?? "—"}`)}
+                ${detailItem("Customer Phone", customer?.phone || "—")}
+                ${detailItem("Assigned Agent", agent?.full_name || `Agent #${ticket.assigned_agent_id ?? "—"}`)}
+                ${detailItem("Created At", formatDate(ticket.created_at), true)}
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:20px;">
+            <div class="card-header"><h2>Support Context</h2></div>
+            <div class="card-body">
+              <div style="margin-bottom:22px;">
+                <div class="stat-label">Description</div>
+                <div class="text-block">${escapeHtml(ticket.description || "No description provided.")}</div>
+              </div>
+              <div>
+                <div class="stat-label">Procedure Steps Previously Given</div>
+                <div class="text-block">${escapeHtml(ticket.procedure_steps || "No procedure steps provided.")}</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      `, role === "AGENT" ? "follow-ups" : "tickets", "Ticket Details");
+    }
+
+    async function renderFollowUps() {
+      if (getRoleName() !== "AGENT") { navigate("/403"); return; }
+      await loadFollowUps();
+
+      renderShell(`
+        <section class="page">
+          <div class="page-header">
+            <div>
+              <h1>My Follow-ups</h1>
+              <p>Assigned tickets that are ready for an AI follow-up call.</p>
+            </div>
+            <button class="btn btn-secondary" onclick="router()">↻ Refresh</button>
+          </div>
+
+          <div class="stats">
+            <div class="card stat-card">
+              <div class="stat-label">Pending Follow-ups</div>
+              <div class="stat-value">${state.followUps.length}</div>
+            </div>
+            <div class="card stat-card">
+              <div class="stat-label">Call Flow</div>
+              <div class="stat-value" style="font-size:22px;">Arabic AI</div>
+              <div class="stat-note">Audio → STT → Groq → Outcome</div>
+            </div>
+            <div class="card stat-card">
+              <div class="stat-label">Agent</div>
+              <div class="stat-value" style="font-size:22px;">${escapeHtml(state.currentUser?.full_name || "Agent")}</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="toolbar">
+              <div class="search-box">
+                <input id="followUpSearch" type="search" placeholder="Search customer, phone or subject..." value="${escapeHtml(state.followUpSearch)}" />
+              </div>
+              <div class="muted" style="font-size:14px;align-self:center;"><span id="followUpResultCount"></span></div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Ticket</th><th>Customer</th><th>Phone</th><th>Subject</th><th>Procedure</th><th>Status</th><th>Action</th></tr></thead>
+                <tbody id="followUpsTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      `, "follow-ups", "My Follow-ups");
+
+      document.getElementById("followUpSearch")?.addEventListener("input", event => {
+        state.followUpSearch = event.target.value;
+        drawFollowUpsTable();
+      });
+
+      drawFollowUpsTable();
+    }
+
+    function drawFollowUpsTable() {
+      const tbody = document.getElementById("followUpsTableBody");
+      const count = document.getElementById("followUpResultCount");
+      if (!tbody) return;
+
+      const query = state.followUpSearch.trim().toLowerCase();
+      const filtered = state.followUps.filter(ticket => {
+        const customer = ticket.customer || {};
+        return [ticket.id, ticket.subject, ticket.procedure_steps, customer.full_name, customer.phone]
+          .filter(Boolean).join(" ").toLowerCase().includes(query);
+      });
+
+      if (count) count.textContent = `${filtered.length} result${filtered.length === 1 ? "" : "s"}`;
+
+      tbody.innerHTML = filtered.length ? filtered.map(ticket => {
+        const customer = ticket.customer || {};
+        const procedure = String(ticket.procedure_steps || "—");
+        const shortProcedure = procedure.length > 65 ? `${procedure.slice(0, 65)}…` : procedure;
+        return `
+          <tr>
+            <td><button class="btn-link" onclick="navigate('/tickets/${Number(ticket.id)}')">#${escapeHtml(ticket.id)}</button></td>
+            <td><strong>${escapeHtml(customer.full_name || `Customer #${ticket.customer_id ?? "—"}`)}</strong></td>
+            <td>${escapeHtml(customer.phone || "—")}</td>
+            <td>${escapeHtml(ticket.subject || "—")}</td>
+            <td title="${escapeHtml(procedure)}">${escapeHtml(shortProcedure)}</td>
+            <td>${ticketStatusBadge(ticket.status)}</td>
+            <td>
+              <button class="btn btn-success btn-sm call-btn"
+                      onclick="confirmStartCall(${Number(ticket.id)}, '${escapeJs(customer.full_name || ticket.subject || `Ticket #${ticket.id}`)}')">
+                ☎ Start AI Call
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join("") : `<tr><td colspan="7"><div class="state-box"><h3>${state.followUps.length ? "No matching follow-ups" : "No pending follow-ups"}</h3><p>${state.followUps.length ? "Try another search term." : "You currently have no pending follow-up calls."}</p></div></td></tr>`;
+    }
+
+    function confirmStartCall(ticketId, customerName) {
+      openConfirm({
+        title: "Start AI Follow-up Call",
+        message: `Start a real outbound AI call for ${customerName}? The customer's saved phone number will be called through Vonage.`,
+        confirmText: "Start Call",
+        danger: false,
+        onConfirm: async () => {
+          await startTicketCall(ticketId);
+        }
+      });
+    }
+
+    async function startTicketCall(ticketId) {
+      setLoading(true);
+      try {
+        const call = await apiRequest(`/tickets/${encodeURIComponent(ticketId)}/call`, {
+          method: "POST"
+        });
+
+        showToast("Outbound AI call started successfully.", "success");
+        showCallStatusModal(call, ticketId);
+        pollTicketAfterCall(ticketId);
+      } catch (error) {
+        showToast(error.message, "error");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    function showCallStatusModal(call, ticketId) {
+      document.getElementById("callStatusModal")?.remove();
+
+      const backdrop = document.createElement("div");
+      backdrop.id = "callStatusModal";
+      backdrop.className = "modal-backdrop";
+      backdrop.style.display = "flex";
+      backdrop.innerHTML = `
+        <div class="modal" style="width:min(560px,100%);">
+          <h3>AI Call Started</h3>
+          <p>The call is now handled by Vonage, Arabic speech recognition and the Groq classifier.</p>
+
+          <div class="call-live">
+            <span class="pulse-dot"></span>
+            <span id="liveCallMessage">Waiting for the customer and final ticket outcome...</span>
+          </div>
+
+          <div class="details-grid" style="margin-top:18px;grid-template-columns:1fr;">
+            <div class="detail-item"><span>Local Call ID</span><strong>${escapeHtml(call?.id ?? "—")}</strong></div>
+            <div class="detail-item"><span>Provider Call ID</span><strong style="font-size:12px;">${escapeHtml(call?.provider_call_id || "Pending")}</strong></div>
+            <div class="detail-item"><span>Initial Call Status</span><strong id="liveCallStatus">${callStatusBadge(call?.status || "initiating")}</strong></div>
+            <div class="detail-item"><span>Ticket</span><strong>#${escapeHtml(ticketId)}</strong></div>
+          </div>
+
+          <div class="modal-actions">
+            <button class="btn btn-secondary" onclick="closeCallStatusModal()">Close</button>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(backdrop);
+    }
+
+    function closeCallStatusModal() {
+      document.getElementById("callStatusModal")?.remove();
+    }
+
+    async function pollTicketAfterCall(ticketId) {
+      const maxChecks = 30;
+
+      for (let index = 0; index < maxChecks; index += 1) {
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        try {
+          const ticket = await apiRequest(`/tickets/${encodeURIComponent(ticketId)}`);
+          const message = document.getElementById("liveCallMessage");
+          const status = document.getElementById("liveCallStatus");
+
+          if (ticket.status === "resolved") {
+            if (message) message.textContent = "Customer confirmed that the previous issue is resolved.";
+            if (status) status.innerHTML = `<span class="badge badge-success">Resolved</span>`;
+            showToast("Call completed: ticket resolved.", "success");
+            state.followUps = state.followUps.filter(item => String(item.id) !== String(ticketId));
+            drawFollowUpsTable();
+            return;
+          }
+
+          if (ticket.status === "needs_agent") {
+            if (message) message.textContent = "The issue still needs human Agent follow-up.";
+            if (status) status.innerHTML = `<span class="badge badge-danger">Needs Agent</span>`;
+            showToast("Call completed: human follow-up required.");
+            state.followUps = state.followUps.filter(item => String(item.id) !== String(ticketId));
+            drawFollowUpsTable();
+            return;
+          }
+        } catch (error) {
+          console.warn("Call status polling failed:", error);
+          return;
+        }
+      }
+
+      const message = document.getElementById("liveCallMessage");
+      if (message) {
+        message.textContent = "No final ticket outcome yet. The call may be unanswered or still pending follow-up.";
+      }
     }
 
     // ------------------------------------------------------------

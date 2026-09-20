@@ -77,3 +77,23 @@ def get_active_by_ticket(
     return db.scalars(
         statement
     ).first()
+    
+    
+
+
+def get_by_provider_call_id(
+    db: Session,
+    provider_call_id: str
+) -> Call | None:
+
+    stmt = (
+        select(Call)
+        .where(
+            Call.provider_call_id
+            == provider_call_id
+        )
+    )
+
+    return db.scalars(
+        stmt
+    ).first()

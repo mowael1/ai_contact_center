@@ -1,12 +1,24 @@
+from datetime import datetime, timezone
 from typing import Any
 
+from sqlalchemy.orm import Session
+
 from app.core.config import settings
+from app.repositories import (
+    call_repository,
+    ticket_repository,
+)
 from app.services.llm_service import (
     classify_follow_up_response,
 )
 
 
+# =========================================
+# Configuration
+# =========================================
+
 MAX_ATTEMPTS = 2
+
 STT_CONFIDENCE_THRESHOLD = 0.60
 
 
@@ -26,10 +38,18 @@ NOT_RESOLVED_AUDIO = "not_resolved_closing.mp3"
 
 
 # =========================================
-# URL helpers
+# General helpers
 # =========================================
 
+def _utc_now() -> datetime:
+
+    return datetime.now(
+        timezone.utc
+    ).replace(tzinfo=None)
+
+
 def _base_url() -> str:
+
     return settings.PUBLIC_BASE_URL.rstrip("/")
 
 
@@ -249,7 +269,9 @@ def _extract_best_speech_result(
     )
 
     try:
+
         if confidence is not None:
+
             confidence = float(
                 confidence
             )
@@ -258,6 +280,7 @@ def _extract_best_speech_result(
         TypeError,
         ValueError,
     ):
+
         confidence = None
 
     return (
@@ -267,11 +290,188 @@ def _extract_best_speech_result(
 
 
 # =========================================
+# Database helpers
+# =========================================
+
+def _get_call_by_provider_id(
+    db: Session,
+    provider_call_id: str | None,
+):
+
+    if not provider_call_id:
+        return None
+
+    return (
+        call_repository
+        .get_by_provider_call_id(
+            db,
+            provider_call_id
+        )
+    )
+
+
+def _save_transcript(
+    db: Session,
+    call,
+    *,
+    text: str,
+    attempt: int,
+) -> None:
+
+    if not text:
+        return
+
+    transcript_line = (
+        f"Attempt {attempt}: {text}"
+    )
+
+    if call.transcript:
+
+        call.transcript = (
+            f"{call.transcript}\n"
+            f"{transcript_line}"
+        )
+
+    else:
+
+        call.transcript = transcript_line
+
+    db.commit()
+    db.refresh(call)
+
+    print("\n==============================")
+    print("TRANSCRIPT SAVED")
+    print("CALL ID:", call.id)
+    print("TEXT:", transcript_line)
+    print("==============================\n")
+
+
+def _save_call_outcome(
+    db: Session,
+    call,
+    *,
+    outcome: str,
+) -> None:
+
+    ticket = (
+        ticket_repository
+        .get_by_id_and_company(
+            db,
+            call.ticket_id,
+            call.company_id
+        )
+    )
+
+    if ticket is None:
+
+        print("\n==============================")
+        print("TICKET NOT FOUND")
+        print("CALL ID:", call.id)
+        print("TICKET ID:", call.ticket_id)
+        print("==============================\n")
+
+        return
+
+    # -------------------------------------
+    # Save business outcome
+    # -------------------------------------
+
+    call.outcome = outcome
+
+    # -------------------------------------
+    # Update Ticket
+    # -------------------------------------
+
+    if outcome == "resolved":
+
+        ticket.status = "resolved"
+
+    elif outcome in {
+        "not_resolved",
+        "unclear",
+    }:
+
+        ticket.status = "needs_agent"
+
+    ticket.updated_at = _utc_now()
+
+    # Important:
+    # We DO NOT set call.status = completed here.
+    # Vonage events control the call lifecycle status.
+
+    db.commit()
+    db.refresh(call)
+
+    print("\n==============================")
+    print("DATABASE OUTCOME UPDATED")
+    print("CALL ID:", call.id)
+    print("OUTCOME:", call.outcome)
+    print("TICKET ID:", ticket.id)
+    print("TICKET STATUS:", ticket.status)
+    print("==============================\n")
+
+
+def _keep_ticket_pending(
+    db: Session,
+    call,
+) -> None:
+
+    ticket = (
+        ticket_repository
+        .get_by_id_and_company(
+            db,
+            call.ticket_id,
+            call.company_id
+        )
+    )
+
+    if ticket is None:
+
+        print(
+            "TICKET NOT FOUND FOR CALL:",
+            call.id
+        )
+
+        return
+
+    ticket.status = "pending_follow_up"
+
+    ticket.updated_at = _utc_now()
+
+    # No commit here.
+    # process_call_event() commits Call + Ticket together.
+
+
+# =========================================
+# Final unclear helper
+# =========================================
+
+def _finish_as_unclear(
+    db: Session,
+    call,
+) -> list[dict[str, Any]]:
+
+    print("FINAL OUTCOME: unclear")
+    print("ACTION: SEND TO HUMAN AGENT")
+
+    if call is not None:
+
+        _save_call_outcome(
+            db,
+            call,
+            outcome="unclear",
+        )
+
+    return build_unclear_final_ncco()
+
+
+# =========================================
 # Speech processing
 # =========================================
 
 def process_speech_input(
     *,
+    db: Session,
     data: dict[str, Any],
     attempt: int,
 ) -> list[dict[str, Any]]:
@@ -279,7 +479,37 @@ def process_speech_input(
     print("\n==============================")
     print("VONAGE SPEECH INPUT")
     print("ATTEMPT:", attempt)
-    print("==============================")
+
+    # Vonage Call UUID
+    provider_call_id = data.get(
+        "uuid"
+    )
+
+    print(
+        "PROVIDER CALL ID:",
+        provider_call_id
+    )
+
+    # -------------------------------------
+    # Find our Call in DB
+    # -------------------------------------
+
+    call = _get_call_by_provider_id(
+        db,
+        provider_call_id
+    )
+
+    if call is None:
+
+        print(
+            "WARNING: CALL NOT FOUND "
+            "FOR PROVIDER UUID:",
+            provider_call_id
+        )
+
+    # -------------------------------------
+    # Get speech transcript
+    # -------------------------------------
 
     text, confidence = (
         _extract_best_speech_result(
@@ -289,6 +519,23 @@ def process_speech_input(
 
     print("TRANSCRIPT:", text)
     print("STT CONFIDENCE:", confidence)
+    print("==============================\n")
+
+    # -------------------------------------
+    # Save transcript
+    # -------------------------------------
+
+    if (
+        call is not None
+        and text
+    ):
+
+        _save_transcript(
+            db,
+            call,
+            text=text,
+            attempt=attempt,
+        )
 
     # =====================================
     # No speech detected
@@ -308,9 +555,10 @@ def process_speech_input(
                 attempt=attempt + 1
             )
 
-        print("FINAL OUTCOME: unclear")
-
-        return build_unclear_final_ncco()
+        return _finish_as_unclear(
+            db,
+            call
+        )
 
     # =====================================
     # Low STT confidence
@@ -322,8 +570,10 @@ def process_speech_input(
         < STT_CONFIDENCE_THRESHOLD
     ):
 
+        print("LOW STT CONFIDENCE")
         print(
-            "LOW STT CONFIDENCE"
+            "CONFIDENCE:",
+            confidence
         )
 
         if attempt < MAX_ATTEMPTS:
@@ -336,17 +586,18 @@ def process_speech_input(
                 attempt=attempt + 1
             )
 
-        print(
-            "FINAL OUTCOME: unclear"
+        return _finish_as_unclear(
+            db,
+            call
         )
-
-        return build_unclear_final_ncco()
 
     # =====================================
     # Send transcript to Groq LLM
     # =====================================
 
-    print("\nSENDING TRANSCRIPT TO GROQ...")
+    print(
+        "\nSENDING TRANSCRIPT TO GROQ..."
+    )
 
     outcome = (
         classify_follow_up_response(
@@ -354,7 +605,10 @@ def process_speech_input(
         )
     )
 
-    print("LLM OUTCOME:", outcome)
+    print(
+        "LLM OUTCOME:",
+        outcome
+    )
 
     # =====================================
     # Resolved
@@ -370,12 +624,13 @@ def process_speech_input(
             "ACTION: CLOSE CALL AS RESOLVED"
         )
 
-        # Later:
-        #
-        # call.status = "completed"
-        # call.outcome = "resolved"
-        #
-        # ticket.status = "resolved"
+        if call is not None:
+
+            _save_call_outcome(
+                db,
+                call,
+                outcome="resolved",
+            )
 
         return build_resolved_ncco()
 
@@ -393,12 +648,13 @@ def process_speech_input(
             "ACTION: SEND TO HUMAN AGENT"
         )
 
-        # Later:
-        #
-        # call.status = "completed"
-        # call.outcome = "not_resolved"
-        #
-        # ticket.status = "needs_agent"
+        if call is not None:
+
+            _save_call_outcome(
+                db,
+                call,
+                outcome="not_resolved",
+            )
 
         return build_not_resolved_ncco()
 
@@ -410,6 +666,7 @@ def process_speech_input(
         "LLM OUTCOME IS UNCLEAR"
     )
 
+    # First unclear answer
     if attempt < MAX_ATTEMPTS:
 
         print(
@@ -421,22 +678,11 @@ def process_speech_input(
             attempt=attempt + 1
         )
 
-    print(
-        "FINAL OUTCOME: unclear"
+    # Second unclear answer
+    return _finish_as_unclear(
+        db,
+        call
     )
-
-    print(
-        "ACTION: SEND TO HUMAN AGENT"
-    )
-
-    # Later:
-    #
-    # call.status = "completed"
-    # call.outcome = "unclear"
-    #
-    # ticket.status = "needs_agent"
-
-    return build_unclear_final_ncco()
 
 
 # =========================================
@@ -444,14 +690,16 @@ def process_speech_input(
 # =========================================
 
 def process_call_event(
+    *,
+    db: Session,
     data: dict[str, Any],
 ) -> None:
 
-    call_uuid = data.get(
+    provider_call_id = data.get(
         "uuid"
     )
 
-    status = data.get(
+    vonage_status = data.get(
         "status"
     )
 
@@ -461,32 +709,207 @@ def process_call_event(
 
     print("\n==============================")
     print("VONAGE EVENT")
-    print("UUID:", call_uuid)
-    print("STATUS:", status)
-    print("DETAIL:", detail)
+    print(
+        "UUID:",
+        provider_call_id
+    )
+    print(
+        "STATUS:",
+        vonage_status
+    )
+    print(
+        "DETAIL:",
+        detail
+    )
     print("==============================\n")
 
+    # -------------------------------------
+    # Need UUID to identify our Call
+    # -------------------------------------
+
+    if not provider_call_id:
+
+        print(
+            "EVENT DOES NOT HAVE UUID"
+        )
+
+        return
+
+    # -------------------------------------
+    # Find Call in DB
+    # -------------------------------------
+
+    call = _get_call_by_provider_id(
+        db,
+        provider_call_id
+    )
+
+    if call is None:
+
+        print(
+            "CALL NOT FOUND FOR UUID:",
+            provider_call_id
+        )
+
+        return
+
+    now = _utc_now()
+
     # =====================================
-    # Database integration comes later
+    # Started
     # =====================================
-    #
-    # Example:
-    #
-    # call = call_repository.get_by_provider_call_id(
-    #     provider_call_id=call_uuid
-    # )
-    #
-    # ringing
-    # → call.status = "ringing"
-    #
-    # answered
-    # → call.status = "in_progress"
-    #
-    # completed
-    # → call.status = "completed"
-    #
-    # rejected / failed
-    # → call.status = "failed"
-    #
-    # no_answer
-    # → call.status = "no_answer"
+
+    if vonage_status == "started":
+
+        call.status = "initiating"
+
+    # =====================================
+    # Ringing
+    # =====================================
+
+    elif vonage_status == "ringing":
+
+        call.status = "ringing"
+
+    # =====================================
+    # Answered
+    # =====================================
+
+    elif vonage_status == "answered":
+
+        call.status = "in_progress"
+
+    # =====================================
+    # Busy
+    # =====================================
+
+    elif vonage_status == "busy":
+
+        call.status = "busy"
+
+        call.outcome = None
+
+        call.ended_at = now
+
+        _keep_ticket_pending(
+            db,
+            call
+        )
+
+    # =====================================
+    # No answer
+    # =====================================
+
+    elif vonage_status in {
+        "unanswered",
+        "timeout",
+    }:
+
+        call.status = "no_answer"
+
+        call.outcome = None
+
+        call.ended_at = now
+
+        _keep_ticket_pending(
+            db,
+            call
+        )
+
+    # =====================================
+    # Failed
+    # =====================================
+
+    elif vonage_status in {
+        "failed",
+        "rejected",
+        "cancelled",
+    }:
+
+        call.status = "failed"
+
+        call.outcome = None
+
+        call.ended_at = now
+
+        _keep_ticket_pending(
+            db,
+            call
+        )
+
+    # =====================================
+    # Completed
+    # =====================================
+
+    elif vonage_status == "completed":
+
+        call.status = "completed"
+
+        call.ended_at = now
+
+        duration = data.get(
+            "duration"
+        )
+
+        # Vonage may send duration
+        if duration is not None:
+
+            try:
+
+                call.duration_seconds = int(
+                    float(duration)
+                )
+
+            except (
+                TypeError,
+                ValueError,
+            ):
+
+                pass
+
+        # Fallback if duration wasn't usable
+        if (
+            call.duration_seconds is None
+            and call.started_at is not None
+        ):
+
+            call.duration_seconds = max(
+                0,
+                int(
+                    (
+                        now
+                        - call.started_at
+                    ).total_seconds()
+                )
+            )
+
+    # =====================================
+    # Unknown event
+    # =====================================
+
+    else:
+
+        print(
+            "IGNORING VONAGE STATUS:",
+            vonage_status
+        )
+
+        return
+
+    # =====================================
+    # Save Call changes
+    # =====================================
+
+    db.commit()
+    db.refresh(call)
+
+    print("\n==============================")
+    print("DATABASE CALL UPDATED")
+    print("CALL ID:", call.id)
+    print("STATUS:", call.status)
+    print("OUTCOME:", call.outcome)
+    print(
+        "DURATION:",
+        call.duration_seconds
+    )
+    print("==============================\n")
