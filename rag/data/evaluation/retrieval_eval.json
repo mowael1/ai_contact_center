@@ -1,0 +1,1184 @@
+{
+  "name": "vf_egypt_eval",
+  "description": "Evaluation set for the Vodafone Egypt RAG knowledge base. FAQ questions and reference answers are mined verbatim from the scraped pages; curated questions target verified corpus URLs; out-of-scope questions carry no retrieval ground truth and exist to measure insufficient-context handling.",
+  "questions": [
+    {
+      "id": "faq-f27299e23d",
+      "question": "ايه المميز فى انظمة RED الجديدة عن انظمة RED القديمة ؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "reference_answer": "RED بتقدم انظمة شاملة ليك و لعيلتك, فاتورة واحدة فيها كل حاجة: ترفيه (WATCH IT, OSN+, Anghami Plus, Amazon Prime, Yango Play, TOD, Disney+, and Youtube Premium) الحياة اليومية (BEFIT, talabat pro, Qanz) DSLللبيت وتقدر تسافر بباقة !RED\nاعرف اكتر",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/ar/vodafone-red1"
+      ],
+      "relevant_document_ids": [
+        "bd76e05ac4ddd39f7086"
+      ],
+      "relevant_sections": [
+        "إستمتع بأجدد الخدمات الترفيهية المقدمة من RED > اعرف اكتر عن نظام RED > ايه المميز فى انظمة RED الجديدة عن انظمة RED القديمة ؟"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/ar/vodafone-red1"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/ar/vodafone-red1": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "faq-231dadceae",
+      "question": "What are the major extra benefits of the new plans over the last ones ?",
+      "category": "mined_faq",
+      "language": "en",
+      "reference_answer": "RED introduces all-inclusive plans for you and your family, one bill that brings together entertainment (WATCH IT, OSN+, Anghami Plus, Amazon Prime, Yango Play, TOD, Disney+, and Youtube Premium), lifestyle (BEFIT, talabat pro, Qanz), Home DSL, and the option to Take your Bundle Abroad. check now\n__PRESENT",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/en/vodafone-red1"
+      ],
+      "relevant_document_ids": [
+        "ae5ebcd99d41b789fba2"
+      ],
+      "relevant_sections": [
+        "Enjoy the Latest Entertainment Apps in the Market that Fit your Needs > Still Wondering? We thought you might still have questions > What are the major extra benefits of the new plans over the last ones ?"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/en/vodafone-red1"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/en/vodafone-red1": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "faq-1be71684c5",
+      "question": "8. إيه هو Vodafone Plus Play ؟",
+      "category": "mined_faq",
+      "language": "mixed",
+      "reference_answer": "مع Vodafone Plus Play هتستمتع بميجابايتس تلعب بيها كل الألعاب اللي بتحبها ومنها: Clash Royale ، PUBG ، Free Fire ، Mobile Legends و Call of Duty\n- لو أنت على نظام كارت واشتركت في Plus Play ب6.5ج في الشهر هتستمتع ب450 ميجا على الألعاب اللي بتحبها وهتتجدد كل 28 يوم تلقائيا وممكن لو خلصت الميجابايتس تشتريها تاني من خلال #3*00 *\n- لو أنت علي نظام فليكس 25-55 ب6.5ج في الشهر هتسمتع ب1000 ميجا على الألعاب اللي بتحبها وممكن لو خلصت الميجابايتس تشتريها تاني من خلال #3*00 *\n- لو أنت علي نظام فليكس 60-100 ب6.5ج في الشهر هتسمتع ب2000 ميجا على الألعاب اللي بتحبها وممكن لو خلصت الميجابايتس تشتريها تاني من خلال #3*00 *",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/ar/mobile-internet-bundles"
+      ],
+      "relevant_document_ids": [
+        "4ecad22de922452b0b20"
+      ],
+      "relevant_sections": [
+        "باقات الإنترنت > الأسئلة الشائعة > 8. إيه هو Vodafone Plus Play ؟"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/ar/mobile-internet-bundles"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/ar/mobile-internet-bundles": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "faq-167341730f",
+      "question": "ازاي ممكن أحول لنظام RED ؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "reference_answer": "لو انت نظام فاتورة تقدر تحول لنظام REDمن خلال تطبيق أنا ڤودافون فقط اضغط على \"المزيد\" ثم \"نظامي\" لو إنت على نظام كارت شحن هتقدر تحول لنظام RED من خلال أي فرع من فروع ڤودافون",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/ar/vodafone-red1"
+      ],
+      "relevant_document_ids": [
+        "bd76e05ac4ddd39f7086"
+      ],
+      "relevant_sections": [
+        "إستمتع بأجدد الخدمات الترفيهية المقدمة من RED > اعرف اكتر عن نظام RED > ازاي ممكن أحول لنظام RED ؟"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/ar/vodafone-red1"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/ar/vodafone-red1": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "faq-95fdeaf54d",
+      "question": "How do I migrate to the new RED ?",
+      "category": "mined_faq",
+      "language": "en",
+      "reference_answer": "If you are already a postpaid customer, visit or download Ana Vodafone App, just click on “More”, then “My Plan” to migrate to the rate plan you want If you are a prepaid customer, head to the nearest retail store to migrate to RED For any extra support call 888\n__PRESENT",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/en/vodafone-red1"
+      ],
+      "relevant_document_ids": [
+        "ae5ebcd99d41b789fba2"
+      ],
+      "relevant_sections": [
+        "Enjoy the Latest Entertainment Apps in the Market that Fit your Needs > Still Wondering? We thought you might still have questions > How do I migrate to the new RED ?"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/en/vodafone-red1"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/en/vodafone-red1": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "faq-f62b17f43f",
+      "question": "إيه مميزات التجوال في نظام RED الجديد ؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "reference_answer": "دلوقتي مع نظام REDالجديد هتقدر تستخدم باقة الانترنت المحلية وانت مسافر لمدة اسابيع محدودة في السنة.",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/ar/vodafone-red1"
+      ],
+      "relevant_document_ids": [
+        "bd76e05ac4ddd39f7086"
+      ],
+      "relevant_sections": [
+        "إستمتع بأجدد الخدمات الترفيهية المقدمة من RED > اعرف اكتر عن نظام RED > إيه مميزات التجوال في نظام RED الجديد ؟"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/ar/vodafone-red1"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/ar/vodafone-red1": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "faq-593492fd34",
+      "question": "How can I add member(s) to my RED Family ?",
+      "category": "mined_faq",
+      "language": "en",
+      "reference_answer": "Visit or download Ana Vodafone App to send an invitation to your loved ones to join your RED family\n__PRESENT",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/en/vodafone-red1"
+      ],
+      "relevant_document_ids": [
+        "ae5ebcd99d41b789fba2"
+      ],
+      "relevant_sections": [
+        "Enjoy the Latest Entertainment Apps in the Market that Fit your Needs > Still Wondering? We thought you might still have questions > How can I add member(s) to my RED Family ?"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/en/vodafone-red1"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/en/vodafone-red1": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "faq-6638a5a2df",
+      "question": "ازاي أقدر استمتع بباقة DSL ؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "reference_answer": "على حسب النظام إلي إنت عليه ليك 140 جيجا أو 300 جيجا DSL بسرعة mbps 30\nممكن كمان تستمتع بباقات أعلى وتدفع الفرق بس. اعرف اكتر",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/ar/vodafone-red1"
+      ],
+      "relevant_document_ids": [
+        "bd76e05ac4ddd39f7086"
+      ],
+      "relevant_sections": [
+        "إستمتع بأجدد الخدمات الترفيهية المقدمة من RED > اعرف اكتر عن نظام RED > ازاي أقدر استمتع بباقة DSL ؟"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/ar/vodafone-red1"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/ar/vodafone-red1": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "faq-a009289764",
+      "question": "What are my Roaming Benefits ?",
+      "category": "mined_faq",
+      "language": "en",
+      "reference_answer": "Take your Bundle Abroad free of charge! Now you can enjoy your local megabytes while roaming for a certain number of weeks per year\n__PRESENT",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/en/vodafone-red1"
+      ],
+      "relevant_document_ids": [
+        "ae5ebcd99d41b789fba2"
+      ],
+      "relevant_sections": [
+        "Enjoy the Latest Entertainment Apps in the Market that Fit your Needs > Still Wondering? We thought you might still have questions > What are my Roaming Benefits ?"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/en/vodafone-red1"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/en/vodafone-red1": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "faq-b96da60a92",
+      "question": "1. ايه هى باقات Plus ؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "reference_answer": "من اول 32 جنيه لحد 520 جنيه عشان تجيب اخرك عالنت سعر الباقات . نت كتير و باحسن سعر في مصر , Plus مع\nاختار بين باقات Plus و استمتع بانترنت كتير.",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/ar/mobile-internet-bundles"
+      ],
+      "relevant_document_ids": [
+        "4ecad22de922452b0b20"
+      ],
+      "relevant_sections": [
+        "باقات الإنترنت > الأسئلة الشائعة > 1. ايه هى باقات Plus ؟"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/ar/mobile-internet-bundles"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/ar/mobile-internet-bundles": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "faq-ab37394132",
+      "question": "How do I enjoy my DSL Bundle ?",
+      "category": "mined_faq",
+      "language": "en",
+      "reference_answer": "Based on your rate plan, you will have a DSL Bundle, varying between 140 GBs or 300 GBs. You can also upgrade to a higher bundle and only pay the difference. check Now\n__PRESENT",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/en/vodafone-red1"
+      ],
+      "relevant_document_ids": [
+        "ae5ebcd99d41b789fba2"
+      ],
+      "relevant_sections": [
+        "Enjoy the Latest Entertainment Apps in the Market that Fit your Needs > Still Wondering? We thought you might still have questions > How do I enjoy my DSL Bundle ?"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/en/vodafone-red1"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/en/vodafone-red1": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "faq-a1a03bc7f4",
+      "question": "3. باقات Plus بتتجدد كل أد إيه؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "reference_answer": "باقات Plus بتجدد كل 28 يوم تلقائيا لعملاء الكارت. اتاكد ان معاك رصيد كافي يوم التجديد عشان تستمتع بانترنت كتير و كمان بترحيل الميجابيتس المتبقية للشهرالقادم .\nلعملاء فليكس باقات Plus لا تجدد تلقائيا بس ممكن تشترك في Plus وقت ما تحب",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/ar/mobile-internet-bundles"
+      ],
+      "relevant_document_ids": [
+        "4ecad22de922452b0b20"
+      ],
+      "relevant_sections": [
+        "باقات الإنترنت > الأسئلة الشائعة > 3. باقات Plus بتتجدد كل أد إيه؟"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/ar/mobile-internet-bundles"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/ar/mobile-internet-bundles": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "faq-1ce67d8632",
+      "question": "1. What are the New Plus bundles ?",
+      "category": "mined_faq",
+      "language": "en",
+      "reference_answer": "Plus bundles are internet bundles that start from 32 EGP up to 520 EGP. Choose between the different Plus bundles and enjoy more internet with the best prices in Egypt.",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/en/mobile-internet-bundles"
+      ],
+      "relevant_document_ids": [
+        "9afbc6e2b81debae88cb"
+      ],
+      "relevant_sections": [
+        "Vodafone Internet Bundles > Frequently asked questions: > 1. What are the New Plus bundles ?"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/en/mobile-internet-bundles"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/en/mobile-internet-bundles": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "faq-738adedc15",
+      "question": "5. ايه هي باقات ڤودافون Plus Apps؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "reference_answer": "مع Vodafone Plus هتعيش على كل ال Applications اللي بتحبها YouTube, TikTok, Pubg ب 6.5 جنيه في الشهر . اختارال Applications الي بتحبها و ممكن تشترك فى اكتر من واحدة كلم *00# و اشترك .\nالتطبيق | عملاء فليكس من فليكس 25 حتى 55 جنيه | عملاء فليكس من فليكس 60 حتى 100 جنيه | عملاء الكارت | الكود\nPlus YouTube | 1000 YouTube ميجابايت | 2000 YouTube ميجابايت | 450 YouTube ميجابايت | *00*1#\nPlus TikTok | 1000 TikTok ميجابايت | 2000 TikTok ميجابايت | 450 TikTok ميجابايت | *00*2#\nPlus Play | 1000 PubG ميجابايت | 2000 PubG ميجابايت | 450 PubG ميجابايت | *00*3#",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/ar/mobile-internet-bundles"
+      ],
+      "relevant_document_ids": [
+        "4ecad22de922452b0b20"
+      ],
+      "relevant_sections": [
+        "باقات الإنترنت > الأسئلة الشائعة > 5. ايه هي باقات ڤودافون Plus Apps؟"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/ar/mobile-internet-bundles"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/ar/mobile-internet-bundles": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "faq-da98a0a891",
+      "question": "2. How can I Subscribe to the Plus Bundles?",
+      "category": "mined_faq",
+      "language": "en",
+      "reference_answer": "To Subscribe and manage your bundles you can dial *00# , *2000# or through Ana Vodafone App .",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/en/mobile-internet-bundles"
+      ],
+      "relevant_document_ids": [
+        "9afbc6e2b81debae88cb"
+      ],
+      "relevant_sections": [
+        "Vodafone Internet Bundles > Frequently asked questions: > 2. How can I Subscribe to the Plus Bundles?"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/en/mobile-internet-bundles"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/en/mobile-internet-bundles": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "faq-cad7627b26",
+      "question": "6. Plus Apps بشتغل أزاي مع عملاء فليكس؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "reference_answer": "لواشتركت في Plus YouTube ب 6.5 جنيه فى الشهر هتعرف تقضيها على YouTube براحتك كل شهر وليك ميجابايتس على YouTube على حسب باقة نظامك .\nيعنى لو أنت على باقة فليكس 35 ليك 1000 ميجا على . YouTube الميجابايتس ل YouTube غير الميجابايتس الخاصة بنظامك. والاشتراك بيتجدد كل شهر علشان تفضل مستمتع ب YouTube أكتر، وكمان ممكن تشترك في أكتر من Application في نفس الوقت .",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/ar/mobile-internet-bundles"
+      ],
+      "relevant_document_ids": [
+        "4ecad22de922452b0b20"
+      ],
+      "relevant_sections": [
+        "باقات الإنترنت > الأسئلة الشائعة > 6. Plus Apps بشتغل أزاي مع عملاء فليكس؟"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/ar/mobile-internet-bundles"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/ar/mobile-internet-bundles": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "faq-d8eeca83f5",
+      "question": "3. When will the Plus bundles get renewed?",
+      "category": "mined_faq",
+      "language": "en",
+      "reference_answer": "Plus Bundles renew every 28 days automatically for Prepaid Customers. Make sure that you have enough balance on the renewal date to enjoy the biggest quota. If you have any remaining quota and you renew your bundle on time, the remaining quota will be rolled over to the next cycle.\nFor Flex Customers you have to purchase plus bundles on demand.",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/en/mobile-internet-bundles"
+      ],
+      "relevant_document_ids": [
+        "9afbc6e2b81debae88cb"
+      ],
+      "relevant_sections": [
+        "Vodafone Internet Bundles > Frequently asked questions: > 3. When will the Plus bundles get renewed?"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/en/mobile-internet-bundles"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/en/mobile-internet-bundles": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "faq-c4397d1d50",
+      "question": "7. Plus Apps بشتغل أزاي مع عملاء الكارت؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "reference_answer": "لو انت علي نظام كارت واشتركت في Plus Apps (YouTube, TikTok, PubG) ب 6.5 ج في الشهر هتستمتع ب450 ميجا علي ال App اللي اخترتها و هتتجدد كل 28 يوم تلقائيا و ممكن لو خلصت الميجابايتس تشتريها تاني من خلال *00#",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/ar/mobile-internet-bundles"
+      ],
+      "relevant_document_ids": [
+        "4ecad22de922452b0b20"
+      ],
+      "relevant_sections": [
+        "باقات الإنترنت > الأسئلة الشائعة > 7. Plus Apps بشتغل أزاي مع عملاء الكارت؟"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/ar/mobile-internet-bundles"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/ar/mobile-internet-bundles": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "faq-4d3edf4d97",
+      "question": "5. What is Vodafone Plus Apps?",
+      "category": "mined_faq",
+      "language": "en",
+      "reference_answer": "Vodafone Plus Apps gives you much more of what you love on your favorite content platforms with only 6.5 EGP monthly, so that you can binge all you want on YouTube, TikTok, and PUBG\nCall *00# and Subscribe.\nApplications | Flex Customers From Flex 25 to 55 LE | Flex Customers From Flex 60 to 100 LE | Prepaid Customers | Code\nPlus YouTube | 1000 YouTube MB | 2000 YouTube MB | 450 YouTube MB | *00*1#\nPlus TikTok | 1000 TikTok MB | 2000 TikTok MB | 450 TikTok MB | *00*2#\nPlus Play | 1000 PubG MB | 2000 PubG MB | 450 PubG MB | *00*3#",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/en/mobile-internet-bundles"
+      ],
+      "relevant_document_ids": [
+        "9afbc6e2b81debae88cb"
+      ],
+      "relevant_sections": [
+        "Vodafone Internet Bundles > Frequently asked questions: > 5. What is Vodafone Plus Apps?"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/en/mobile-internet-bundles"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/en/mobile-internet-bundles": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "faq-3c9d1d6184",
+      "question": "ايه اللي أقدر أعمله على تطبيق أنا ڤودافون؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "reference_answer": "باستخدام التطبيق تقدر تتحكم في خطك بشكل كامل، تراجع رصيدك أو فاتورتك، تعرف أكتر عن استهلاكك، تشتري باقات انترنت أو حتى تدير الUSB انترنت الخاص بك. وكمان هيجيك عروض خاصة ليك.",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/ar/anavodafone"
+      ],
+      "relevant_document_ids": [
+        "970e9f34a425734af389"
+      ],
+      "relevant_sections": [
+        "صفحه تطبيق انا فودافون > عندك سؤال عن التطبيق؟ > ايه اللي أقدر أعمله على تطبيق أنا ڤودافون؟"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/ar/anavodafone"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/ar/anavodafone": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "faq-bea5d2656a",
+      "question": "6. How does Vodafone Plus Apps work if I am a Flex Customer?",
+      "category": "mined_faq",
+      "language": "en",
+      "reference_answer": "If you are a Flex Customer (for example: Flex 35) and subscribed to Plus YouTube, every month you will get 1000 megabytes on YouTube in addition to your Flexes valid with your Flex Active Bundle. Your subscription is valid for one month & you can purchase it again if you need it. You can also subscribe to more than one Application at the same time.",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/en/mobile-internet-bundles"
+      ],
+      "relevant_document_ids": [
+        "9afbc6e2b81debae88cb"
+      ],
+      "relevant_sections": [
+        "Vodafone Internet Bundles > Frequently asked questions: > 6. How does Vodafone Plus Apps work if I am a Flex Customer?"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/en/mobile-internet-bundles"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/en/mobile-internet-bundles": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "faq-b31c479c72",
+      "question": "ايه الاجهزة اللي بتدعم تطبيق أنا ڤودافون؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "reference_answer": "تطبيق أنا ڤودافون يمكن تشغيله من كل أجهزة أندرويد بنظام تشغيل 4 أو أعلى، وكمان من كل أجهزة iPhone بنظام تشغيل 8 أو أعلى",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/ar/anavodafone"
+      ],
+      "relevant_document_ids": [
+        "970e9f34a425734af389"
+      ],
+      "relevant_sections": [
+        "صفحه تطبيق انا فودافون > عندك سؤال عن التطبيق؟ > ايه الاجهزة اللي بتدعم تطبيق أنا ڤودافون؟"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/ar/anavodafone"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/ar/anavodafone": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "faq-7f16158dbd",
+      "question": "7. How does Vodafone Plus Apps work if I am a Prepaid Customer?",
+      "category": "mined_faq",
+      "language": "en",
+      "reference_answer": "If you are a prepaid customer and you choose an application (YouTube, TikTok, PubG) you will pay 6.5 EGP and get 450 megabytes on your chosen application and your subscription will be renewed every 28 days. If you consume all your megabytes, you can repurchase your bundle more than once per month and you can also subscribe to more than one Application at the same time.",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/en/mobile-internet-bundles"
+      ],
+      "relevant_document_ids": [
+        "9afbc6e2b81debae88cb"
+      ],
+      "relevant_sections": [
+        "Vodafone Internet Bundles > Frequently asked questions: > 7. How does Vodafone Plus Apps work if I am a Prepaid Customer?"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/en/mobile-internet-bundles"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/en/mobile-internet-bundles": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "faq-ccfa6408ce",
+      "question": "هل أنا ڤودافون تدعم خطط أسعار معينة؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "reference_answer": "تطبيق أنا ڤودافون بيدعم كل خطط الأسعار، عشان تقدر تستمتع بتجربة التحكم في خطك وخدماتك بسهولة.",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/ar/anavodafone"
+      ],
+      "relevant_document_ids": [
+        "970e9f34a425734af389"
+      ],
+      "relevant_sections": [
+        "صفحه تطبيق انا فودافون > عندك سؤال عن التطبيق؟ > هل أنا ڤودافون تدعم خطط أسعار معينة؟"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/ar/anavodafone"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/ar/anavodafone": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "faq-fea901481e",
+      "question": "8. What is Vodafone Plus Play?",
+      "category": "mined_faq",
+      "language": "en",
+      "reference_answer": "- A gaming bundle with quota dedicated to 5 games: PUBG, Clash Royale, Call of Duty, Mobile Legends, and Free Fire.\n- The quota is only dedicated to the mentioned mobile games.\n- The bundle is for 6.5EGP and depending on your rate plan, you get different quota:\n- If you are a prepaid customer, you get 450 MBs dedicated to your favorite games.\n- If you are a Flex 25-55, get 1000MB dedicated to your favorite games.\n- If you are a Flex 60-100, get 2000MB dedicated to your favorite games.",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/en/mobile-internet-bundles"
+      ],
+      "relevant_document_ids": [
+        "9afbc6e2b81debae88cb"
+      ],
+      "relevant_sections": [
+        "Vodafone Internet Bundles > Frequently asked questions: > 8. What is Vodafone Plus Play?"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/en/mobile-internet-bundles"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/en/mobile-internet-bundles": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "faq-e021ac7d65",
+      "question": "هل يمكنني اقتراح أفكار للمساعدة في تطوير أنا ڤودافون؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "reference_answer": "بالتأكيد! ڤودافون بتسعى دايما لتزويد العملاء بكل الخدمات اللي بيحتاجوها، لو عندك أي اقتراح أو فكرة تقدر تبلغنا بيها من خلال ملأ استطلاع الرأي وإرسال اجاباتك وأفكارك وسوف يتم أخذهم في الاعتبار.\nأعرف أكتر عن عروض رمضان هنا",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/ar/anavodafone"
+      ],
+      "relevant_document_ids": [
+        "970e9f34a425734af389"
+      ],
+      "relevant_sections": [
+        "صفحه تطبيق انا فودافون > عندك سؤال عن التطبيق؟ > هل يمكنني اقتراح أفكار للمساعدة في تطوير أنا ڤودافون؟"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/ar/anavodafone"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/ar/anavodafone": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "faq-915333c9d3",
+      "question": "I don’t have good 4G network in the house?",
+      "category": "mined_faq",
+      "language": "en",
+      "reference_answer": "- If there is a single spot in your house where there is a good 4G network, that would be sufficient because you can place the router there.\n__PRESENT",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/en/wireless-net"
+      ],
+      "relevant_document_ids": [
+        "289d481fe585e18124d8"
+      ],
+      "relevant_sections": [
+        "More details > I don’t have good 4G network in the house?"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/en/wireless-net"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/en/wireless-net": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "faq-02684db567",
+      "question": "كيف تستخدم سياسة الخصوصية وسياسة ملفات تعريف الارتباط ؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "reference_answer": "في هذه السياسة، نوضح كيف نقوم بجمع واستخدام ومشاركة وحماية معلوماتك الشخصية عند استخدامك لمنتجاتنا وخدماتنا وموقعنا الاليكتروني.",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt"
+      ],
+      "relevant_document_ids": [
+        "4a9d6457b6c292c548e0"
+      ],
+      "relevant_sections": [
+        "اشعار الخصوصية > أنت في آمان > كيف تستخدم سياسة الخصوصية وسياسة ملفات تعريف الارتباط ؟"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "faq-3f1b6b2642",
+      "question": "How to start using the Router?",
+      "category": "mined_faq",
+      "language": "en",
+      "reference_answer": "- Insert the Sim card in the router\n- Plug-in the router\n- Open the Wifi connection of the device you wish to use\n- Change the password of the router for more security: Type the router default gateway IP in the address bar: 192.168.8.1 Type the default administrator router’s credentials (User name & Password): admin Click Change Now, and type the current password: admin, then type the new password twice in the next two text boxes then to click Apply For more information and instructions download the router manual\n__PRESENT",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/en/wireless-net"
+      ],
+      "relevant_document_ids": [
+        "289d481fe585e18124d8"
+      ],
+      "relevant_sections": [
+        "More details > How to start using the Router?"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/en/wireless-net"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/en/wireless-net": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "faq-f02eff2300",
+      "question": "متى نقوم بجمع معلوماتك الشخصية؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "reference_answer": "على سبيل المثال، نجمع معلوماتك الشخصية عند:\n- شراء أو استخدام أي من منتجاتنا وخدماتنا.\n- استخدام شبكتنا أو منتجات وخدمات ڤودافون الأخرى.\n- التسجيل في منتج أو خدمة معينة.\n- الاشتراك في النشرات الإخبارية والتنبيهات أو الخدمات الأخرى منا.\n- الاتصال بنا من خلال قنوات الاتصال المختلفة، أو طلب معلومات حول منتج أو خدمة ما.\n- المشاركة في مسابقة أو سحب جائزة أو استبيان.\n- القيام بزيارة أو تصفح موقعنا أو مواقع مجموعة ڤودافون الأخرى.\n- منح الإذن لشركات أخرى، مثل شركائنا في العمل أو المشاريع المشتركة وكذلك موردينا أو مقاولينا الخارجيين، بمشاركة معلومات عنك.\n- حيث تكون معلوماتك متاحة للعامة ؛ أو\n- عندما تكون عميل شركة استحوذت عليها ڤودافون.\nنقوم أيضا بجمع معلومات من جهات معينة، حيثما كان ذلك مناسبا وإلى الحد المسموح به قانونا. ومن أمثلة هذه الجهات، وكالات منع الاحتيال، وأدلة الأعمال، ووكالات الفحص / فحص الائتمان، ووكالات حساب الفواتير وموفري الشبكات المتصلة.\nنحن نستخدم ملفات تعريف الارتباط (ملفات نصي",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt"
+      ],
+      "relevant_document_ids": [
+        "4a9d6457b6c292c548e0"
+      ],
+      "relevant_sections": [
+        "اشعار الخصوصية > أنت في آمان > متى نقوم بجمع معلوماتك الشخصية؟"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "faq-eb9a0c9ea3",
+      "question": "Is Wi-Fi Calling compatible with all mobile phones?",
+      "category": "mined_faq",
+      "language": "en",
+      "reference_answer": "Wi-Fi calling needs a compatible mobile with the latest software version, a 4G sim and VoLTE has to be activated.",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/en/wifi-calling"
+      ],
+      "relevant_document_ids": [
+        "d20daf0e94541e25bdd5"
+      ],
+      "relevant_sections": [
+        "H1 > Is Wi-Fi Calling compatible with all mobile phones?"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/en/wifi-calling"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/en/wifi-calling": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "faq-c281aeafa3",
+      "question": "ماهي المعلومات الشخصية التي نجمعها عنك؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "reference_answer": "عند الضرورة، قد نجمع:\n- اسمك وعنوانك و / أو رقم هاتفك و / أو رقم هاتفك المحمول وتاريخ ميلادك وجنسك وعنوان بريدك الإلكتروني.\n- معلومات بطاقتك الائتمانية أو بطاقة الخصم، ومعلومات عن حسابك المصرفي ومعلومات مصرفية أخرى - على سبيل المثال، سيتعين عليك تزويدنا بهذه المعلومات عند فتح حساب معنا. سنجمع البيانات اللازمة لاتمام الدفع كلما أجريت عملية شراء.\n- بيانات الاتصال الخاصة بك. وهي البيانات التي نتعرض لها كمتطلب من متطلبات تزويدك بخدمة الهاتف المحمول. مثل الأرقام التي تتصل بها، ووقت ومدة المكالمة أو كمية البيانات التي تستخدمها؛\n- بيانات موقعك. يمكن أن يكون تحديد الموقع دقيقا حيث يستخدم بيانات نظام تحديد المواقع العالمي (GPS) أو من خلال تحديد صواري الهاتف المحمول القريبة ونقاط اتصال Wi-Fi وتمكين الخدمات أو الميزات المستندة إلى الموقع. أو أقل دقة حيث، على سبيل المثال، الموقع مشتق من عنوان IP الخاص بك أو البيانات مثل الرمز البريدي أو اسم المدينة أو المدينة.\n- تفاصيل اتصالاتك معنا، مثل مراقبة أو ت",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt"
+      ],
+      "relevant_document_ids": [
+        "4a9d6457b6c292c548e0"
+      ],
+      "relevant_sections": [
+        "اشعار الخصوصية > أنت في آمان > ماهي المعلومات الشخصية التي نجمعها عنك؟"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "faq-d3b06a28a1",
+      "question": "How will I be charged for Wi-Fi Call?",
+      "category": "mined_faq",
+      "language": "en",
+      "reference_answer": "Wi-Fi calls are charged according to your voice rate plan as any normal call without any extra cost & consumed MBs are deducted from your DSL bundle (10mbs for every 30 minutes)",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/en/wifi-calling"
+      ],
+      "relevant_document_ids": [
+        "d20daf0e94541e25bdd5"
+      ],
+      "relevant_sections": [
+        "H1 > How will I be charged for Wi-Fi Call?"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/en/wifi-calling"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/en/wifi-calling": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "faq-a499100194",
+      "question": "كيف نستخدم المعلومات الشخصية الخاصة بك؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "reference_answer": "لتزويدك بالخدمة: تنفيذ طلباتك وتزويدك بالمنتجات والخدمات الخاصة بك\n- لتقديم المنتجات والخدمات التي قمت بشرائها منا، وإطلاعك باستمرار على حالة طلبك.\n- تقديم المنتجات أو الخدمات ذات الصلة بك. وهذا يشمل الخدمات الأخرى غير المدرجة في عقدك معنا، والخدمات التي تستخدم معلومات حول مكانك، والاتصال بك من خلال رسائل حول التغييرات في المنتجات أو الخدمات.\nالمحاسبة ورعاية العملاء:\n- لإصدار فواتيراستخدام منتجاتنا وخدماتنا، أو لأخذ مبلغ الائتمان المناسب منك.\n- للاتصال بك إذا كانت معلومات الفواتير التي قدمتها إلينا على وشك الانتهاء أو لم نتمكن من قبول الدفع.\n- للرد على أي أسئلة أو مخاوف قد تكون لديكم حول شبكتنا أو منتجاتنا أو خدماتنا.\nرسائل الخدمة:\nسنتواصل معك عن طريق رسائل خدمة العملاء، لإبقائك على اطلاع بالمعلومات الحالية حول المنتجات والخدمات التي اشتريتها. على سبيل المثال، التغييرات التي تطرأ على الشروط والأحكام وخطة الأسعار واستخدام الإنترنت أو الاضافات التي يحق لك الحصول عليها أوحالات انقطاع الخدمة",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt"
+      ],
+      "relevant_document_ids": [
+        "4a9d6457b6c292c548e0"
+      ],
+      "relevant_sections": [
+        "اشعار الخصوصية > أنت في آمان > كيف نستخدم المعلومات الشخصية الخاصة بك؟"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "faq-25ce619c20",
+      "question": "Does Wi-Fi Calling work on Roaming calls or Emergency calls?",
+      "category": "mined_faq",
+      "language": "en",
+      "reference_answer": "No, roaming calls & emergency calls are not applicable to Wi-Fi Calling. In the event of an emergency, you should use a traditional landline or mobile phone connection over the cellular network.",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/en/wifi-calling"
+      ],
+      "relevant_document_ids": [
+        "d20daf0e94541e25bdd5"
+      ],
+      "relevant_sections": [
+        "H1 > Does Wi-Fi Calling work on Roaming calls or Emergency calls?"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/en/wifi-calling"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/en/wifi-calling": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "faq-b90325dfb0",
+      "question": "مع من نشارك معلوماتك الشخصية؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "reference_answer": "سنقوم بتخزين معلوماتك الشخصية في الحدود التي يقررها القانون، وإذا لم يكن هناك أي حد قانوني ، فسنقوم بتخزينها فقط طالما احتجنا لذلك. سنحتفظ ببعض المعلومات الشخصية لفترة معقولة بعد انتهاء عقدك معنا في حال قررت استخدام خدماتنا مرة أخرى.\nقد نقوم، نحن أو أحد شركائنا، بالاتصال بك بشأن خدمات ڤودافون خلال هذه الفترة إذا لم تكن قد اخترت عدم تلقي اتصالات تسويقية منا.\nبحسب الجائز، نشارك معلوماتك الشخصية مع:\n- شركات مجموعة ڤودافون.\n- الشركاء أو الوكلاء المشاركون في تقديم المنتجات والخدمات التي طلبتها أو استخدمتها.\n- الشركات التي تقوم بأداء خدمات لصالح أو نيابة عن: مجموعة ڤودافون المحدودة أو مجموعة ڤودافون .\n- وكالات المرجعية الائتمانية، أو وكالات منع الاحتيال أو وكالات تسجيل الأعمال، أو وكالات التسجيل الائتماني الأخرى .\n- وكالات تحصيل الديون أو غيرها من منظمات استرداد الديون.\n- وكالات إنفاذ القانون والهيئات الحكومية والمنظمات التنظيمية والمحاكم أو السلطات العامة الأخرى إذا اضطررنا إلى ذلك أو سمح لنا",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt"
+      ],
+      "relevant_document_ids": [
+        "4a9d6457b6c292c548e0"
+      ],
+      "relevant_sections": [
+        "اشعار الخصوصية > أنت في آمان > مع من نشارك معلوماتك الشخصية؟"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "faq-e3901069e1",
+      "question": "What happens if i lose Wi-Fi connection?",
+      "category": "mined_faq",
+      "language": "en",
+      "reference_answer": "Wi-Fi Calling depends on quality and speed of the Wi-Fi connection. During a call, if you experience bad or weak Wi-Fi signal the call will be transferred over cellular connection.",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/en/wifi-calling"
+      ],
+      "relevant_document_ids": [
+        "d20daf0e94541e25bdd5"
+      ],
+      "relevant_sections": [
+        "H1 > What happens if i lose Wi-Fi connection?"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/en/wifi-calling"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/en/wifi-calling": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "faq-8de14f5914",
+      "question": "إلى متى نحتفظ بمعلوماتك الشخصية؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "reference_answer": "سنقوم بتخزين معلوماتك الشخصية في الحدود التي يقررها القانون، وإذا لم يكن هناك أي حد قانوني ، فسنقوم بتخزينها فقط طالما احتجنا لذلك. سنحتفظ ببعض المعلومات الشخصية لفترة معقولة بعد انتهاء عقدك معنا في حال قررت استخدام خدماتنا مرة أخرى.\nقد نقوم، نحن أو أحد شركائنا، بالاتصال بك بشأن خدمات ڤودافون خلال هذه الفترة إذا لم تكن قد اخترت عدم تلقي اتصالات تسويقية منا.",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt"
+      ],
+      "relevant_document_ids": [
+        "4a9d6457b6c292c548e0"
+      ],
+      "relevant_sections": [
+        "اشعار الخصوصية > أنت في آمان > إلى متى نحتفظ بمعلوماتك الشخصية؟"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "faq-4bba2f5a98",
+      "question": "What can I do on the App?",
+      "category": "mined_faq",
+      "language": "en",
+      "reference_answer": "You can fully control your line, check your balance or bills, track your usage and subscribe to internet bundles. You will also check our offers designed just for you and much more!\n__PRESENT",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/en/anavodafone"
+      ],
+      "relevant_document_ids": [
+        "c98aa2dd0efbfc4f8712"
+      ],
+      "relevant_sections": [
+        "Ana Vodafone app > Got a question? > What can I do on the App?"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/en/anavodafone"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/en/anavodafone": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "faq-e9a45d9eeb",
+      "question": "كيف نحافظ على أمان معلوماتك الشخصية؟",
+      "category": "mined_faq",
+      "language": "ar",
+      "reference_answer": "لدينا فرق عمل تأمينية متخصصة، تقوم بمراجعة وتحسين إجراءاتنا باستمرار لحماية معلوماتك الشخصية من الوصول غير المصرح به أو الفقد العرضي أو الكشف أو التدمير.\nالاتصالات عبر الإنترنت بشكل عام (مثل رسائل البريد الإلكتروني) ليست آمنة ما لم يتم تشفيرها. قد تمر اتصالاتك عبر عدد من البلدان قبل تسليمها لأن هذه هي طبيعة الإنترنت.\nلا يمكننا قبول المسؤولية عن أي وصول غير مصرح به أو فقدان المعلومات الشخصية، طالما كان خارجا عن سيطرتنا. لن نطلب أبدا معلوماتك الشخصية أو معلومات حسابك الآمنة عن طريق وسيلة اتصال غير مرغوب فيها. أنت مسؤول عن الحفاظ على أمان معلوماتك الشخصية وحسابك وعدم مشاركتها مع الآخرين. قد يوفر موقعنا روابط لمواقع جهات أخرى، وعندئذ، لا يمكننا أن نكون مسؤولين عن أمن ومحتوى هذه المواقع، لذا تأكد من قراءة سياسات الخصوصية وملفات تعريف الارتباط الخاصة بهذه الجهات قبل استخدام معلوماتك الشخصية على موقعهم. وينطبق الشيء نفسه على أي مواقع ويب أو محتوى تابع لجهة خارجية تتصل باستخدام منتجاتنا وخدماتنا",
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt"
+      ],
+      "relevant_document_ids": [
+        "4a9d6457b6c292c548e0"
+      ],
+      "relevant_sections": [
+        "اشعار الخصوصية > أنت في آمان > كيف نحافظ على أمان معلوماتك الشخصية؟"
+      ],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Mined from an FAQ accordion; reference answer is verbatim page text."
+    },
+    {
+      "id": "curated-6bf26575db",
+      "question": "ازاي أجدد باقة الفليكس بتاعتي؟",
+      "category": "arabic_faq",
+      "language": "ar",
+      "reference_answer": null,
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/ar/vodafone-flex"
+      ],
+      "relevant_document_ids": [
+        "24df1ab008184825c3ca"
+      ],
+      "relevant_sections": [],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/ar/vodafone-flex"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/ar/vodafone-flex": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Hand-written question against a verified corpus URL."
+    },
+    {
+      "id": "curated-a7ed8036f2",
+      "question": "How do I renew my Flex bundle?",
+      "category": "english_faq",
+      "language": "en",
+      "reference_answer": null,
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/en/vodafone-flex"
+      ],
+      "relevant_document_ids": [
+        "f5b3b1a7ffef98128b7f"
+      ],
+      "relevant_sections": [],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/en/vodafone-flex"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/en/vodafone-flex": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Hand-written question against a verified corpus URL."
+    },
+    {
+      "id": "curated-4368bfeb19",
+      "question": "عايز أعرف إيه هي مزايا باقة RED الجديدة؟",
+      "category": "arabic_factual",
+      "language": "ar",
+      "reference_answer": null,
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/ar/vodafone-red1"
+      ],
+      "relevant_document_ids": [
+        "bd76e05ac4ddd39f7086"
+      ],
+      "relevant_sections": [],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/ar/vodafone-red1"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/ar/vodafone-red1": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Hand-written question against a verified corpus URL."
+    },
+    {
+      "id": "curated-e9ed25d318",
+      "question": "What are the benefits of the new RED plans?",
+      "category": "english_factual",
+      "language": "en",
+      "reference_answer": null,
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/en/vodafone-red1"
+      ],
+      "relevant_document_ids": [
+        "ae5ebcd99d41b789fba2"
+      ],
+      "relevant_sections": [],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/en/vodafone-red1"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/en/vodafone-red1": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Hand-written question against a verified corpus URL."
+    },
+    {
+      "id": "curated-402be20084",
+      "question": "ايه هو Vodafone Cash وازاي أستخدمه؟",
+      "category": "mixed_language",
+      "language": "mixed",
+      "reference_answer": null,
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/ar/home"
+      ],
+      "relevant_document_ids": [
+        "da20d5235554922859d2"
+      ],
+      "relevant_sections": [],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/ar/home"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/ar/home": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Hand-written question against a verified corpus URL."
+    },
+    {
+      "id": "curated-0a142fc293",
+      "question": "What is Vodafone DSL and what speeds are available?",
+      "category": "english_factual",
+      "language": "en",
+      "reference_answer": null,
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/en/home"
+      ],
+      "relevant_document_ids": [
+        "80084180c4e37a8af3bb"
+      ],
+      "relevant_sections": [],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/en/home"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/en/home": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Hand-written question against a verified corpus URL."
+    },
+    {
+      "id": "curated-df887471ff",
+      "question": "ازاي أشترك في كارت الفكة؟",
+      "category": "arabic_factual",
+      "language": "ar",
+      "reference_answer": null,
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/ar/kart-el-korout"
+      ],
+      "relevant_document_ids": [
+        "692fb1d38377ec960e83"
+      ],
+      "relevant_sections": [],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/ar/kart-el-korout"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/ar/kart-el-korout": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Hand-written question against a verified corpus URL."
+    },
+    {
+      "id": "curated-d4b2ed5c9b",
+      "question": "Tell me about Fakka cards and how to recharge them",
+      "category": "english_factual",
+      "language": "en",
+      "reference_answer": null,
+      "relevant_source_urls": [
+        "https://web.vodafone.com.eg/en/kart-el-korout"
+      ],
+      "relevant_document_ids": [
+        "7808aa8d588a49fecd63"
+      ],
+      "relevant_sections": [],
+      "expected_citations": [
+        "https://web.vodafone.com.eg/en/kart-el-korout"
+      ],
+      "graded_relevance": {
+        "https://web.vodafone.com.eg/en/kart-el-korout": 3.0
+      },
+      "expect_insufficient": false,
+      "notes": "Hand-written question against a verified corpus URL."
+    },
+    {
+      "id": "oos-9869c1703b",
+      "question": "ما هو سعر سهم فودافون مصر في البورصة النهاردة؟",
+      "category": "out_of_scope",
+      "language": "ar",
+      "reference_answer": null,
+      "relevant_source_urls": [],
+      "relevant_document_ids": [],
+      "relevant_sections": [],
+      "expected_citations": [],
+      "graded_relevance": {},
+      "expect_insufficient": true,
+      "notes": "Answer is not in the knowledge base; measures refusal behaviour."
+    },
+    {
+      "id": "oos-0e8c7c01cd",
+      "question": "What is the home address of the Vodafone Egypt CEO?",
+      "category": "out_of_scope",
+      "language": "en",
+      "reference_answer": null,
+      "relevant_source_urls": [],
+      "relevant_document_ids": [],
+      "relevant_sections": [],
+      "expected_citations": [],
+      "graded_relevance": {},
+      "expect_insufficient": true,
+      "notes": "Answer is not in the knowledge base; measures refusal behaviour."
+    },
+    {
+      "id": "oos-8c73fd1d75",
+      "question": "كام موظف شغال في فروع فودافون في أسوان دلوقتي؟",
+      "category": "out_of_scope",
+      "language": "ar",
+      "reference_answer": null,
+      "relevant_source_urls": [],
+      "relevant_document_ids": [],
+      "relevant_sections": [],
+      "expected_citations": [],
+      "graded_relevance": {},
+      "expect_insufficient": true,
+      "notes": "Answer is not in the knowledge base; measures refusal behaviour."
+    }
+  ]
+}
