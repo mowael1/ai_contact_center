@@ -1,0 +1,262 @@
+{
+  "collection": "vf_egypt_kb",
+  "embedding_model": "text-embedding-3-large",
+  "llm_model": "claude-sonnet-5",
+  "chunking_config": {
+    "target": 700,
+    "min": 200,
+    "max": 1400,
+    "similarity_threshold": 0.55,
+    "overlap_sentences": 1
+  },
+  "stages": {
+    "chunking": {
+      "stage": "chunking",
+      "documents": 538,
+      "sections": 2967,
+      "embedding_model": "local-lexical-512",
+      "embedding_dimension": 512,
+      "configurations": [
+        {
+          "config": {
+            "target_size": 700,
+            "min_size": 200,
+            "max_size": 1400,
+            "similarity_threshold": 0.55,
+            "overlap_sentences": 1
+          },
+          "total_chunks": 4794,
+          "documents": 538,
+          "sections": 2967,
+          "chunks_per_document": 8.911,
+          "chunks_per_section": 1.616,
+          "size": {
+            "mean": 354.0,
+            "median": 300.0,
+            "min": 26,
+            "max": 1400,
+            "p25": 123.0,
+            "p75": 505.0,
+            "p95": 860.0
+          },
+          "sentences_per_chunk": {
+            "mean": 3.43,
+            "median": 3.0
+          },
+          "pct_at_max_size": 0.02,
+          "pct_below_min_size": 36.52,
+          "pct_over_max_size": 0.0,
+          "section_boundary_violations": 0,
+          "empty_chunks": 0,
+          "duplicate_chunks": 1985,
+          "duplicate_pct": 41.41,
+          "chunking_methods": {
+            "whole_section": 2735,
+            "semantic": 2059
+          },
+          "section_extraction_methods": {
+            "html_structure": 4108,
+            "html_component": 570,
+            "no_section": 107,
+            "text_fallback": 9
+          },
+          "max_chunks_in_one_document": 128,
+          "max_chunks_in_one_section": 49
+        },
+        {
+          "config": {
+            "target_size": 350,
+            "min_size": 100,
+            "max_size": 700,
+            "similarity_threshold": 0.55,
+            "overlap_sentences": 1
+          },
+          "total_chunks": 6889,
+          "documents": 538,
+          "sections": 2967,
+          "chunks_per_document": 12.805,
+          "chunks_per_section": 2.322,
+          "size": {
+            "mean": 275.6,
+            "median": 261,
+            "min": 26,
+            "max": 701,
+            "p25": 146.0,
+            "p75": 371.0,
+            "p95": 570.0
+          },
+          "sentences_per_chunk": {
+            "mean": 2.66,
+            "median": 2
+          },
+          "pct_at_max_size": 0.1,
+          "pct_below_min_size": 12.8,
+          "pct_over_max_size": 0.03,
+          "section_boundary_violations": 0,
+          "empty_chunks": 0,
+          "duplicate_chunks": 2441,
+          "duplicate_pct": 35.43,
+          "chunking_methods": {
+            "whole_section": 2506,
+            "semantic": 4383
+          },
+          "section_extraction_methods": {
+            "html_structure": 5831,
+            "html_component": 896,
+            "no_section": 145,
+            "text_fallback": 17
+          },
+          "max_chunks_in_one_document": 219,
+          "max_chunks_in_one_section": 82
+        }
+      ],
+      "comparison": [
+        {
+          "config": {
+            "target_size": 700,
+            "min_size": 200,
+            "max_size": 1400,
+            "similarity_threshold": 0.55,
+            "overlap_sentences": 1
+          },
+          "total_chunks": 4794,
+          "median_size": 300.0,
+          "p95_size": 860.0,
+          "pct_below_min_size": 36.52,
+          "pct_at_max_size": 0.02,
+          "duplicate_pct": 41.41,
+          "chunks_per_document": 8.911
+        },
+        {
+          "config": {
+            "target_size": 350,
+            "min_size": 100,
+            "max_size": 700,
+            "similarity_threshold": 0.55,
+            "overlap_sentences": 1
+          },
+          "total_chunks": 6889,
+          "median_size": 261,
+          "p95_size": 570.0,
+          "pct_below_min_size": 12.8,
+          "pct_at_max_size": 0.1,
+          "duplicate_pct": 35.43,
+          "chunks_per_document": 12.805
+        }
+      ],
+      "note": "Chunk count alone is not a quality signal. Read it together with size distribution, duplicate rate and downstream retrieval metrics."
+    },
+    "retrieval": {
+      "evaluated_questions": 48,
+      "skipped_no_ground_truth": [
+        "oos-9869c1703b",
+        "oos-0e8c7c01cd",
+        "oos-8c73fd1d75"
+      ],
+      "top_k": 10,
+      "metrics": {
+        "HitRate@1": 0.4375,
+        "Recall@1": 0.4375,
+        "Precision@1": 0.4375,
+        "HitRate@3": 0.6458,
+        "Recall@3": 0.6458,
+        "Precision@3": 0.3611,
+        "HitRate@5": 0.75,
+        "Recall@5": 0.75,
+        "Precision@5": 0.3542,
+        "HitRate@10": 0.8125,
+        "Recall@10": 0.8125,
+        "Precision@10": 0.2563,
+        "MRR": 0.5622,
+        "nDCG@3": 0.4574,
+        "nDCG@5": 0.5414,
+        "nDCG@10": 0.6141
+      },
+      "section_retrieval_accuracy": {
+        "top_1": 0.1,
+        "top_3": 0.3,
+        "top_5": 0.475,
+        "top_10": 0.5
+      },
+      "source_retrieval_accuracy": {
+        "top_1": 0.4375,
+        "top_3": 0.6458,
+        "top_5": 0.75,
+        "top_10": 0.8125
+      },
+      "latency": {
+        "total_retrieval": {
+          "count": 48,
+          "mean_ms": 635.859,
+          "median_ms": 635.031,
+          "p95_ms": 655.817,
+          "p99_ms": 673.476,
+          "min_ms": 597.757,
+          "max_ms": 673.476
+        },
+        "embedding": {
+          "count": 48,
+          "mean_ms": 0.126,
+          "median_ms": 0.124,
+          "p95_ms": 0.156,
+          "p99_ms": 0.179,
+          "min_ms": 0.1,
+          "max_ms": 0.179
+        },
+        "vector_search": {
+          "count": 48,
+          "mean_ms": 635.585,
+          "median_ms": 634.769,
+          "p95_ms": 655.545,
+          "p99_ms": 673.176,
+          "min_ms": 597.486,
+          "max_ms": 673.176
+        }
+      }
+    },
+    "rag": {
+      "evaluated_questions": 51,
+      "generator_model": "echo-offline",
+      "generation_is_stub": true,
+      "deterministic_metrics": {
+        "citation_correctness_lexical": 0.2725,
+        "lexical_groundedness": 0.1106,
+        "answer_token_f1": 0.0448,
+        "insufficient_context_handling": 0.9412
+      },
+      "judge_metrics": {},
+      "judge_enabled": false,
+      "judge_model": null,
+      "unavailable_metrics": {
+        "faithfulness": "LLM judge disabled (no LLM credentials or --no-judge)",
+        "answer_relevance": "LLM judge disabled (no LLM credentials or --no-judge)",
+        "context_relevance": "LLM judge disabled (no LLM credentials or --no-judge)",
+        "context_precision": "LLM judge disabled (no LLM credentials or --no-judge)",
+        "context_recall": "LLM judge disabled (no LLM credentials or --no-judge)",
+        "answer_correctness": "LLM judge disabled (no LLM credentials or --no-judge)",
+        "unsupported_claim_rate": "LLM judge disabled (no LLM credentials or --no-judge)",
+        "citation_validity": "generation ran on the offline stub (LLM_PROVIDER=echo); set a real LLM_PROVIDER and API key to measure this",
+        "citation_correctness_lexical": "generation ran on the offline stub (LLM_PROVIDER=echo); set a real LLM_PROVIDER and API key to measure this",
+        "citation_completeness": "generation ran on the offline stub (LLM_PROVIDER=echo); set a real LLM_PROVIDER and API key to measure this",
+        "lexical_groundedness": "generation ran on the offline stub (LLM_PROVIDER=echo); set a real LLM_PROVIDER and API key to measure this",
+        "answer_token_f1": "generation ran on the offline stub (LLM_PROVIDER=echo); set a real LLM_PROVIDER and API key to measure this",
+        "insufficient_context_handling": "generation ran on the offline stub (LLM_PROVIDER=echo); set a real LLM_PROVIDER and API key to measure this"
+      },
+      "latency": {
+        "count": 51,
+        "mean_ms": 628.946,
+        "median_ms": 627.216,
+        "p95_ms": 650.642,
+        "p99_ms": 668.272,
+        "min_ms": 609.609,
+        "max_ms": 668.272
+      },
+      "llm_usage": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "estimated_cost_usd": 0.0,
+        "total_tokens": 0
+      }
+    }
+  }
+}
