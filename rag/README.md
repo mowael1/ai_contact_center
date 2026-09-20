@@ -34,9 +34,14 @@ Chroma Cloud
   ↓
 Retriever
   ↓
+Context Evaluator  (judge LLM)
+  ↓
+Relevant? ──NO──► Query Rewriter ──► (retrieve again)
+  │ YES
+  ▼
 Context Builder
   ↓
-LLM Generator
+LLM Generator  (streamed)
   ↓
 Citation Builder
   ↓
@@ -45,6 +50,11 @@ FastAPI / CLI
 
 Each arrow is a separate module with a single responsibility. There is no
 god-function: every stage can be imported and run on its own.
+
+The retrieve/evaluate/rewrite cycle is a **LangGraph** workflow
+(`AGENTIC_ENABLED=true`, the default). Setting it to `false` falls back to the
+original linear `retrieve -> generate` pipeline, which is still fully
+supported.
 
 ## 3. Folder structure
 
@@ -76,7 +86,8 @@ rag/
 │   ├── llm/                     # base, providers
 │   ├── services/                # retriever, context_builder, generator,
 │   │                            # citations, rag_service, ingest_service,
-│   │                            # interfaces, prompts
+│   │                            # evaluator, interfaces, prompts
+│   ├── graph/                   # LangGraph agentic workflow: state, workflow
 │   ├── evaluation/              # metrics, dataset, dataset_builder,
 │   │                            # diagnostics, stages, runner
 │   └── api/                     # app, routes, schemas
@@ -318,7 +329,31 @@ over-fetches (`top_k × 3`) and collapses passages with the same content hash,
 keeping the best-scoring copy and listing the others in
 `metadata.duplicate_source_urls`. Disable with `DEDUPLICATE_RESULTS=false`.
 
-## 12. Generation and citations
+## 12. Generation, streaming and citations
+
+**Model:** Gemini 2.5 Pro by default (`LLM_MODEL=gemini-2.5-pro`), reached over
+the Generative Language REST API - no vendor SDK, no LangChain wrapper. The key
+travels in an `x-goog-api-key` header rather than the URL, so it cannot leak
+through request logs. Gemini 2.5's thinking budget is set to 0: this is a
+grounded extraction task, not a reasoning one, and reasoning tokens are billed.
+
+### Streaming
+
+`generate_stream()` streams over `:streamGenerateContent?alt=sse`. Three
+details matter:
+
+1. **The `INSUFFICIENT_CONTEXT` sentinel never reaches the reader.** It can
+   straddle two stream frames, so the service withholds a tail of
+   `len(marker) - 1` characters until it can be resolved.
+2. **Citations are only emitted on `done`.** They are resolved from the
+   finished answer's bracketed indices against retrieved metadata, so a
+   citation cannot be invented mid-stream.
+3. **A final reconciliation event** carries `replaces_from`, a character offset
+   the client truncates to before appending. Post-processing (marker removal,
+   invalid-citation stripping) can rewrite the tail, so the stream is not
+   guaranteed to be a prefix of the final answer. Applying the deltas in order,
+   honouring `replaces_from`, always reconstructs the final text exactly.
+
 
 `GenerationService` builds a numbered context block — each passage labelled
 `[n]` with its section path and URL — and prompts the model to answer **only**
@@ -373,41 +408,80 @@ chunks per document/section, % at max size, % below min size, section-boundary
 violations, empty chunks, duplicate chunks. `--compare` runs two configurations
 side by side.
 
-## 15. Future LangGraph extension point
-
-Current workflow — linear, so plain Python is the right tool:
+## 15. The agentic retrieval graph (LangGraph)
 
 ```text
-Retrieve
-   ↓
-Generate
+    Question
+       │
+       ▼
+    retrieve ──► evaluate_context ──► relevant?
+       ▲                                │
+       │                         ┌──────┴──────┐
+       │                        YES            NO
+       │                         │              │
+       │                         ▼              ▼
+       │                     generate      attempts left?
+       │                                    │         │
+       └──────── rewrite_query ◄───── YES   │        NO
+                                            │         │
+                                            └────► give_up
 ```
 
-Possible future workflow:
+This is implemented in `rag/graph/` using **LangGraph**, and it is on by
+default (`AGENTIC_ENABLED=true`).
 
-```text
-Retrieve
-   ↓
-Evaluate Context
-   ↓
-Relevant?
- ├── YES → Generate
- └── NO  → Rewrite Query
-              ↓
-           Retrieve Again
-```
+### Why LangGraph is justified here
 
-`services/interfaces.py` already defines `Retriever`, `ContextEvaluator`,
-`QueryRewriter` and `Generator` as protocols. `Retriever` and `Generator` are
-implemented; `ContextEvaluator` and `QueryRewriter` are intentionally left
-unimplemented — a stub evaluator that always returned "relevant" would be worse
-than none.
+The original pipeline was linear, and this README previously argued against
+adding a graph runtime for it. That argument no longer holds, because this
+workflow has all three properties the earlier one lacked:
 
-LangGraph becomes appropriate when the workflow acquires **state, branching and
-loops**: retry budgets, per-attempt query history, conditional edges,
-checkpointing, human-in-the-loop review. None of those exist today, so adding a
-graph runtime now would be pure overhead. Because the services are already
-independent, introducing it later is a wiring change, not a rewrite.
+* **State** - an attempt counter, the query currently in play, the history of
+  per-attempt verdicts.
+* **Branching** - the relevance decision routes to `generate`, `rewrite_query`
+  or `give_up`.
+* **Loops** - `rewrite_query` feeds back into `retrieve`, bounded by
+  `MAX_RETRIEVAL_ATTEMPTS`.
+
+Only `langgraph` itself is used. LangChain's abstractions are not: `langchain-core`
+appears in the lockfile purely as a transitive dependency of langgraph.
+
+Setting `AGENTIC_ENABLED=false` (or `--linear` / `"agentic": false`) restores
+the original pipeline, which is still tested and supported.
+
+### The judge is a separate model
+
+`ContextEvaluator` and `QueryRewriter` - previously unimplemented extension
+points - are now backed by a **different LLM from the generator**:
+
+| role | default | why |
+|---|---|---|
+| generator | `gemini-2.5-pro` | writes the grounded answer |
+| judge | `gemini-2.5-flash` | grades retrieved context; cheap and fast |
+
+The model that writes the answer should not be the one deciding whether its own
+evidence was good enough. The judge returns
+`{is_relevant, confidence, reason, missing}`; a "relevant" verdict below
+`CONTEXT_RELEVANCE_THRESHOLD` is rejected, and `missing` is fed to the rewriter
+so the retry targets the actual gap.
+
+**Failure behaviour is deliberate:**
+
+* Judge unreachable or output unparseable -> **fail open** (treat context as
+  relevant and say so in the trace). A judge outage must not block answering.
+* Rewriter fails or returns junk -> reuse the previous query rather than
+  retrying with nothing.
+* Every attempt fails -> `give_up`: an explicit "not enough information" answer
+  **in the question's language**, with zero citations. The generator is never
+  called, so no tokens are spent inventing an answer.
+
+### Audit trail
+
+Every agentic response carries `attempts` (one record per retrieve/evaluate
+pass: query, hit count, top score, verdict, confidence, reason, what was
+missing) and `trace` (the nodes executed, in order). `rag-cli ask --trace`
+renders it as a table. This is what makes a wrong answer diagnosable: you can
+see whether retrieval, the judge, the rewrite or generation was at fault.
 
 ## 16. Installation
 
@@ -433,14 +507,23 @@ CHROMA_TENANT=
 CHROMA_DATABASE=
 CHROMA_COLLECTION_NAME=vf_egypt_kb
 
-EMBEDDING_PROVIDER=openai
-EMBEDDING_MODEL=text-embedding-3-large
-OPENAI_API_KEY=
-COHERE_API_KEY=
+EMBEDDING_PROVIDER=embeddinggemma_hf
+EMBEDDING_MODEL=google/embeddinggemma-300m
+EMBEDDING_BATCH_SIZE=128
+CHUNKING_EMBEDDING_PROVIDER=    # empty = same as EMBEDDING_PROVIDER
+HF_API_TOKEN=              # gated repo: accept the licence first
 
-LLM_PROVIDER=anthropic
-LLM_MODEL=claude-sonnet-5
-ANTHROPIC_API_KEY=
+LLM_PROVIDER=gemini
+LLM_MODEL=gemini-2.5-pro
+GOOGLE_API_KEY=            # GEMINI_API_KEY is accepted as an alias
+LLM_STREAMING=true
+
+JUDGE_LLM_PROVIDER=gemini
+JUDGE_LLM_MODEL=gemini-2.5-flash
+
+AGENTIC_ENABLED=true
+MAX_RETRIEVAL_ATTEMPTS=3
+CONTEXT_RELEVANCE_THRESHOLD=0.5
 
 RETRIEVAL_TEXT_POLICY=enhanced_first   # | language_aware | raw_only
 
@@ -475,7 +558,13 @@ rag-cli inspect chunks   --url https://web.vodafone.com.eg/en/vodafone-flex
 # Retrieval and full RAG
 rag-cli retrieve --query "ازاي أجدد باقة الإنترنت؟" --top-k 5
 rag-cli retrieve --query "..." --domain web.vodafone.com.eg --language ar --json
-rag-cli ask      --query "How do I renew my Flex bundle?" --top-k 5
+
+# Full RAG. Streams token by token and runs the agentic loop by default.
+rag-cli ask --query "How do I renew my Flex bundle?" --top-k 5
+rag-cli ask --query "ازاي أجدد باقتي؟" --trace          # show the loop's attempts
+rag-cli ask --query "..." --no-stream                   # print the answer at once
+rag-cli ask --query "..." --linear                      # skip the graph
+rag-cli ask --query "..." --max-attempts 5              # widen the retry budget
 
 # Vector store
 rag-cli store info      # collection, vector count, connection; never the key
@@ -511,6 +600,7 @@ uvicorn rag.api.app:app --reload
 | GET | `/health` | liveness + vector store / embedding diagnostics |
 | POST | `/api/v1/rag/retrieve` | retrieval only, no generation |
 | POST | `/api/v1/rag/query` | full grounded answer with citations |
+| POST | `/api/v1/rag/query/stream` | the same, streamed as Server-Sent Events |
 
 ```bash
 curl -s localhost:8000/api/v1/rag/retrieve -H 'Content-Type: application/json' -d '{
@@ -522,9 +612,36 @@ curl -s localhost:8000/api/v1/rag/retrieve -H 'Content-Type: application/json' -
 curl -s localhost:8000/api/v1/rag/query -H 'Content-Type: application/json' -d '{
   "query": "How do I renew my Flex bundle?",
   "top_k": 5,
-  "include_chunks": true
+  "include_chunks": true,
+  "agentic": true,
+  "max_attempts": 3
 }'
+
+# Streaming (SSE)
+curl -N -s localhost:8000/api/v1/rag/query/stream \
+  -H 'Content-Type: application/json' \
+  -d '{"query": "ازاي أجدد باقتي؟", "top_k": 5}'
 ```
+
+### Consuming the SSE stream
+
+```text
+event: delta
+data: {"delta": "تقدر تجدد", "replaces_from": null}
+
+event: delta
+data: {"delta": " باقتك من", "replaces_from": null}
+
+event: done
+data: {"query": "...", "answer": "...", "citations": [...], "usage": {...},
+       "attempts": [...], "trace": [...]}
+```
+
+Append each `delta`. If `replaces_from` is an integer, truncate your buffer to
+that offset first - the final reconciliation event uses it after citation
+post-processing. `citations`, `usage` and the agentic `attempts`/`trace` arrive
+only on `done`. An `error` event carries `{"detail": "..."}` if generation
+fails after the stream has already started.
 
 To mount inside the parent project instead of running standalone:
 
@@ -536,7 +653,7 @@ app.include_router(rag_router, prefix="/api/v1")
 ## 20. Testing
 
 ```bash
-pytest rag/tests -q      # 106 tests
+pytest rag/tests -q      # 186 tests
 ```
 
 Covers heading extraction and nested hierarchy, section paths, accordion/FAQ/tab
@@ -548,8 +665,17 @@ prevention/delete/re-ingest/metadata/filters (against a mocked client), the
 three API endpoints, fabricated-citation stripping, and every metric against
 hand-computed examples (including the standard nDCG worked example).
 
+It also covers the agentic graph (relevant-first-try, the rewrite loop, giving
+up without citations, max-attempts, the judge failing open, low-confidence
+rejection, and that generation is never invoked twice on the streaming path),
+the Gemini provider (SSE parsing, the key staying out of the URL, thinking
+budget, thought-token accounting), EmbeddingGemma (task prefixes, batching,
+mean-pooling, the gated-repo error), and the SSE endpoint (deltas reconstruct
+the final answer; citations only on `done`).
+
 No test requires live Chroma Cloud credentials or a real LLM: the Chroma client
-is mocked, and generation and judging use stubs.
+is mocked, HTTP is mocked with `httpx.MockTransport`, and generation and judging
+use stubs.
 
 ## 21. Known limitations
 
@@ -571,5 +697,20 @@ is mocked, and generation and judging use stubs.
   string with no surrounding label cannot be distinguished from ordinary text.
   The primary guarantee is that no code path formats a credential into a log
   message; redaction is the backstop.
+- **The agentic loop costs extra tokens.** Each attempt adds one judge call,
+  and each failed attempt adds a rewrite call. A question that needs three
+  attempts spends 3 judge + 2 rewrite calls before a single answer token. The
+  judge runs on `gemini-2.5-flash` to keep that cheap, and
+  `MAX_RETRIEVAL_ATTEMPTS` bounds it. Set `AGENTIC_ENABLED=false` for the
+  lowest-latency path.
+- **The retrieve/evaluate/rewrite cycle is not streamed**, only the final
+  answer is. The loop produces verdicts, not prose, so there is nothing
+  meaningful to render until it settles. On a question that needs several
+  attempts, time-to-first-token is correspondingly longer.
+- **Evaluation metrics were measured on the pre-Gemini configuration.** The
+  retrieval numbers below were produced with the lexical dev embedder, and the
+  answer-side metrics were never measured against a real LLM. Re-run
+  `rag-cli eval retrieval` and `rag-cli eval rag --judge` once EmbeddingGemma
+  and Gemini credentials are in place.
 - The evaluation set is 51 questions. It is large enough to compare
   configurations, not to certify production quality.
