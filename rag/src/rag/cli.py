@@ -452,12 +452,14 @@ def ask_cmd(
 def store_info(
     offline: bool = OfflineOpt,
     offline_store: Optional[str] = OfflineStoreOpt,
+    provider: Optional[str] = EmbedProviderOpt,
+    model: Optional[str] = EmbedModelOpt,
 ) -> None:
     """Collection name, vector count, embedding model, connection status.
 
     The API key is never printed - only whether one is set.
     """
-    container = _container(offline, offline_store)
+    container = _container(offline, offline_store, provider, model)
     info = container.store.info()
     info["embedding"] = container.embeddings.model_info()
     _print_json(info)
@@ -516,6 +518,7 @@ def eval_chunking(
 def eval_retrieval(
     dataset_path: Optional[Path] = typer.Option(None, "--dataset"),
     top_k: int = typer.Option(10, "--top-k", "-k"),
+    limit: Optional[int] = typer.Option(None, "--limit", "-n"),
     offline: bool = OfflineOpt,
     offline_store: Optional[str] = OfflineStoreOpt,
     provider: Optional[str] = EmbedProviderOpt,
@@ -528,6 +531,8 @@ def eval_retrieval(
 
     container = _container(offline, offline_store, provider, model)
     dataset = EvalDataset.load(dataset_path)
+    if limit:
+        dataset = dataset.sample(limit)
     result = evaluate_retrieval(container.retriever, dataset, top_k=top_k)
     _print_json(result.summary)
     write_report(
@@ -540,7 +545,15 @@ def eval_retrieval(
 def eval_rag(
     dataset_path: Optional[Path] = typer.Option(None, "--dataset"),
     top_k: int = typer.Option(settings.TOP_K, "--top-k", "-k"),
+    limit: Optional[int] = typer.Option(
+        None, "--limit", "-n",
+        help="Evaluate a balanced subset - useful under a provider daily quota",
+    ),
     judge: bool = typer.Option(True, "--judge/--no-judge", help="Enable LLM-as-a-judge metrics"),
+    agentic: Optional[bool] = typer.Option(
+        None, "--agentic/--linear",
+        help="Evaluate the LangGraph loop, or the linear pipeline",
+    ),
     offline: bool = OfflineOpt,
     offline_store: Optional[str] = OfflineStoreOpt,
     provider: Optional[str] = EmbedProviderOpt,
@@ -554,8 +567,12 @@ def eval_rag(
 
     container = _container(offline, offline_store, provider, model)
     dataset = EvalDataset.load(dataset_path)
-    judge_impl = LLMJudge(container.llm) if judge else None
-    result = evaluate_rag(container.rag(), dataset, top_k=top_k, judge=judge_impl)
+    if limit:
+        dataset = dataset.sample(limit)
+        console.print(f"[yellow]Evaluating a balanced subset of {len(dataset.questions)} questions[/yellow]")
+    judge_impl = LLMJudge(container.judge_llm) if judge else None
+    answerer = container.answerer(agentic=agentic)
+    result = evaluate_rag(answerer, dataset, top_k=top_k, judge=judge_impl)
     _print_json(result.summary)
     write_report(
         {"summary": result.summary, "per_query": result.per_query},
