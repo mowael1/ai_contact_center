@@ -1,136 +1,53 @@
 {
   "stage": "chunking",
-  "documents": 538,
-  "sections": 2967,
+  "documents": 595,
+  "sections": 3641,
   "embedding_model": "local-lexical-512",
   "embedding_dimension": 512,
-  "configurations": [
-    {
-      "config": {
-        "target_size": 700,
-        "min_size": 200,
-        "max_size": 1400,
-        "similarity_threshold": 0.55,
-        "overlap_sentences": 1
-      },
-      "total_chunks": 4794,
-      "documents": 538,
-      "sections": 2967,
-      "chunks_per_document": 8.911,
-      "chunks_per_section": 1.616,
-      "size": {
-        "mean": 354.0,
-        "median": 300.0,
-        "min": 26,
-        "max": 1400,
-        "p25": 123.0,
-        "p75": 505.0,
-        "p95": 860.0
-      },
-      "sentences_per_chunk": {
-        "mean": 3.43,
-        "median": 3.0
-      },
-      "pct_at_max_size": 0.02,
-      "pct_below_min_size": 36.52,
-      "pct_over_max_size": 0.0,
-      "section_boundary_violations": 0,
-      "empty_chunks": 0,
-      "duplicate_chunks": 1985,
-      "duplicate_pct": 41.41,
-      "chunking_methods": {
-        "whole_section": 2735,
-        "semantic": 2059
-      },
-      "section_extraction_methods": {
-        "html_structure": 4108,
-        "html_component": 570,
-        "no_section": 107,
-        "text_fallback": 9
-      },
-      "max_chunks_in_one_document": 128,
-      "max_chunks_in_one_section": 49
+  "report": {
+    "config": {
+      "target_size": 700,
+      "min_size": 200,
+      "max_size": 1400,
+      "similarity_threshold": 0.55,
+      "overlap_sentences": 1
     },
-    {
-      "config": {
-        "target_size": 350,
-        "min_size": 100,
-        "max_size": 700,
-        "similarity_threshold": 0.55,
-        "overlap_sentences": 1
-      },
-      "total_chunks": 6889,
-      "documents": 538,
-      "sections": 2967,
-      "chunks_per_document": 12.805,
-      "chunks_per_section": 2.322,
-      "size": {
-        "mean": 275.6,
-        "median": 261,
-        "min": 26,
-        "max": 701,
-        "p25": 146.0,
-        "p75": 371.0,
-        "p95": 570.0
-      },
-      "sentences_per_chunk": {
-        "mean": 2.66,
-        "median": 2
-      },
-      "pct_at_max_size": 0.1,
-      "pct_below_min_size": 12.8,
-      "pct_over_max_size": 0.03,
-      "section_boundary_violations": 0,
-      "empty_chunks": 0,
-      "duplicate_chunks": 2441,
-      "duplicate_pct": 35.43,
-      "chunking_methods": {
-        "whole_section": 2506,
-        "semantic": 4383
-      },
-      "section_extraction_methods": {
-        "html_structure": 5831,
-        "html_component": 896,
-        "no_section": 145,
-        "text_fallback": 17
-      },
-      "max_chunks_in_one_document": 219,
-      "max_chunks_in_one_section": 82
-    }
-  ],
-  "comparison": [
-    {
-      "config": {
-        "target_size": 700,
-        "min_size": 200,
-        "max_size": 1400,
-        "similarity_threshold": 0.55,
-        "overlap_sentences": 1
-      },
-      "total_chunks": 4794,
-      "median_size": 300.0,
-      "p95_size": 860.0,
-      "pct_below_min_size": 36.52,
-      "pct_at_max_size": 0.02,
-      "duplicate_pct": 41.41,
-      "chunks_per_document": 8.911
+    "total_chunks": 5884,
+    "documents": 595,
+    "sections": 3641,
+    "chunks_per_document": 9.889,
+    "chunks_per_section": 1.616,
+    "size": {
+      "mean": 379.3,
+      "median": 342.5,
+      "min": 26,
+      "max": 1400,
+      "p25": 136.0,
+      "p75": 538.0,
+      "p95": 913.0
     },
-    {
-      "config": {
-        "target_size": 350,
-        "min_size": 100,
-        "max_size": 700,
-        "similarity_threshold": 0.55,
-        "overlap_sentences": 1
-      },
-      "total_chunks": 6889,
-      "median_size": 261,
-      "p95_size": 570.0,
-      "pct_below_min_size": 12.8,
-      "pct_at_max_size": 0.1,
-      "duplicate_pct": 35.43,
-      "chunks_per_document": 12.805
-    }
-  ],
-  "note": "Chunk count alone is not a quality signal. Read it together with size distribution, duplicate rate and downstream retrieval metrics."
+    "sentences_per_chunk": {
+      "mean": 3.45,
+      "median": 3.0
+    },
+    "pct_at_max_size": 0.02,
+    "pct_below_min_size": 33.04,
+    "pct_over_max_size": 0.0,
+    "section_boundary_violations": 0,
+    "empty_chunks": 0,
+    "duplicate_chunks": 2743,
+    "duplicate_pct": 46.62,
+    "chunking_methods": {
+      "whole_section": 3093,
+      "semantic": 2791
+    },
+    "section_extraction_methods": {
+      "html_structure": 4924,
+      "html_component": 792,
+      "no_section": 161,
+      "text_fallback": 7
+    },
+    "max_chunks_in_one_document": 128,
+    "max_chunks_in_one_section": 49
+  }
 }
