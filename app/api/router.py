@@ -2,6 +2,7 @@ from fastapi import APIRouter
 
 from app.api.routes import (
     auth,
+    calls,
     companies,
     customers,
     tickets,
@@ -42,4 +43,10 @@ api_router.include_router(
     tickets.router,
     prefix="/tickets",
     tags=["Tickets"]
+)
+
+api_router.include_router(
+    calls.router,
+    prefix="/calls",
+    tags=["Calls"]
 )

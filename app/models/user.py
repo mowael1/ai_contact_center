@@ -18,7 +18,7 @@ if TYPE_CHECKING:
     from app.models.company import Company
     from app.models.role import Role
     from app.models.ticket import Ticket
-
+    from app.models.call import Call
 class User(Base):
     __tablename__ = "users"
 
@@ -83,4 +83,8 @@ class User(Base):
     assigned_tickets: Mapped[list["Ticket"]] = relationship(
     back_populates="assigned_agent",
     foreign_keys="Ticket.assigned_agent_id"
+)
+    calls: Mapped[list["Call"]] = relationship(
+    back_populates="agent",
+    foreign_keys="Call.agent_id"
 )

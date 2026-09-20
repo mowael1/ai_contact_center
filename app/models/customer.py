@@ -21,7 +21,7 @@ from app.db.base import Base
 if TYPE_CHECKING:
     from app.models.company import Company
     from app.models.ticket import Ticket
-
+    from app.models.call import Call
 
 class Customer(Base):
     __tablename__ = "customers"
@@ -77,4 +77,7 @@ class Customer(Base):
     
     tickets: Mapped[list["Ticket"]] = relationship(
         back_populates="customer"
+    )
+    calls: Mapped[list["Call"]] = relationship(
+    back_populates="customer"
     )
