@@ -1,0 +1,4 @@
+# Optional: run embeddings locally instead of via a hosted API.
+# Pulls in torch (~2 GB). Only needed for offline operation or for
+# benchmarking a local model against the hosted one.
+sentence-transformers>=3.0
