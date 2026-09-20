@@ -70,9 +70,10 @@ class HFInferenceEmbeddingGemma(EmbeddingService):
                 "rag/.env (see rag/.env.example). google/embeddinggemma-300m is a "
                 "gated repo, so accept its licence on the model page first."
             )
-        # The hosted endpoint is far happier with modest batches than the
-        # 96-item default used for the big commercial embedding APIs.
-        self._batch_size = batch_size or min(settings.EMBEDDING_BATCH_SIZE, 32)
+        # Measured on the hosted endpoint: 32 -> 61/s, 64 -> 66/s, 128 -> 73/s,
+        # 256 -> 79/s. Returns diminish past 128 while per-request failure cost
+        # grows, so that is the cap.
+        self._batch_size = batch_size or min(settings.EMBEDDING_BATCH_SIZE, 128)
         self._dim = DIMENSION
         self._client = httpx.Client(timeout=timeout)
         self._url = (
