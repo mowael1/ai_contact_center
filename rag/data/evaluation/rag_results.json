@@ -1,72 +1,141 @@
 {
   "summary": {
-    "evaluated_questions": 51,
-    "generator_model": "echo-offline",
-    "generation_is_stub": true,
+    "evaluated_questions": 8,
+    "generator_model": "gemini-2.5-flash",
+    "generation_is_stub": false,
+    "agentic": {
+      "enabled": false,
+      "mean_attempts": null,
+      "questions_needing_a_rewrite": 0,
+      "questions_exhausting_attempts": 0
+    },
     "deterministic_metrics": {
-      "citation_correctness_lexical": 0.2725,
-      "lexical_groundedness": 0.1106,
-      "answer_token_f1": 0.0448,
-      "insufficient_context_handling": 0.9412
+      "citation_validity": 1.0,
+      "citation_correctness_lexical": 0.8667,
+      "citation_completeness": 0.9722,
+      "lexical_groundedness": 0.4606,
+      "insufficient_context_handling": 0.75,
+      "answer_token_f1": 0.0351
     },
-    "judge_metrics": {},
-    "judge_enabled": false,
-    "judge_model": null,
-    "unavailable_metrics": {
-      "faithfulness": "LLM judge disabled (no LLM credentials or --no-judge)",
-      "answer_relevance": "LLM judge disabled (no LLM credentials or --no-judge)",
-      "context_relevance": "LLM judge disabled (no LLM credentials or --no-judge)",
-      "context_precision": "LLM judge disabled (no LLM credentials or --no-judge)",
-      "context_recall": "LLM judge disabled (no LLM credentials or --no-judge)",
-      "answer_correctness": "LLM judge disabled (no LLM credentials or --no-judge)",
-      "unsupported_claim_rate": "LLM judge disabled (no LLM credentials or --no-judge)",
-      "citation_validity": "generation ran on the offline stub (LLM_PROVIDER=echo); set a real LLM_PROVIDER and API key to measure this",
-      "citation_correctness_lexical": "generation ran on the offline stub (LLM_PROVIDER=echo); set a real LLM_PROVIDER and API key to measure this",
-      "citation_completeness": "generation ran on the offline stub (LLM_PROVIDER=echo); set a real LLM_PROVIDER and API key to measure this",
-      "lexical_groundedness": "generation ran on the offline stub (LLM_PROVIDER=echo); set a real LLM_PROVIDER and API key to measure this",
-      "answer_token_f1": "generation ran on the offline stub (LLM_PROVIDER=echo); set a real LLM_PROVIDER and API key to measure this",
-      "insufficient_context_handling": "generation ran on the offline stub (LLM_PROVIDER=echo); set a real LLM_PROVIDER and API key to measure this"
+    "judge_metrics": {
+      "faithfulness": 1.0,
+      "answer_relevance": 0.9375,
+      "context_relevance": 0.5437,
+      "context_precision": 0.5312,
+      "context_recall": 0.525,
+      "unsupported_claim_rate": 0.0,
+      "answer_correctness": 0.2
     },
+    "judge_enabled": true,
+    "judge_model": "gemini-2.5-flash",
+    "unavailable_metrics": {},
     "latency": {
-      "count": 51,
-      "mean_ms": 628.946,
-      "median_ms": 627.216,
-      "p95_ms": 650.642,
-      "p99_ms": 668.272,
-      "min_ms": 609.609,
-      "max_ms": 668.272
+      "count": 8,
+      "mean_ms": 16376.302,
+      "median_ms": 6391.128,
+      "p95_ms": 50014.11,
+      "p99_ms": 50014.11,
+      "min_ms": 5596.89,
+      "max_ms": 50014.11
     },
     "llm_usage": {
-      "input_tokens": 0,
-      "output_tokens": 0,
-      "estimated_cost_usd": 0.0,
-      "total_tokens": 0
+      "input_tokens": 9378,
+      "output_tokens": 1506,
+      "estimated_cost_usd": 0.006578,
+      "total_tokens": 10884
     }
   },
   "per_query": [
     {
-      "id": "faq-f27299e23d",
-      "question": "ايه المميز فى انظمة RED الجديدة عن انظمة RED القديمة ؟",
-      "category": "mined_faq",
+      "id": "curated-4368bfeb19",
+      "question": "عايز أعرف إيه هي مزايا باقة RED الجديدة؟",
+      "category": "arabic_factual",
       "language": "ar",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
+      "answer": "مع نظام RED الجديد، ممكن تستخدم باقة الإنترنت المحلية بتاعتك وانت مسافر لعدد أسابيع محدودة في السنة [4][5]. كمان ممكن تستمتع بباقات Home DSL مجانية وخصومات خاصة حسب نظام Red بتاعك [1].",
       "has_sufficient_context": true,
+      "attempts": [],
+      "trace": [],
       "citations": [
         {
-          "index": 1,
+          "index": 4,
           "source_url": "https://web.vodafone.com.eg/ar/red-business",
           "section_path": [
             "Red Family",
             "اعرف اكتر عن نظام RED",
-            "ايه المميز فى انظمة RED الجديدة عن انظمة RED القديمة ؟"
+            "إيه مميزات التجوال في نظام RED الجديد ؟"
           ]
         },
         {
-          "index": 2,
-          "source_url": "https://advisory.vodafone.com.eg/ar/knowledge-center/why-you-need-to-take-cybersecurity-seriously-before-its-too-late",
+          "index": 5,
+          "source_url": "https://web.vodafone.com.eg/ar/vodafone-red1",
           "section_path": [
-            "لماذا تحتاج إلى أن تأخذ مسألة الأمن السيبراني أو الإلكتروني على محمل الجد – قبل فوات الأوان",
-            "التعريف والأسباب والوسائل: دليل مكتمل إلى الامتثال للأمن الإلكتروني"
+            "إستمتع بأجدد الخدمات الترفيهية المقدمة من RED",
+            "اعرف اكتر عن نظام RED",
+            "إيه مميزات التجوال في نظام RED الجديد ؟"
+          ]
+        },
+        {
+          "index": 1,
+          "source_url": "https://web.vodafone.com.eg/ar/adsl-catalog",
+          "section_path": [
+            "adsl-catalog",
+            "خصومات ومزايا RED"
+          ]
+        }
+      ],
+      "deterministic": {
+        "citation_validity": 1.0,
+        "citation_correctness_lexical": 1.0,
+        "citation_completeness": 1.0,
+        "lexical_groundedness": 0.6333,
+        "answer_token_f1": null,
+        "insufficient_context_handling": 1.0
+      },
+      "judge": {
+        "scores": {
+          "faithfulness": 1.0,
+          "answer_relevance": 1.0,
+          "context_relevance": 0.75,
+          "context_precision": 0.6,
+          "context_recall": 1.0,
+          "answer_correctness": null,
+          "unsupported_claim_rate": 0.0
+        },
+        "reason": "The answer accurately extracts the benefits of the new RED package from the provided context, and the context contains relevant information to answer the question.",
+        "error": null
+      },
+      "latency_ms": {
+        "embed_ms": 5624.496,
+        "search_ms": 1051.3,
+        "total_ms": 7884.935,
+        "generate_ms": 1209.139
+      }
+    },
+    {
+      "id": "curated-6bf26575db",
+      "question": "ازاي أجدد باقة الفليكس بتاعتي؟",
+      "category": "arabic_faq",
+      "language": "ar",
+      "answer": "ممكن تجدد باقة فليكس أو الإنترنت الخاصة بيك عن طريق فودافون كاش [1]. كمان ممكن تجدد باقتك من خلال تطبيق أنا فودافون [4]. باقات فليكس الجديدة ممكن تتجدد بسهولة، وممكن تستلف باقتك وتدفعها بعدين من غير مصاريف زيادة [3].",
+      "has_sufficient_context": true,
+      "attempts": [],
+      "trace": [],
+      "citations": [
+        {
+          "index": 1,
+          "source_url": "https://web.vodafone.com.eg/ar/vodafone-cash",
+          "section_path": [
+            "إيه هى خدمات ڤودافون كاش الأخرى ؟",
+            "جدد باقتك في أي وقت وفي أي مكان"
+          ]
+        },
+        {
+          "index": 4,
+          "source_url": "https://web.vodafone.com.eg/ar/anavodafone",
+          "section_path": [
+            "صفحه تطبيق انا فودافون",
+            "عندك سؤال عن التطبيق؟",
+            "الإنترنت"
           ]
         },
         {
@@ -74,248 +143,47 @@
           "source_url": "https://web.vodafone.com.eg/ar/vodafone-flex",
           "section_path": [
             "فودافون فليكس: فليكسات للمكالمات والإنترنت والتطبيقات الترفيهية",
-            "معلومات عن فليكس",
-            "تجديد الباقة"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/ar/vodafone-red1",
-          "section_path": [
-            "إستمتع بأجدد الخدمات الترفيهية المقدمة من RED",
-            "أهلا بيك في عالم RED"
-          ]
-        },
-        {
-          "index": 5,
-          "source_url": "https://advisory.vodafone.com.eg/ar/knowledge-center/how-to-make-an-online-shop-your-customers-will-love",
-          "section_path": [
-            "كيف تصنع متجرا عبر الإنترنت يحبه عملاؤك",
-            "اجعل متجرك الإلكتروني أفضل ما يمكن أن يكون",
-            "التعرف على عميلك"
+            "فليكس بقى أكبر وأسهل بزيادة"
           ]
         }
       ],
       "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.0,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.04,
-        "answer_token_f1": 0.0312,
+        "citation_validity": 1.0,
+        "citation_correctness_lexical": 1.0,
+        "citation_completeness": 1.0,
+        "lexical_groundedness": 0.5,
+        "answer_token_f1": null,
         "insufficient_context_handling": 1.0
       },
-      "judge": null,
+      "judge": {
+        "scores": {
+          "faithfulness": 1.0,
+          "answer_relevance": 1.0,
+          "context_relevance": 0.8,
+          "context_precision": 0.75,
+          "context_recall": 1.0,
+          "answer_correctness": null,
+          "unsupported_claim_rate": 0.0
+        },
+        "reason": "The answer accurately provides methods for renewing the Flex package based on the provided context, and the context contains relevant information for answering the question.",
+        "error": null
+      },
       "latency_ms": {
-        "embed_ms": 0.176,
-        "search_ms": 620.418,
-        "total_ms": 620.806,
-        "generate_ms": 0.212
+        "embed_ms": 513.096,
+        "search_ms": 601.464,
+        "total_ms": 5981.616,
+        "generate_ms": 4867.057
       }
     },
     {
-      "id": "faq-231dadceae",
-      "question": "What are the major extra benefits of the new plans over the last ones ?",
-      "category": "mined_faq",
+      "id": "curated-e9ed25d318",
+      "question": "What are the benefits of the new RED plans?",
+      "category": "english_factual",
       "language": "en",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
+      "answer": "The new RED plans offer the latest entertainment and lifestyle apps [1]. With the new RED system, customers can use their local internet bundle while traveling for a limited number of weeks per year [4]. RED customers can also enjoy free Home DSL bundles and special discounts based on their RED system [2].",
       "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://www.vodafone.com.eg/en/services",
-          "section_path": [
-            "Vodafone Services Manage your line , your payment, balance, and all the services you need",
-            "Great Entertainment",
-            "90 Mins"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://advisory.vodafone.com.eg/knowledge-center/what-are-the-most-common-security-threats-today",
-          "section_path": [
-            "What are the most common security threats today?",
-            "The most common cyber threats to look out for",
-            "What are the biggest threats right now?"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://advisory.vodafone.com.eg/knowledge-center/how-to-use-tiktok-for-business",
-          "section_path": [
-            "How to use TikTok for Business",
-            "Find out how you can use this increasingly popular social media platform to your business advantage",
-            "How to use TikTok for Business"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/en/wifi-calling",
-          "section_path": [
-            "H1",
-            "Does Wi-Fi Calling work on Roaming calls or Emergency calls?"
-          ]
-        },
-        {
-          "index": 5,
-          "source_url": "https://advisory.vodafone.com.eg/knowledge-center/discover-how-cloud-is-supporting-businesses-through-the-crisis",
-          "section_path": [
-            "Discover how cloud is supporting businesses through the crisis",
-            "Uncover the many benefits cloud can bring to your business"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.8,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.2,
-        "answer_token_f1": 0.0857,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.156,
-        "search_ms": 650.394,
-        "total_ms": 650.642,
-        "generate_ms": 0.092
-      }
-    },
-    {
-      "id": "faq-1be71684c5",
-      "question": "8. إيه هو Vodafone Plus Play ؟",
-      "category": "mined_faq",
-      "language": "mixed",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "http://internet.vodafone.com.eg/digital/cash-guide",
-          "section_path": null
-        },
-        {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/en/mobile-internet-bundles",
-          "section_path": [
-            "Vodafone Internet Bundles",
-            "Frequently asked questions:",
-            "4. Who can enjoy the new Plus Bundles?"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://web.vodafone.com.eg/en/red-business-deals",
-          "section_path": [
-            "With Business Benefits, gain access to exclusive discounts across a wide range of vendors. From food and beverage to groceries, fashion, electronics, and health and beauty, we've partnered with leading brands to offer you unmatched savings."
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://eshop.vodafone.com.eg/ar/internetServices/dsl/bundles",
-          "section_path": null
-        },
-        {
-          "index": 5,
-          "source_url": "https://web.vodafone.com.eg/en/sme",
-          "section_path": [
-            "Vodafone Egypt home page",
-            "Open a Vodafone Business Account",
-            "Explore more solutions",
-            "Offers & Benefits"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.0,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.08,
-        "answer_token_f1": 0.0,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.104,
-        "search_ms": 631.038,
-        "total_ms": 631.222,
-        "generate_ms": 0.08
-      }
-    },
-    {
-      "id": "faq-167341730f",
-      "question": "ازاي ممكن أحول لنظام RED ؟",
-      "category": "mined_faq",
-      "language": "ar",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/ar/vodafone-red1",
-          "section_path": [
-            "إستمتع بأجدد الخدمات الترفيهية المقدمة من RED",
-            "أهلا بيك في عالم RED"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://advisory.vodafone.com.eg/ar/knowledge-center/how-to-measure-and-track-aov-on-your-website",
-          "section_path": [
-            "كيفية قياس وتتبع القيمة المتوسطة للطلب (AOV) على موقعك الإلكتروني",
-            "إزاي تتابع وتقيس متوسط قيمة الطلب بفاعلية؟"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://web.vodafone.com.eg/ar/red-business",
-          "section_path": [
-            "Red Family",
-            "اعرف اكتر عن نظام RED",
-            "ازاي أقدر استمتع بباقة DSL ؟"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/ar/vodafone-red1",
-          "section_path": [
-            "إستمتع بأجدد الخدمات الترفيهية المقدمة من RED",
-            "اعرف اكتر عن نظام RED",
-            "ازاي ممكن أحول لنظام RED ؟"
-          ]
-        },
-        {
-          "index": 5,
-          "source_url": "https://advisory.vodafone.com.eg/ar/knowledge-center/heres-a-simple-way-for-your-business-to-make-more-sales",
-          "section_path": [
-            "إليك طريقة بسيطة لتحقيق المزيد من المبيعات لشركتك",
-            "هل المبيعات من خلال وسائل التواصل الاجتماعي هي السبيل إلى المضي قدما للأمام؟",
-            "نصائح حول كيفية البدء في البيع بشكل أكبر على مواقع التواصل الاجتماعي"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.0,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.0,
-        "answer_token_f1": 0.0,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.1,
-        "search_ms": 626.816,
-        "total_ms": 627.0,
-        "generate_ms": 0.084
-      }
-    },
-    {
-      "id": "faq-95fdeaf54d",
-      "question": "How do I migrate to the new RED ?",
-      "category": "mined_faq",
-      "language": "en",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
+      "attempts": [],
+      "trace": [],
       "citations": [
         {
           "index": 1,
@@ -326,68 +194,7 @@
           ]
         },
         {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/en/privacy-policy-of-vodafone-egypt",
-          "section_path": [
-            "Privacy Notice",
-            "You are secured",
-            "How do we use cookies?"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://advisory.vodafone.com.eg/knowledge-center/the-importance-of-business-networking",
-          "section_path": [
-            "The importance of business networking",
-            "More news and insights",
-            "Three steps to building your own online shop"
-          ]
-        },
-        {
           "index": 4,
-          "source_url": "https://advisory.vodafone.com.eg/knowledge-center?query_topic=website-and-apps&query_subtopic=mobile-apps&query_page=1",
-          "section_path": [
-            "All articles related with Website & Apps",
-            "Content type",
-            "So, you think you need an app... what should you do now?"
-          ]
-        },
-        {
-          "index": 5,
-          "source_url": "https://web.vodafone.com.eg/en/ramadan",
-          "section_path": [
-            "Watch it & Yango Play for Free | Vodafone Ramadan 2026",
-            "Home Compound Promo",
-            "Terms and Conditions"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.8,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.16,
-        "answer_token_f1": 0.0635,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.105,
-        "search_ms": 625.376,
-        "total_ms": 625.564,
-        "generate_ms": 0.083
-      }
-    },
-    {
-      "id": "faq-f62b17f43f",
-      "question": "إيه مميزات التجوال في نظام RED الجديد ؟",
-      "category": "mined_faq",
-      "language": "ar",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
           "source_url": "https://web.vodafone.com.eg/ar/red-business",
           "section_path": [
             "Red Family",
@@ -397,2335 +204,39 @@
         },
         {
           "index": 2,
-          "source_url": "https://web.vodafone.com.eg/ar/2019-news",
+          "source_url": "https://web.vodafone.com.eg/ar/adsl-catalog",
           "section_path": [
-            "عن طريق \"فودافون كاش\" و بالشراكة مع \"فوري\" فودافون تمكن عملائها من تسديد فواتير الكهرباء والغاز والمصاريف الجامعية عبر المحمول"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://web.vodafone.com.eg/ar/smart-meter",
-          "section_path": [
-            "العداد الذكي",
-            "إيه هي الشبكة الذكية ؟"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/en/574",
-          "section_path": [
-            "أحدث أخبارنا",
-            "فودافون تقدم مفهوم جديد للباقات وتطرح مميزات لا تنتهي في نظام فودافون فليكس الجديد"
-          ]
-        },
-        {
-          "index": 5,
-          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
-          "section_path": [
-            "اشعار الخصوصية",
-            "أنت في آمان",
-            "كيف نستخدم المعلومات الشخصية الخاصة بك؟"
+            "adsl-catalog",
+            "خصومات ومزايا RED"
           ]
         }
       ],
       "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.0,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.0,
-        "answer_token_f1": 0.0,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.123,
-        "search_ms": 627.006,
-        "total_ms": 627.216,
-        "generate_ms": 0.087
-      }
-    },
-    {
-      "id": "faq-593492fd34",
-      "question": "How can I add member(s) to my RED Family ?",
-      "category": "mined_faq",
-      "language": "en",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/en/latest-news-2017",
-          "section_path": [
-            "Latest News",
-            "Hazem Emam Joins Vodafone “RED Family”"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/en/vodafone-red1",
-          "section_path": [
-            "Enjoy the Latest Entertainment Apps in the Market that Fit your Needs",
-            "Still Wondering? We thought you might still have questions",
-            "How can I add member(s) to my RED Family ?"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://advisory.vodafone.com.eg/knowledge-center/why-is-average-order-value-aov-important",
-          "section_path": [
-            "Why is Average Order Value(AOV) important",
-            "More news and insights",
-            "How to get the most out of your website"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/en/privacy-policy-of-vodafone-egypt",
-          "section_path": [
-            "Privacy Notice",
-            "You are secured",
-            "How do we use cookies?"
-          ]
-        },
-        {
-          "index": 5,
-          "source_url": "https://advisory.vodafone.com.eg/knowledge-center?query_topic=website-and-apps&query_subtopic=website&query_page=1",
-          "section_path": [
-            "All articles related with Website & Apps",
-            "Content type",
-            "How to get the most out of your website"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.8,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.24,
-        "answer_token_f1": 0.0476,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.116,
-        "search_ms": 625.719,
-        "total_ms": 625.92,
-        "generate_ms": 0.085
-      }
-    },
-    {
-      "id": "faq-6638a5a2df",
-      "question": "ازاي أقدر استمتع بباقة DSL ؟",
-      "category": "mined_faq",
-      "language": "ar",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/ar/home",
-          "section_path": [
-            "الصفحه الرئيسية لڤودافون مصر",
-            "مكالمات الواي فاي",
-            "خدمات أخرى",
-            "Home Wireless"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/ar/ramadan",
-          "section_path": [
-            "شاهد مسلسلات رمضان 2026 مجانا مع ڤودافون",
-            "عرض رمضان Home DSL"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://web.vodafone.com.eg/ar/services",
-          "section_path": [
-            "خدمات فودافون، إدارة خطك ورصيدك وكل الخدمات اللي تحتاجها",
-            "ترفيه بلا حدود",
-            "VF Play"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/ar/red-business",
-          "section_path": [
-            "Red Family",
-            "اعرف اكتر عن نظام RED",
-            "ازاي أقدر استمتع بباقة DSL ؟"
-          ]
-        },
-        {
-          "index": 5,
-          "source_url": "https://web.vodafone.com.eg/ar/vodafone-red1",
-          "section_path": [
-            "إستمتع بأجدد الخدمات الترفيهية المقدمة من RED",
-            "اعرف اكتر عن نظام RED",
-            "ازاي أقدر استمتع بباقة DSL ؟"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.0,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.0,
-        "answer_token_f1": 0.0,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.109,
-        "search_ms": 609.419,
-        "total_ms": 609.609,
-        "generate_ms": 0.081
-      }
-    },
-    {
-      "id": "faq-a009289764",
-      "question": "What are my Roaming Benefits ?",
-      "category": "mined_faq",
-      "language": "en",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/en/privacy-policy-of-vodafone-egypt",
-          "section_path": [
-            "Privacy Notice",
-            "You are secured",
-            "How do we use your personal information?"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/en/sme",
-          "section_path": [
-            "Vodafone Egypt home page",
-            "Open a Vodafone Business Account",
-            "Explore more solutions",
-            "Offers & Benefits"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://advisory.vodafone.com.eg/knowledge-center/3-helpful-mental-health-resources-available-for-small-business-owners",
-          "section_path": [
-            "3 helpful mental health resources available for small business owners",
-            "More news and insights",
-            "Why mental health matters for business leaders"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/en/privacy-policy-of-vodafone-egypt",
-          "section_path": [
-            "Privacy Notice",
-            "You are secured",
-            "How do we use your personal information?"
-          ]
-        },
-        {
-          "index": 5,
-          "source_url": "https://web.vodafone.com.eg/business-flex",
-          "section_path": null
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.4,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.2,
-        "answer_token_f1": 0.0,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.11,
-        "search_ms": 627.282,
-        "total_ms": 627.478,
-        "generate_ms": 0.086
-      }
-    },
-    {
-      "id": "faq-b96da60a92",
-      "question": "1. ايه هى باقات Plus ؟",
-      "category": "mined_faq",
-      "language": "ar",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/ar/plus-business",
-          "section_path": [
-            "Plus-business",
-            "Plus Business",
-            "الاسئلة الشائعة"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/ar/mobile-internet-bundles",
-          "section_path": [
-            "باقات الإنترنت",
-            "الأسئلة الشائعة",
-            "4. باقات Plus متاحة لمين؟"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://web.vodafone.com.eg/ar/sme",
-          "section_path": [
-            "الصفحه الرئيسية لڤودافون مصر",
-            "افتح حساب ڤودافون بيزنس",
-            "باقات بلس بزنس"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/ar/mobile-internet-bundles",
-          "section_path": [
-            "باقات الإنترنت",
-            "الأسئلة الشائعة",
-            "1. ايه هى باقات Plus ؟"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.0,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.0,
-        "answer_token_f1": 0.0,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.096,
-        "search_ms": 630.155,
-        "total_ms": 630.333,
-        "generate_ms": 0.082
-      }
-    },
-    {
-      "id": "faq-ab37394132",
-      "question": "How do I enjoy my DSL Bundle ?",
-      "category": "mined_faq",
-      "language": "en",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/en/vodafone-flex",
-          "section_path": [
-            "Vodafone Flex: Flexible Mobile Plans for Calls, Internet & Entertainment",
-            "More information about Flex",
-            "Terms and Conditions"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/en/ramadan",
-          "section_path": [
-            "Watch it & Yango Play for Free | Vodafone Ramadan 2026",
-            "Ramadan Home DSL Promo"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://web.vodafone.com.eg/en/plus-business",
-          "section_path": [
-            "Plus-business",
-            "Plus Business"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/en/vodafone-red1",
-          "section_path": [
-            "Enjoy the Latest Entertainment Apps in the Market that Fit your Needs",
-            "Still Wondering? We thought you might still have questions",
-            "What are my Roaming Benefits ?"
-          ]
-        },
-        {
-          "index": 5,
-          "source_url": "https://web.vodafone.com.eg/en/home",
-          "section_path": [
-            "Vodafone Egypt home page",
-            "Wi-Fi Calling",
-            "Vodafone DSL"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.6,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.16,
-        "answer_token_f1": 0.1091,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.103,
-        "search_ms": 629.492,
-        "total_ms": 629.675,
-        "generate_ms": 0.08
-      }
-    },
-    {
-      "id": "faq-a1a03bc7f4",
-      "question": "3. باقات Plus بتتجدد كل أد إيه؟",
-      "category": "mined_faq",
-      "language": "ar",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/ar/plus-business",
-          "section_path": [
-            "Plus-business",
-            "Plus Business",
-            "الاسئلة الشائعة"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/ar/mobile-internet-bundles",
-          "section_path": [
-            "باقات الإنترنت",
-            "الأسئلة الشائعة",
-            "3. باقات Plus بتتجدد كل أد إيه؟"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://web.vodafone.com.eg/ar/mobile-internet-bundles",
-          "section_path": [
-            "باقات الإنترنت",
-            "الأسئلة الشائعة",
-            "4. باقات Plus متاحة لمين؟"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/ar/sme",
-          "section_path": [
-            "الصفحه الرئيسية لڤودافون مصر",
-            "افتح حساب ڤودافون بيزنس",
-            "باقات بلس بزنس"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.0,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.0,
-        "answer_token_f1": 0.0,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.107,
-        "search_ms": 624.986,
-        "total_ms": 625.175,
-        "generate_ms": 0.082
-      }
-    },
-    {
-      "id": "faq-1ce67d8632",
-      "question": "1. What are the New Plus bundles ?",
-      "category": "mined_faq",
-      "language": "en",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/en/vodafone-flex",
-          "section_path": [
-            "Vodafone Flex: Flexible Mobile Plans for Calls, Internet & Entertainment",
-            "More information about Flex",
-            "Terms and Conditions"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/en/mobile-internet-bundles",
-          "section_path": [
-            "Vodafone Internet Bundles",
-            "Frequently asked questions:",
-            "1. What are the New Plus bundles ?"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://web.vodafone.com.eg/en/sme",
-          "section_path": [
-            "Vodafone Egypt home page",
-            "Open a Vodafone Business Account",
-            "Plus Business"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/en/vodafone-flex",
-          "section_path": [
-            "Vodafone Flex: Flexible Mobile Plans for Calls, Internet & Entertainment",
-            "More information about Flex",
-            "Terms and Conditions"
-          ]
-        },
-        {
-          "index": 5,
-          "source_url": "https://web.vodafone.com.eg/en/mobile-internet-bundles",
-          "section_path": [
-            "Vodafone Internet Bundles",
-            "Frequently asked questions:",
-            "4. Who can enjoy the new Plus Bundles?"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.4,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.16,
-        "answer_token_f1": 0.1633,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.111,
-        "search_ms": 653.336,
-        "total_ms": 653.53,
-        "generate_ms": 0.082
-      }
-    },
-    {
-      "id": "faq-738adedc15",
-      "question": "5. ايه هي باقات ڤودافون Plus Apps؟",
-      "category": "mined_faq",
-      "language": "ar",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/ar/mobile-internet-bundles",
-          "section_path": [
-            "باقات الإنترنت",
-            "الأسئلة الشائعة",
-            "4. باقات Plus متاحة لمين؟"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/ar/plus-business",
-          "section_path": [
-            "Plus-business",
-            "Plus Business",
-            "الاسئلة الشائعة"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://web.vodafone.com.eg/ar/plans",
-          "section_path": [
-            "خطط أسعار البزنس",
-            "باقات"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/ar/mobile-internet-bundles",
-          "section_path": [
-            "باقات الإنترنت",
-            "الأسئلة الشائعة",
-            "1. ايه هى باقات Plus ؟"
-          ]
-        },
-        {
-          "index": 5,
-          "source_url": "https://web.vodafone.com.eg/ar/home",
-          "section_path": [
-            "الصفحه الرئيسية لڤودافون مصر",
-            "مكالمات الواي فاي",
-            "ڤودافون كاش"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.0,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.0,
-        "answer_token_f1": 0.0,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.125,
-        "search_ms": 642.968,
-        "total_ms": 643.181,
-        "generate_ms": 0.087
-      }
-    },
-    {
-      "id": "faq-da98a0a891",
-      "question": "2. How can I Subscribe to the Plus Bundles?",
-      "category": "mined_faq",
-      "language": "en",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/en/vodafone-flex",
-          "section_path": [
-            "Vodafone Flex: Flexible Mobile Plans for Calls, Internet & Entertainment",
-            "More information about Flex",
-            "Terms and Conditions"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/en/plus-business",
-          "section_path": [
-            "Plus-business",
-            "Plus Business",
-            "FAQ:"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://web.vodafone.com.eg/en/mobile-internet-bundles",
-          "section_path": [
-            "Vodafone Internet Bundles",
-            "Frequently asked questions:",
-            "2. How can I Subscribe to the Plus Bundles?"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/en/mobile-internet-bundles",
-          "section_path": [
-            "Vodafone Internet Bundles",
-            "Frequently asked questions:",
-            "1. What are the New Plus bundles ?"
-          ]
-        },
-        {
-          "index": 5,
-          "source_url": "https://web.vodafone.com.eg/en/vodafone-flex",
-          "section_path": [
-            "Vodafone Flex: Flexible Mobile Plans for Calls, Internet & Entertainment",
-            "More information about Flex",
-            "Terms and Conditions"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.8,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.2,
-        "answer_token_f1": 0.0976,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.144,
-        "search_ms": 624.178,
-        "total_ms": 624.407,
-        "generate_ms": 0.085
-      }
-    },
-    {
-      "id": "faq-cad7627b26",
-      "question": "6. Plus Apps بشتغل أزاي مع عملاء فليكس؟",
-      "category": "mined_faq",
-      "language": "ar",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/ar/vodafone-flex",
-          "section_path": [
-            "فودافون فليكس: فليكسات للمكالمات والإنترنت والتطبيقات الترفيهية",
-            "معلومات عن فليكس",
-            "الشروط والأحكام"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/ar/vodafone-flex",
-          "section_path": [
-            "فودافون فليكس: فليكسات للمكالمات والإنترنت والتطبيقات الترفيهية",
-            "معلومات عن فليكس",
-            "الشروط والأحكام"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://web.vodafone.com.eg/ar/mobile-internet-bundles",
-          "section_path": [
-            "باقات الإنترنت",
-            "الأسئلة الشائعة",
-            "4. باقات Plus متاحة لمين؟"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/ar/vodafone-flex",
-          "section_path": [
-            "فودافون فليكس: فليكسات للمكالمات والإنترنت والتطبيقات الترفيهية",
-            "معلومات عن فليكس",
-            "الشروط والأحكام"
-          ]
-        },
-        {
-          "index": 5,
-          "source_url": "https://advisory.vodafone.com.eg/knowledge-center/reading-this-will-help-you-decide-if-your-business-needs-a-mobile-app",
-          "section_path": [
-            "Reading this will help you decide if your business needs a mobile app",
-            "Deciding if your business needs an app starts here",
-            "Why should I consider an app?"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.2,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.2,
-        "answer_token_f1": 0.0,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.12,
-        "search_ms": 633.549,
-        "total_ms": 633.75,
-        "generate_ms": 0.081
-      }
-    },
-    {
-      "id": "faq-d8eeca83f5",
-      "question": "3. When will the Plus bundles get renewed?",
-      "category": "mined_faq",
-      "language": "en",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/en/vodafone-flex",
-          "section_path": [
-            "Vodafone Flex: Flexible Mobile Plans for Calls, Internet & Entertainment",
-            "More information about Flex",
-            "Terms and Conditions"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/en/vodafone-flex",
-          "section_path": [
-            "Vodafone Flex: Flexible Mobile Plans for Calls, Internet & Entertainment",
-            "More information about Flex",
-            "Terms and Conditions"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://web.vodafone.com.eg/en/ramadan",
-          "section_path": [
-            "Watch it & Yango Play for Free | Vodafone Ramadan 2026",
-            "Ramadan Plus Bundles"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/en/vodafone-flex",
-          "section_path": [
-            "Vodafone Flex: Flexible Mobile Plans for Calls, Internet & Entertainment",
-            "More information about Flex",
-            "Terms and Conditions"
-          ]
-        },
-        {
-          "index": 5,
-          "source_url": "https://web.vodafone.com.eg/en/mobile-internet-bundles",
-          "section_path": [
-            "Vodafone Internet Bundles",
-            "Frequently asked questions:",
-            "3. When will the Plus bundles get renewed?"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.8,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.2,
-        "answer_token_f1": 0.0909,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.124,
-        "search_ms": 631.429,
-        "total_ms": 631.639,
-        "generate_ms": 0.085
-      }
-    },
-    {
-      "id": "faq-c4397d1d50",
-      "question": "7. Plus Apps بشتغل أزاي مع عملاء الكارت؟",
-      "category": "mined_faq",
-      "language": "ar",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/ar/mobile-internet-bundles",
-          "section_path": [
-            "باقات الإنترنت",
-            "الأسئلة الشائعة",
-            "4. باقات Plus متاحة لمين؟"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/ar/mobile-internet-bundles",
-          "section_path": [
-            "باقات الإنترنت",
-            "الأسئلة الشائعة",
-            "3. باقات Plus بتتجدد كل أد إيه؟"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://web.vodafone.com.eg/ar/plus-business",
-          "section_path": [
-            "Plus-business",
-            "Plus Business",
-            "الاسئلة الشائعة"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/ar/vodafone-flex",
-          "section_path": [
-            "فودافون فليكس: فليكسات للمكالمات والإنترنت والتطبيقات الترفيهية",
-            "معلومات عن فليكس",
-            "الشروط والأحكام"
-          ]
-        },
-        {
-          "index": 5,
-          "source_url": "https://web.vodafone.com.eg/ar/vodafone-flex",
-          "section_path": [
-            "فودافون فليكس: فليكسات للمكالمات والإنترنت والتطبيقات الترفيهية",
-            "معلومات عن فليكس",
-            "الشروط والأحكام"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.0,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.0,
-        "answer_token_f1": 0.0,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.123,
-        "search_ms": 629.334,
-        "total_ms": 629.538,
-        "generate_ms": 0.081
-      }
-    },
-    {
-      "id": "faq-4d3edf4d97",
-      "question": "5. What is Vodafone Plus Apps?",
-      "category": "mined_faq",
-      "language": "en",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/en/sustainability-report-2023",
-          "section_path": [
-            "Vodafone Egypt Sustainability Report",
-            "Actioning Our Purpose",
-            "Our People"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/en/esg",
-          "section_path": [
-            "Vodafone 2020 - 2022 ESG Indices",
-            "2020 - 2022 ESG Indices",
-            "Economic",
-            "11"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "http://internet.vodafone.com.eg/digital/cash-guide",
-          "section_path": null
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/en/anavodafone",
-          "section_path": [
-            "Ana Vodafone app",
-            "Got a question?",
-            "Shop"
-          ]
-        },
-        {
-          "index": 5,
-          "source_url": "https://eshop.vodafone.com.eg/ar/internetServices/dsl/bundles",
-          "section_path": null
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.0,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.08,
-        "answer_token_f1": 0.0759,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.106,
-        "search_ms": 623.174,
-        "total_ms": 623.363,
-        "generate_ms": 0.083
-      }
-    },
-    {
-      "id": "faq-3c9d1d6184",
-      "question": "ايه اللي أقدر أعمله على تطبيق أنا ڤودافون؟",
-      "category": "mined_faq",
-      "language": "ar",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/ar/vodafone-red1",
-          "section_path": [
-            "إستمتع بأجدد الخدمات الترفيهية المقدمة من RED",
-            "اعرف اكتر عن نظام RED",
-            "ازاي ممكن أضيف أفراد للعيلة ؟"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/ar/anavodafone",
-          "section_path": [
-            "صفحه تطبيق انا فودافون",
-            "عندك سؤال عن التطبيق؟",
-            "تسوق"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://web.vodafone.com.eg/ar/ramadan",
-          "section_path": [
-            "شاهد مسلسلات رمضان 2026 مجانا مع ڤودافون",
-            "عرض رمضان للنت الهوائي"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/ar/red-business-deals",
-          "section_path": [
-            "مع بيزنس ديلز استمتع بأقوى العروض و الخصومات من اكبر المحلات فى مصر من مطاعم و محلات ملابس و الكترونيات و اكتر كتير."
-          ]
-        },
-        {
-          "index": 5,
-          "source_url": "https://web.vodafone.com.eg/ar/businessapp",
-          "section_path": null
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.0,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.0,
-        "answer_token_f1": 0.0,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.129,
-        "search_ms": 626.853,
-        "total_ms": 627.066,
-        "generate_ms": 0.084
-      }
-    },
-    {
-      "id": "faq-bea5d2656a",
-      "question": "6. How does Vodafone Plus Apps work if I am a Flex Customer?",
-      "category": "mined_faq",
-      "language": "en",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/en/mobile-internet-bundles",
-          "section_path": [
-            "Vodafone Internet Bundles",
-            "Frequently asked questions:",
-            "4. Who can enjoy the new Plus Bundles?"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/en/vodafone-flex",
-          "section_path": [
-            "Vodafone Flex: Flexible Mobile Plans for Calls, Internet & Entertainment",
-            "More information about Flex",
-            "Flexaweya Discounts"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://web.vodafone.com.eg/en/sustainability-report-2023",
-          "section_path": [
-            "Vodafone Egypt Sustainability Report",
-            "Actioning Our Purpose",
-            "Our People"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/en/ramadan",
-          "section_path": [
-            "Watch it & Yango Play for Free | Vodafone Ramadan 2026",
-            "Home Compound Promo",
-            "Terms and Conditions"
-          ]
-        },
-        {
-          "index": 5,
-          "source_url": "https://web.vodafone.com.eg/en/plus-business",
-          "section_path": [
-            "Plus-business",
-            "Plus Business",
-            "FAQ:"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.4,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.16,
-        "answer_token_f1": 0.1408,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.148,
-        "search_ms": 630.455,
-        "total_ms": 630.686,
-        "generate_ms": 0.083
-      }
-    },
-    {
-      "id": "faq-b31c479c72",
-      "question": "ايه الاجهزة اللي بتدعم تطبيق أنا ڤودافون؟",
-      "category": "mined_faq",
-      "language": "ar",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/ar/anavodafone",
-          "section_path": [
-            "صفحه تطبيق انا فودافون",
-            "عندك سؤال عن التطبيق؟",
-            "تسوق"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/ar/vodafone-red1",
-          "section_path": [
-            "إستمتع بأجدد الخدمات الترفيهية المقدمة من RED",
-            "اعرف اكتر عن نظام RED",
-            "ازاي ممكن أضيف أفراد للعيلة ؟"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://web.vodafone.com.eg/ar/anavodafone",
-          "section_path": [
-            "صفحه تطبيق انا فودافون",
-            "عندك سؤال عن التطبيق؟",
-            "ايه الاجهزة اللي بتدعم تطبيق أنا ڤودافون؟"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/ar/anavodafone",
-          "section_path": [
-            "صفحه تطبيق انا فودافون",
-            "عندك سؤال عن التطبيق؟",
-            "عروض"
-          ]
-        },
-        {
-          "index": 5,
-          "source_url": "https://web.vodafone.com.eg/ar/ramadan",
-          "section_path": [
-            "شاهد مسلسلات رمضان 2026 مجانا مع ڤودافون",
-            "عرض رمضان للنت الهوائي"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.0,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.0,
-        "answer_token_f1": 0.0,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.128,
-        "search_ms": 630.88,
-        "total_ms": 631.104,
-        "generate_ms": 0.096
-      }
-    },
-    {
-      "id": "faq-7f16158dbd",
-      "question": "7. How does Vodafone Plus Apps work if I am a Prepaid Customer?",
-      "category": "mined_faq",
-      "language": "en",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/en/mobile-internet-bundles",
-          "section_path": [
-            "Vodafone Internet Bundles",
-            "Frequently asked questions:",
-            "4. Who can enjoy the new Plus Bundles?"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/en/sustainability-report-2023",
-          "section_path": [
-            "Vodafone Egypt Sustainability Report",
-            "Actioning Our Purpose",
-            "Our People"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://web.vodafone.com.eg/en/vodafone-red1",
-          "section_path": [
-            "Enjoy the Latest Entertainment Apps in the Market that Fit your Needs",
-            "Still Wondering? We thought you might still have questions",
-            "How do I migrate to the new RED ?"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/en/ramadan",
-          "section_path": [
-            "Watch it & Yango Play for Free | Vodafone Ramadan 2026",
-            "Home Compound Promo",
-            "Terms and Conditions"
-          ]
-        },
-        {
-          "index": 5,
-          "source_url": "https://web.vodafone.com.eg/en/ramadan",
-          "section_path": [
-            "Watch it & Yango Play for Free | Vodafone Ramadan 2026",
-            "Home Compound Promo",
-            "Terms and Conditions"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.2,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.16,
-        "answer_token_f1": 0.0822,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.154,
-        "search_ms": 620.409,
-        "total_ms": 620.645,
-        "generate_ms": 0.082
-      }
-    },
-    {
-      "id": "faq-ccfa6408ce",
-      "question": "هل أنا ڤودافون تدعم خطط أسعار معينة؟",
-      "category": "mined_faq",
-      "language": "ar",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/ar/social",
-          "section_path": [
-            "خلق مكان أفضل للعمل من أجل موظفينا ودمج روح فودافون في طرق عملنا اليومية",
-            "Awards",
-            "خطط أسعار ڤودافون"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/ar/vodafone-red1",
-          "section_path": [
-            "إستمتع بأجدد الخدمات الترفيهية المقدمة من RED",
-            "اعرف اكتر عن نظام RED",
-            "ازاي ممكن أضيف أفراد للعيلة ؟"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://web.vodafone.com.eg/ar/anavodafone",
-          "section_path": [
-            "صفحه تطبيق انا فودافون",
-            "عندك سؤال عن التطبيق؟",
-            "هل أنا ڤودافون تدعم خطط أسعار معينة؟"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/ar/anavodafone",
-          "section_path": [
-            "صفحه تطبيق انا فودافون",
-            "عندك سؤال عن التطبيق؟",
-            "تسوق"
-          ]
-        },
-        {
-          "index": 5,
-          "source_url": "https://web.vodafone.com.eg/ar/anavodafone",
-          "section_path": [
-            "صفحه تطبيق انا فودافون",
-            "عندك سؤال عن التطبيق؟",
-            "عروض"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.0,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.0,
-        "answer_token_f1": 0.0,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.135,
-        "search_ms": 628.137,
-        "total_ms": 628.362,
-        "generate_ms": 0.09
-      }
-    },
-    {
-      "id": "faq-fea901481e",
-      "question": "8. What is Vodafone Plus Play?",
-      "category": "mined_faq",
-      "language": "en",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "http://internet.vodafone.com.eg/digital/cash-guide",
-          "section_path": null
-        },
-        {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/en/esg",
-          "section_path": [
-            "Vodafone 2020 - 2022 ESG Indices",
-            "2020 - 2022 ESG Indices",
-            "Economic",
-            "11"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://web.vodafone.com.eg/en/sustainability-report-2023",
-          "section_path": [
-            "Vodafone Egypt Sustainability Report",
-            "Actioning Our Purpose",
-            "Our People"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/en/anavodafone",
-          "section_path": [
-            "Ana Vodafone app",
-            "Got a question?",
-            "Shop"
-          ]
-        },
-        {
-          "index": 5,
-          "source_url": "https://eshop.vodafone.com.eg/ar/internetServices/dsl/bundles",
-          "section_path": null
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.0,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.08,
-        "answer_token_f1": 0.1081,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.11,
-        "search_ms": 628.514,
-        "total_ms": 628.704,
-        "generate_ms": 0.08
-      }
-    },
-    {
-      "id": "faq-e021ac7d65",
-      "question": "هل يمكنني اقتراح أفكار للمساعدة في تطوير أنا ڤودافون؟",
-      "category": "mined_faq",
-      "language": "ar",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
-          "section_path": [
-            "اشعار الخصوصية",
-            "أنت في آمان",
-            "مبادئنا"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://digitalstore.vodafone.com.eg/portal/ar/products",
-          "section_path": [
-            "ڤودافون بيزنس Digital Store",
-            "طور شركتك"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://web.vodafone.com.eg/ar/vodafone-cash",
-          "section_path": [
-            "إيه هى خدمات ڤودافون كاش الأخرى ؟",
-            "جدد باقتك في أي وقت وفي أي مكان"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.0,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.0,
-        "answer_token_f1": 0.0,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.147,
-        "search_ms": 668.047,
-        "total_ms": 668.272,
-        "generate_ms": 0.079
-      }
-    },
-    {
-      "id": "faq-915333c9d3",
-      "question": "I don’t have good 4G network in the house?",
-      "category": "mined_faq",
-      "language": "en",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/en/wireless-net",
-          "section_path": [
-            "More details",
-            "I don’t have good 4G network in the house?"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/en/privacy-policy-of-vodafone-egypt",
-          "section_path": [
-            "Privacy Notice",
-            "You are secured",
-            "How do we use your personal information?"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://advisory.vodafone.com.eg/knowledge-center/3-certain-ways-to-supercharge-your-seo-strategy-with-google-ads",
-          "section_path": [
-            "3 certain ways to supercharge your SEO strategy with Google Ads",
-            "How about using Google Ads to boost who sees your business",
-            "Optimising keywords for success"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/en/latest-news-2017",
-          "section_path": [
-            "Latest News",
-            "Vodafone Egypt brings the best Ramadan series to its customers through the “Vodafone TV” Service"
-          ]
-        },
-        {
-          "index": 5,
-          "source_url": "https://web.vodafone.com.eg/en/multi-sim",
-          "section_path": [
-            "Multi Sim"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 1.0,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.24,
-        "answer_token_f1": 0.1224,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.122,
-        "search_ms": 626.659,
-        "total_ms": 626.875,
-        "generate_ms": 0.093
-      }
-    },
-    {
-      "id": "faq-02684db567",
-      "question": "كيف تستخدم سياسة الخصوصية وسياسة ملفات تعريف الارتباط ؟",
-      "category": "mined_faq",
-      "language": "ar",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
-          "section_path": [
-            "اشعار الخصوصية",
-            "أنت في آمان",
-            "كيف نستخدم ملفات تعريف الارتباط؟"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
-          "section_path": [
-            "اشعار الخصوصية",
-            "أنت في آمان",
-            "كيف نستخدم ملفات تعريف الارتباط؟"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
-          "section_path": [
-            "اشعار الخصوصية",
-            "أنت في آمان",
-            "كيف نستخدم ملفات تعريف الارتباط؟"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
-          "section_path": [
-            "اشعار الخصوصية",
-            "أنت في آمان",
-            "كيف نستخدم ملفات تعريف الارتباط؟"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.0,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.0,
-        "answer_token_f1": 0.0,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.149,
-        "search_ms": 612.697,
-        "total_ms": 612.926,
-        "generate_ms": 0.08
-      }
-    },
-    {
-      "id": "faq-3f1b6b2642",
-      "question": "How to start using the Router?",
-      "category": "mined_faq",
-      "language": "en",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/en/office-4g",
-          "section_path": [
-            "at-home",
-            "Your new office ready to go with our high speed plug and play Home Wireless internet with no landline required",
-            "Usage Guide"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://advisory.vodafone.com.eg/knowledge-center/how-to-use-data-to-improve-your-business",
-          "section_path": [
-            "How to use data to improve your business",
-            "Creating a data-led business"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://advisory.vodafone.com.eg/knowledge-center/how-to-use-data-to-improve-your-business",
-          "section_path": [
-            "How to use data to improve your business",
-            "Creating a data-led business",
-            "How can I use data to grow my business?"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://advisory.vodafone.com.eg/knowledge-center?query_topic=digital-marketing&query_subtopic=digital-marketing&query_page=1",
-          "section_path": [
-            "All articles related with Digital Marketing",
-            "Content type",
-            "Why PR is important for your business"
-          ]
-        },
-        {
-          "index": 5,
-          "source_url": "https://advisory.vodafone.com.eg/knowledge-center?query_topic=website-and-apps&query_subtopic=mobile-apps&query_page=1",
-          "section_path": [
-            "All articles related with Website & Apps",
-            "Content type",
-            "So, you think you need an app... what should you do now?"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.8,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.32,
-        "answer_token_f1": 0.1013,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.104,
-        "search_ms": 617.272,
-        "total_ms": 617.459,
-        "generate_ms": 0.083
-      }
-    },
-    {
-      "id": "faq-f02eff2300",
-      "question": "متى نقوم بجمع معلوماتك الشخصية؟",
-      "category": "mined_faq",
-      "language": "ar",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
-          "section_path": [
-            "اشعار الخصوصية",
-            "أنت في آمان",
-            "كيف تستخدم سياسة الخصوصية وسياسة ملفات تعريف الارتباط ؟"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
-          "section_path": [
-            "اشعار الخصوصية",
-            "أنت في آمان",
-            "كيف نحافظ على أمان معلوماتك الشخصية؟"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
-          "section_path": [
-            "اشعار الخصوصية",
-            "أنت في آمان",
-            "مع من نشارك معلوماتك الشخصية؟"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
-          "section_path": [
-            "اشعار الخصوصية",
-            "أنت في آمان",
-            "مع من نشارك معلوماتك الشخصية؟"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.0,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.0,
-        "answer_token_f1": 0.0,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.115,
-        "search_ms": 626.372,
-        "total_ms": 626.568,
-        "generate_ms": 0.081
-      }
-    },
-    {
-      "id": "faq-eb9a0c9ea3",
-      "question": "Is Wi-Fi Calling compatible with all mobile phones?",
-      "category": "mined_faq",
-      "language": "en",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/en/wifi-calling",
-          "section_path": [
-            "H1",
-            "Is Wi-Fi Calling compatible with all mobile phones?"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/en/wifi-calling",
-          "section_path": [
-            "H1"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://web.vodafone.com.eg/en/anavodafone",
-          "section_path": [
-            "Ana Vodafone app",
-            "Got a question?",
-            "Which devices support Ana Vodafone app?"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/en/wifi-calling",
-          "section_path": [
-            "H1",
-            "Does Wi-Fi Calling work on Roaming calls or Emergency calls?"
-          ]
-        },
-        {
-          "index": 5,
-          "source_url": "https://www.vodafone.com.eg/en/services",
-          "section_path": [
-            "Vodafone Services Manage your line , your payment, balance, and all the services you need",
-            "Call & Connect abroad"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.8,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.36,
-        "answer_token_f1": 0.1333,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.13,
-        "search_ms": 626.016,
-        "total_ms": 626.232,
-        "generate_ms": 0.085
-      }
-    },
-    {
-      "id": "faq-c281aeafa3",
-      "question": "ماهي المعلومات الشخصية التي نجمعها عنك؟",
-      "category": "mined_faq",
-      "language": "ar",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
-          "section_path": [
-            "اشعار الخصوصية",
-            "أنت في آمان",
-            "كيف نستخدم المعلومات الشخصية الخاصة بك؟"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
-          "section_path": [
-            "اشعار الخصوصية",
-            "أنت في آمان",
-            "كيف نستخدم المعلومات الشخصية الخاصة بك؟"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
-          "section_path": [
-            "اشعار الخصوصية",
-            "أنت في آمان",
-            "مبادئنا"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
-          "section_path": [
-            "اشعار الخصوصية",
-            "أنت في آمان",
-            "كيف تمارس حقوقك المتعلقة بالبيانات الشخصية؟"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.0,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.0,
-        "answer_token_f1": 0.0,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.127,
-        "search_ms": 626.656,
-        "total_ms": 626.865,
-        "generate_ms": 0.081
-      }
-    },
-    {
-      "id": "faq-d3b06a28a1",
-      "question": "How will I be charged for Wi-Fi Call?",
-      "category": "mined_faq",
-      "language": "en",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/en/kart-el-korout",
-          "section_path": [
-            "Different prepaid rate plans with the lowest minute rate that suits you",
-            "Kart El-Korout Rateplans",
-            "14 PT Minute"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/en/shokran-services",
-          "section_path": [
-            "Shokran services",
-            "Shokran services",
-            "Edfa3ly Shokran"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://web.vodafone.com.eg/en/shokran-services",
-          "section_path": [
-            "Shokran services",
-            "Shokran services",
-            "Rennely Shokran"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/en/wifi-calling",
-          "section_path": [
-            "H1",
-            "What happens if i lose Wi-Fi connection?"
-          ]
-        },
-        {
-          "index": 5,
-          "source_url": "https://web.vodafone.com.eg/en/wifi-calling",
-          "section_path": [
-            "H1",
-            "How will I be charged for Wi-Fi Call?"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.4,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.2,
-        "answer_token_f1": 0.037,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.116,
-        "search_ms": 622.495,
-        "total_ms": 622.696,
-        "generate_ms": 0.085
-      }
-    },
-    {
-      "id": "faq-a499100194",
-      "question": "كيف نستخدم المعلومات الشخصية الخاصة بك؟",
-      "category": "mined_faq",
-      "language": "ar",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
-          "section_path": [
-            "اشعار الخصوصية",
-            "أنت في آمان",
-            "كيف نستخدم ملفات تعريف الارتباط؟"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
-          "section_path": [
-            "اشعار الخصوصية",
-            "أنت في آمان",
-            "كيف تمارس حقوقك المتعلقة بالبيانات الشخصية؟"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
-          "section_path": [
-            "اشعار الخصوصية",
-            "اشعار الخصوصية"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
-          "section_path": [
-            "اشعار الخصوصية",
-            "أنت في آمان",
-            "كيف نستخدم المعلومات الشخصية الخاصة بك؟"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.0,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.0,
-        "answer_token_f1": 0.0,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.123,
-        "search_ms": 623.64,
-        "total_ms": 623.844,
-        "generate_ms": 0.081
-      }
-    },
-    {
-      "id": "faq-25ce619c20",
-      "question": "Does Wi-Fi Calling work on Roaming calls or Emergency calls?",
-      "category": "mined_faq",
-      "language": "en",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/en/wifi-calling",
-          "section_path": [
-            "H1",
-            "Does Wi-Fi Calling work on Roaming calls or Emergency calls?"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/en/wifi-calling",
-          "section_path": [
-            "H1"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://web.vodafone.com.eg/en/wifi-calling",
-          "section_path": [
-            "H1",
-            "What happens if i lose Wi-Fi connection?"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/en/home",
-          "section_path": [
-            "Vodafone Egypt home page",
-            "Wi-Fi Calling"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.5,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.36,
-        "answer_token_f1": 0.1481,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.138,
-        "search_ms": 621.585,
-        "total_ms": 621.802,
-        "generate_ms": 0.079
-      }
-    },
-    {
-      "id": "faq-b90325dfb0",
-      "question": "مع من نشارك معلوماتك الشخصية؟",
-      "category": "mined_faq",
-      "language": "ar",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
-          "section_path": [
-            "اشعار الخصوصية",
-            "أنت في آمان",
-            "كيف نحافظ على أمان معلوماتك الشخصية؟"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
-          "section_path": [
-            "اشعار الخصوصية",
-            "اشعار الخصوصية"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
-          "section_path": [
-            "اشعار الخصوصية",
-            "أنت في آمان",
-            "مع من نشارك معلوماتك الشخصية؟"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
-          "section_path": [
-            "اشعار الخصوصية",
-            "أنت في آمان",
-            "مع من نشارك معلوماتك الشخصية؟"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.0,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.0,
-        "answer_token_f1": 0.0,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.109,
-        "search_ms": 624.549,
-        "total_ms": 624.737,
-        "generate_ms": 0.079
-      }
-    },
-    {
-      "id": "faq-e3901069e1",
-      "question": "What happens if i lose Wi-Fi connection?",
-      "category": "mined_faq",
-      "language": "en",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/en/wifi-calling",
-          "section_path": [
-            "H1",
-            "Will Wi-Fi Calling work if I have DSL from other operators?"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/en/wifi-calling",
-          "section_path": [
-            "H1",
-            "What happens if i lose Wi-Fi connection?"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://web.vodafone.com.eg/en/mobile-internet-bundles",
-          "section_path": [
-            "Vodafone Internet Bundles",
-            "MI Bundles",
-            "WiFi"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/en/wifi-calling",
-          "section_path": [
-            "H1"
-          ]
-        },
-        {
-          "index": 5,
-          "source_url": "https://web.vodafone.com.eg/en/wifi-calling",
-          "section_path": [
-            "H1",
-            "Does Wi-Fi Calling work on Roaming calls or Emergency calls?"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.4,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.36,
-        "answer_token_f1": 0.0784,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.117,
-        "search_ms": 622.955,
-        "total_ms": 623.155,
-        "generate_ms": 0.082
-      }
-    },
-    {
-      "id": "faq-8de14f5914",
-      "question": "إلى متى نحتفظ بمعلوماتك الشخصية؟",
-      "category": "mined_faq",
-      "language": "ar",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
-          "section_path": [
-            "اشعار الخصوصية",
-            "أنت في آمان",
-            "كيف تمارس حقوقك المتعلقة بالبيانات الشخصية؟"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
-          "section_path": [
-            "اشعار الخصوصية",
-            "أنت في آمان",
-            "كيف تمارس حقوقك المتعلقة بالبيانات الشخصية؟"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
-          "section_path": [
-            "اشعار الخصوصية",
-            "أنت في آمان",
-            "مع من نشارك معلوماتك الشخصية؟"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
-          "section_path": [
-            "اشعار الخصوصية",
-            "أنت في آمان",
-            "إلى متى نحتفظ بمعلوماتك الشخصية؟"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.0,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.0,
-        "answer_token_f1": 0.0,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.117,
-        "search_ms": 627.959,
-        "total_ms": 628.156,
-        "generate_ms": 0.08
-      }
-    },
-    {
-      "id": "faq-4bba2f5a98",
-      "question": "What can I do on the App?",
-      "category": "mined_faq",
-      "language": "en",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/en/red-business-deals",
-          "section_path": [
-            "With Business Benefits, gain access to exclusive discounts across a wide range of vendors. From food and beverage to groceries, fashion, electronics, and health and beauty, we've partnered with leading brands to offer you unmatched savings."
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/en/anavodafone",
-          "section_path": [
-            "Ana Vodafone app",
-            "Got a question?",
-            "Reports"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://advisory.vodafone.com.eg/knowledge-center/how-can-i-help-my-team-work-better-from-anywhere",
-          "section_path": [
-            "How can I help my team work better from anywhere?",
-            "Here’s how your business can benefit from remote access tools"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://advisory.vodafone.com.eg/knowledge-center/how-to-successfully-introduce-automation-into-your-business",
-          "section_path": [
-            "How to successfully introduce automation into your business",
-            "How to automate a small business"
-          ]
-        },
-        {
-          "index": 5,
-          "source_url": "https://web.vodafone.com.eg/en/plus-business",
-          "section_path": [
-            "Plus-business",
-            "Plus Business",
-            "FAQ:"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.6,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.24,
-        "answer_token_f1": 0.0769,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.097,
-        "search_ms": 628.738,
-        "total_ms": 628.918,
-        "generate_ms": 0.083
-      }
-    },
-    {
-      "id": "faq-e9a45d9eeb",
-      "question": "كيف نحافظ على أمان معلوماتك الشخصية؟",
-      "category": "mined_faq",
-      "language": "ar",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
-          "section_path": [
-            "اشعار الخصوصية",
-            "أنت في آمان",
-            "كيف نحافظ على أمان معلوماتك الشخصية؟"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://advisory.vodafone.com.eg/ar/knowledge-center/how-to-maximise-your-online-sales",
-          "section_path": [
-            "كيف تعزز مبيعاتك عبر الإنترنت",
-            "ارتق بأعمالك عبر الإنترنت إلى المستوى التالي"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
-          "section_path": [
-            "اشعار الخصوصية",
-            "أنت في آمان",
-            "مع من نشارك معلوماتك الشخصية؟"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://advisory.vodafone.com.eg/ar/knowledge-center/this-is-what-an-app-offers-to-keep-customers-coming-back",
-          "section_path": [
-            "هذا ما يقدمه التطبيق للحفاظ على عودة العملاء مرة أخرى",
-            "في ما يلي تفصيل لما يمكن أن يقدمه التطبيق لشركتك",
-            "ما الذي يمكن أن يقدمه التطبيق لشركتك؟"
-          ]
-        },
-        {
-          "index": 5,
-          "source_url": "https://web.vodafone.com.eg/ar/privacy-policy-of-vodafone-egypt",
-          "section_path": [
-            "اشعار الخصوصية",
-            "أنت في آمان",
-            "كيف تستخدم سياسة الخصوصية وسياسة ملفات تعريف الارتباط ؟"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.0,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.0,
-        "answer_token_f1": 0.0,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.118,
-        "search_ms": 626.295,
-        "total_ms": 626.493,
-        "generate_ms": 0.08
-      }
-    },
-    {
-      "id": "curated-6bf26575db",
-      "question": "ازاي أجدد باقة الفليكس بتاعتي؟",
-      "category": "arabic_faq",
-      "language": "ar",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/ar/vodafone-flex",
-          "section_path": [
-            "فودافون فليكس: فليكسات للمكالمات والإنترنت والتطبيقات الترفيهية",
-            "معلومات عن فليكس",
-            "الشروط والأحكام"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/ar/2019-news",
-          "section_path": [
-            "الرئيس يشهد محاكاة وعرض لمشروع التأمين الصحى الشامل داخل جناح فودافون فى معرض Cairo ICT"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://web.vodafone.com.eg/ar/vodafone-flex",
-          "section_path": [
-            "فودافون فليكس: فليكسات للمكالمات والإنترنت والتطبيقات الترفيهية",
-            "معلومات عن فليكس",
-            "الشروط والأحكام"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/ar/2019-news",
-          "section_path": [
-            "الرئيس يشهد محاكاة وعرض لمشروع التأمين الصحى الشامل داخل جناح فودافون فى معرض Cairo ICT"
-          ]
-        },
-        {
-          "index": 5,
-          "source_url": "https://web.vodafone.com.eg/ar/recharge-bill-payment",
-          "section_path": [
-            "ازاي تشحن ؟"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.0,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.0,
+        "citation_validity": 1.0,
+        "citation_correctness_lexical": 0.3333,
+        "citation_completeness": 1.0,
+        "lexical_groundedness": 0.3333,
         "answer_token_f1": null,
         "insufficient_context_handling": 1.0
       },
-      "judge": null,
+      "judge": {
+        "scores": {
+          "faithfulness": 1.0,
+          "answer_relevance": 1.0,
+          "context_relevance": 0.8,
+          "context_precision": 0.6,
+          "context_recall": 1.0,
+          "answer_correctness": null,
+          "unsupported_claim_rate": 0.0
+        },
+        "reason": "The answer accurately extracts benefits of the new RED plans from the provided context, and all claims are supported.",
+        "error": null
+      },
       "latency_ms": {
-        "embed_ms": 0.108,
-        "search_ms": 632.665,
-        "total_ms": 632.858,
-        "generate_ms": 0.085
+        "embed_ms": 318.718,
+        "search_ms": 167.309,
+        "total_ms": 6313.025,
+        "generate_ms": 5826.997
       }
     },
     {
@@ -2733,45 +244,29 @@
       "question": "How do I renew my Flex bundle?",
       "category": "english_faq",
       "language": "en",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
+      "answer": "You can renew your Flex bundle through the Ana Vodafone app on the Flex Management page or by dialing *880# [1]. You can pay using Vodafone Cash to get 30% extra flexes, or through direct payment, your balance, or electronic vouchers [1]. If you renew on time or before the renewal date, your remaining flexes will roll over to your next bundle [1].\n\nYou cannot renew your Flex bundle if you have a borrowing amount from \"3al nota\" services [4].\n\nThere is also a \"Renew Now, Pay Later\" service for new Flex bundles, allowing you to renew without additional fees and pay within 3 days. If payment is not made within 3 days, the bundle will be paused until payment [3].",
       "has_sufficient_context": true,
+      "attempts": [],
+      "trace": [],
       "citations": [
         {
           "index": 1,
-          "source_url": "https://web.vodafone.com.eg/en/renew-your-bundle",
-          "section_path": [
-            "Renew Your Bundle",
-            "Renew your bundle anytime anywhere"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/en/vodafone-cash",
-          "section_path": [
-            "What are VF Cash services?",
-            "Renew your bundle anytime anywhere"
-          ]
-        },
-        {
-          "index": 3,
           "source_url": "https://web.vodafone.com.eg/en/vodafone-flex",
           "section_path": [
             "Vodafone Flex: Flexible Mobile Plans for Calls, Internet & Entertainment",
             "More information about Flex",
-            "Terms and Conditions"
+            "Renew Your Bundle"
           ]
         },
         {
           "index": 4,
-          "source_url": "https://web.vodafone.com.eg/en/vodafone-flex",
+          "source_url": "https://web.vodafone.com.eg/en/recharge-bill-payment",
           "section_path": [
-            "Vodafone Flex: Flexible Mobile Plans for Calls, Internet & Entertainment",
-            "More information about Flex",
-            "Terms and Conditions"
+            "How To Recharge ?"
           ]
         },
         {
-          "index": 5,
+          "index": 3,
           "source_url": "https://web.vodafone.com.eg/en/vodafone-flex",
           "section_path": [
             "Vodafone Flex: Flexible Mobile Plans for Calls, Internet & Entertainment",
@@ -2781,154 +276,88 @@
         }
       ],
       "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.6,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.2,
+        "citation_validity": 1.0,
+        "citation_correctness_lexical": 1.0,
+        "citation_completeness": 0.8333,
+        "lexical_groundedness": 0.8784,
         "answer_token_f1": null,
         "insufficient_context_handling": 1.0
       },
-      "judge": null,
+      "judge": {
+        "scores": {
+          "faithfulness": 1.0,
+          "answer_relevance": 1.0,
+          "context_relevance": 1.0,
+          "context_precision": 0.8,
+          "context_recall": 1.0,
+          "answer_correctness": null,
+          "unsupported_claim_rate": 0.0
+        },
+        "reason": "The answer accurately and comprehensively addresses the question using the provided context, with only minor irrelevant information in the context.",
+        "error": null
+      },
       "latency_ms": {
-        "embed_ms": 0.108,
-        "search_ms": 626.748,
-        "total_ms": 626.941,
-        "generate_ms": 0.085
+        "embed_ms": 294.596,
+        "search_ms": 405.927,
+        "total_ms": 50014.11,
+        "generate_ms": 49313.587
       }
     },
     {
-      "id": "curated-4368bfeb19",
-      "question": "عايز أعرف إيه هي مزايا باقة RED الجديدة؟",
-      "category": "arabic_factual",
+      "id": "faq-f27299e23d",
+      "question": "ايه المميز فى انظمة RED الجديدة عن انظمة RED القديمة ؟",
+      "category": "mined_faq",
       "language": "ar",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
+      "answer": "مع نظام RED الجديد هتقدر تستخدم باقة الانترنت المحلية وانت مسافر لمدة اسابيع محدودة في السنة [2][3].",
       "has_sufficient_context": true,
+      "attempts": [],
+      "trace": [],
       "citations": [
         {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/ar/ramadan",
-          "section_path": [
-            "شاهد مسلسلات رمضان 2026 مجانا مع ڤودافون",
-            "الأسئله الشائعة"
-          ]
-        },
-        {
           "index": 2,
-          "source_url": "https://web.vodafone.com.eg/ar/renew-your-bundle",
-          "section_path": [
-            "Renew Your Bundle",
-            "جدد باقتك في أي وقت وفي أي مكان"
-          ]
-        },
-        {
-          "index": 3,
           "source_url": "https://web.vodafone.com.eg/ar/red-business",
           "section_path": [
             "Red Family",
             "اعرف اكتر عن نظام RED",
-            "ايه المميز فى انظمة RED الجديدة عن انظمة RED القديمة ؟"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/ar/vodafone-flex",
-          "section_path": [
-            "فودافون فليكس: فليكسات للمكالمات والإنترنت والتطبيقات الترفيهية",
-            "معلومات عن فليكس",
-            "الشروط والأحكام"
-          ]
-        },
-        {
-          "index": 5,
-          "source_url": "https://web.vodafone.com.eg/ar/ready-business-rewards",
-          "section_path": [
-            "Ready Business Rewards",
-            "إنجز"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.0,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.04,
-        "answer_token_f1": null,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.126,
-        "search_ms": 628.437,
-        "total_ms": 628.647,
-        "generate_ms": 0.084
-      }
-    },
-    {
-      "id": "curated-e9ed25d318",
-      "question": "What are the benefits of the new RED plans?",
-      "category": "english_factual",
-      "language": "en",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/en/vodafone-red1",
-          "section_path": [
-            "Enjoy the Latest Entertainment Apps in the Market that Fit your Needs",
-            "Welcome to the World of RED"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://advisory.vodafone.com.eg/knowledge-center/how-to-use-tiktok-for-business",
-          "section_path": [
-            "How to use TikTok for Business",
-            "Find out how you can use this increasingly popular social media platform to your business advantage",
-            "How to use TikTok for Business"
+            "إيه مميزات التجوال في نظام RED الجديد ؟"
           ]
         },
         {
           "index": 3,
-          "source_url": "https://web.vodafone.com.eg/en/latest-news-2017",
+          "source_url": "https://web.vodafone.com.eg/ar/vodafone-red1",
           "section_path": [
-            "Latest News",
-            "Vodafone Offers New “Flex Bundle” with Unlimited Benefits"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://www.vodafone.com.eg/en/services",
-          "section_path": [
-            "Vodafone Services Manage your line , your payment, balance, and all the services you need",
-            "Great Entertainment",
-            "90 Mins"
-          ]
-        },
-        {
-          "index": 5,
-          "source_url": "https://web.vodafone.com.eg/en/vodafone-rate-plans",
-          "section_path": [
-            "All Vodafone Rate plans",
-            "Rate plans",
-            "Vodafone Red"
+            "إستمتع بأجدد الخدمات الترفيهية المقدمة من RED",
+            "اعرف اكتر عن نظام RED",
+            "إيه مميزات التجوال في نظام RED الجديد ؟"
           ]
         }
       ],
       "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.8,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.2,
-        "answer_token_f1": null,
+        "citation_validity": 1.0,
+        "citation_correctness_lexical": 1.0,
+        "citation_completeness": 1.0,
+        "lexical_groundedness": 0.8889,
+        "answer_token_f1": 0.0351,
         "insufficient_context_handling": 1.0
       },
-      "judge": null,
+      "judge": {
+        "scores": {
+          "faithfulness": 1.0,
+          "answer_relevance": 1.0,
+          "context_relevance": 0.5,
+          "context_precision": 0.5,
+          "context_recall": 0.2,
+          "answer_correctness": 0.2,
+          "unsupported_claim_rate": 0.0
+        },
+        "reason": "The answer is faithful and relevant, but the context is incomplete and the answer is not comprehensive compared to the reference.",
+        "error": null
+      },
       "latency_ms": {
-        "embed_ms": 0.117,
-        "search_ms": 631.825,
-        "total_ms": 632.022,
-        "generate_ms": 0.08
+        "embed_ms": 334.417,
+        "search_ms": 636.381,
+        "total_ms": 5596.89,
+        "generate_ms": 4626.093
       }
     },
     {
@@ -2936,260 +365,37 @@
       "question": "ايه هو Vodafone Cash وازاي أستخدمه؟",
       "category": "mixed_language",
       "language": "mixed",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "http://internet.vodafone.com.eg/digital/cash-guide",
-          "section_path": null
-        },
-        {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/en/esg",
-          "section_path": [
-            "Vodafone 2020 - 2022 ESG Indices",
-            "2020 - 2022 ESG Indices",
-            "Economic",
-            "11"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://web.vodafone.com.eg/en/foundation-home",
-          "section_path": [
-            "Connecting for a Better Future",
-            "Donate in Seconds to Change Lives."
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/en/vodafone-cash",
-          "section_path": [
-            "What are VF Cash services?",
-            "Recharge & Bill Payment"
-          ]
-        },
-        {
-          "index": 5,
-          "source_url": "https://web.vodafone.com.eg/en/latest-news-2017",
-          "section_path": [
-            "Latest News",
-            "Vodafone Egypt offers mobile alimony and pensions payments through the “Vodafone Cash” Mobile Service"
-          ]
-        }
-      ],
+      "answer": "Vodafone Cash هو محفظة إلكترونية مقدمة من Vodafone لتسهيل حياتك وإدارة جميع مهامك بنقرة واحدة [1].\n\n\nالمعلومات المتوفرة لا تكفي للإجابة على كيفية استخدام Vodafone Cash.",
+      "has_sufficient_context": false,
+      "attempts": [],
+      "trace": [],
+      "citations": [],
       "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.2,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.16,
+        "citation_validity": 1.0,
+        "citation_correctness_lexical": null,
+        "citation_completeness": 1.0,
+        "lexical_groundedness": 0.087,
         "answer_token_f1": null,
-        "insufficient_context_handling": 1.0
+        "insufficient_context_handling": 0.0
       },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.124,
-        "search_ms": 634.96,
-        "total_ms": 635.165,
-        "generate_ms": 0.082
-      }
-    },
-    {
-      "id": "curated-0a142fc293",
-      "question": "What is Vodafone DSL and what speeds are available?",
-      "category": "english_factual",
-      "language": "en",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/en/mobile-internet-bundles",
-          "section_path": [
-            "Vodafone Internet Bundles",
-            "Frequently asked questions:",
-            "4. Who can enjoy the new Plus Bundles?"
-          ]
+      "judge": {
+        "scores": {
+          "faithfulness": 1.0,
+          "answer_relevance": 0.5,
+          "context_relevance": 0.5,
+          "context_precision": 1.0,
+          "context_recall": 0.0,
+          "answer_correctness": null,
+          "unsupported_claim_rate": 0.0
         },
-        {
-          "index": 2,
-          "source_url": "https://www.vodafone.com.eg/en/services",
-          "section_path": [
-            "Vodafone Services Manage your line , your payment, balance, and all the services you need",
-            "Enjoy other services",
-            "Download Ana Vodafone App"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://web.vodafone.com.eg/en/sustainability-report-2023",
-          "section_path": [
-            "Vodafone Egypt Sustainability Report",
-            "Actioning Our Purpose",
-            "Our People"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/en/sme",
-          "section_path": [
-            "Vodafone Egypt home page",
-            "Open a Vodafone Business Account",
-            "Explore more solutions",
-            "Offers & Benefits"
-          ]
-        },
-        {
-          "index": 5,
-          "source_url": "https://web.vodafone.com.eg/en/social",
-          "section_path": [
-            "creating a better place to work for our people and embedding Vodafone Spirit into our everyday ways of working",
-            "Wellbeing framework",
-            "Doing What's Right"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.2,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.2,
-        "answer_token_f1": null,
-        "insufficient_context_handling": 1.0
+        "reason": "The answer accurately translates and cites the provided context, but the context only defines Vodafone Cash and does not explain how to use it.",
+        "error": null
       },
-      "judge": null,
       "latency_ms": {
-        "embed_ms": 0.13,
-        "search_ms": 624.824,
-        "total_ms": 625.035,
-        "generate_ms": 0.081
-      }
-    },
-    {
-      "id": "curated-df887471ff",
-      "question": "ازاي أشترك في كارت الفكة؟",
-      "category": "arabic_factual",
-      "language": "ar",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/ar/red-videos",
-          "section_path": [
-            "Red Videos",
-            "!WATCHiT"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://advisory.vodafone.com.eg/ar/knowledge-center/how-to-help-protect-against-billing-and-invoice-fraud",
-          "section_path": [
-            "كيفية المساعدة في الحماية من الاحتيال في الفواتير",
-            "أفضل طريقة لمنع النصب؟"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://web.vodafone.com.eg/ar/vodafone-cash-government-payments",
-          "section_path": null
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/ar/engez",
-          "section_path": [
-            "xcver",
-            "انجز مع ڤودافون بيزنس.. برنامج هيساعدك تكبر شغلك من خلال مزايا وخدمات مختلفة",
-            "ميجابيتس شهرية."
-          ]
-        },
-        {
-          "index": 5,
-          "source_url": "https://web.vodafone.com.eg/ar/recharge-bill-payment",
-          "section_path": [
-            "ازاي تشحن ؟"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.0,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.0,
-        "answer_token_f1": null,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.106,
-        "search_ms": 633.317,
-        "total_ms": 633.509,
-        "generate_ms": 0.086
-      }
-    },
-    {
-      "id": "curated-d4b2ed5c9b",
-      "question": "Tell me about Fakka cards and how to recharge them",
-      "category": "english_factual",
-      "language": "en",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/en/kart-el-korout",
-          "section_path": [
-            "Different prepaid rate plans with the lowest minute rate that suits you",
-            "Kart El-Korout Rateplans",
-            "Fakka Card 26 EGP"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/en/recharge-bill-payment",
-          "section_path": [
-            "How To Recharge ?"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://web.vodafone.com.eg/en/recharge-bill-payment",
-          "section_path": [
-            "How To Recharge ?"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/en/recharge-bill-payment",
-          "section_path": [
-            "How To Recharge ?"
-          ]
-        },
-        {
-          "index": 5,
-          "source_url": "https://advisory.vodafone.com.eg/knowledge-center/get-ready-for-success-with-market-research-in-3-simple-steps",
-          "section_path": [
-            "Get ready for success with market research, in 3 simple steps",
-            "Here’s how to find out what customers want",
-            "Step #2: Make a plan"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 0.4,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.2,
-        "answer_token_f1": null,
-        "insufficient_context_handling": 1.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.13,
-        "search_ms": 631.214,
-        "total_ms": 631.427,
-        "generate_ms": 0.084
+        "embed_ms": 533.399,
+        "search_ms": 248.445,
+        "total_ms": 5959.987,
+        "generate_ms": 5178.143
       }
     },
     {
@@ -3197,194 +403,75 @@
       "question": "ما هو سعر سهم فودافون مصر في البورصة النهاردة؟",
       "category": "out_of_scope",
       "language": "ar",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/ar/website-terms-conditions",
-          "section_path": [
-            "الشروط والأحكام",
-            "الشروط والأحكام",
-            "شروط و أحكام مسابقة الايفون"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/ar/ramadan",
-          "section_path": [
-            "شاهد مسلسلات رمضان 2026 مجانا مع ڤودافون",
-            "عرض رمضان للهوم كومباوند",
-            "الشروط والأحكام"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://web.vodafone.com.eg/ar/planet-card",
-          "section_path": [
-            "تلتزم فودافون بخفض التأثير البيئي إلى النصف، والعمل على ضمان مستقبل مستدام للجميع.",
-            "تقرير البصمة الكربونية لعام 2018",
-            "مبادراتنا البيئية"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/en/331",
-          "section_path": [
-            "\"كتبي\" يحصد جائزة \"الألكسو\" كأفضل تطبيق مصري في مجال العلوم",
-            "عماد الأزهري: أطلقنا نسخة جديدة من \"كتبي\" بعدد أكبر من الإصدارات لكبار الكتاب و تجربة ممتعة للمستخدم"
-          ]
-        },
-        {
-          "index": 5,
-          "source_url": "https://web.vodafone.com.eg/en/574",
-          "section_path": [
-            "أحدث أخبارنا",
-            "\"فودافون مصر\" توقع اتفاقية مع \"بنك الإسكندرية\" لتقديم خدمات تحويل الأموال عبر المحمول \"فودافون كاش\""
-          ]
-        }
-      ],
+      "answer": "المعلومات المتوفرة في قاعدة المعرفة غير كافية للإجابة على هذا السؤال.",
+      "has_sufficient_context": false,
+      "attempts": [],
+      "trace": [],
+      "citations": [],
       "deterministic": {
         "citation_validity": null,
-        "citation_correctness_lexical": 0.0,
+        "citation_correctness_lexical": null,
         "citation_completeness": null,
-        "lexical_groundedness": 0.0,
+        "lexical_groundedness": 0.1818,
         "answer_token_f1": null,
-        "insufficient_context_handling": 0.0
+        "insufficient_context_handling": 1.0
       },
-      "judge": null,
+      "judge": {
+        "scores": {
+          "faithfulness": 1.0,
+          "answer_relevance": 1.0,
+          "context_relevance": 0.0,
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "answer_correctness": null,
+          "unsupported_claim_rate": 0.0
+        },
+        "reason": "The answer correctly states that the information is not available in the provided context, and all context passages are irrelevant to the question about Vodafone Egypt's stock price.",
+        "error": null
+      },
       "latency_ms": {
-        "embed_ms": 0.141,
-        "search_ms": 631.027,
-        "total_ms": 631.268,
-        "generate_ms": 0.1
+        "embed_ms": 294.725,
+        "search_ms": 322.124,
+        "total_ms": 42790.626,
+        "generate_ms": 42173.778
       }
     },
     {
-      "id": "oos-0e8c7c01cd",
-      "question": "What is the home address of the Vodafone Egypt CEO?",
-      "category": "out_of_scope",
-      "language": "en",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/en/2019-news",
-          "section_path": [
-            "Vodafone Egypt, Faculty of Agriculture sign cooperation protocol to plant one million trees and develop smart agriculture research"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/en/ayman-essam",
-          "section_path": [
-            "Ayman Essam"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://web.vodafone.com.eg/en/2019-news",
-          "section_path": [
-            "Vodafone Egypt, Faculty of Agriculture sign cooperation protocol to plant one million trees and develop smart agriculture research"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/en/2019-news",
-          "section_path": [
-            "Exclusive Vodafone Cash Phone Service Enhances Payment Services Nation-Wide"
-          ]
-        },
-        {
-          "index": 5,
-          "source_url": "https://web.vodafone.com.eg/en/social",
-          "section_path": [
-            "creating a better place to work for our people and embedding Vodafone Spirit into our everyday ways of working",
-            "Awards",
-            "Great place to work award"
-          ]
-        }
-      ],
-      "deterministic": {
-        "citation_validity": null,
-        "citation_correctness_lexical": 1.0,
-        "citation_completeness": null,
-        "lexical_groundedness": 0.24,
-        "answer_token_f1": null,
-        "insufficient_context_handling": 0.0
-      },
-      "judge": null,
-      "latency_ms": {
-        "embed_ms": 0.128,
-        "search_ms": 633.664,
-        "total_ms": 633.875,
-        "generate_ms": 0.083
-      }
-    },
-    {
-      "id": "oos-8c73fd1d75",
-      "question": "كام موظف شغال في فروع فودافون في أسوان دلوقتي؟",
-      "category": "out_of_scope",
+      "id": "curated-df887471ff",
+      "question": "ازاي أشترك في كارت الفكة؟",
+      "category": "arabic_factual",
       "language": "ar",
-      "answer": "[offline LLM stub] No generation backend is configured, so no grounded answer was produced. Set LLM_PROVIDER and the matching API key in rag/.env to enable generation.",
-      "has_sufficient_context": true,
-      "citations": [
-        {
-          "index": 1,
-          "source_url": "https://web.vodafone.com.eg/ar/planet-card",
-          "section_path": [
-            "تلتزم فودافون بخفض التأثير البيئي إلى النصف، والعمل على ضمان مستقبل مستدام للجميع.",
-            "تقرير البصمة الكربونية لعام 2018",
-            "مبادراتنا البيئية"
-          ]
-        },
-        {
-          "index": 2,
-          "source_url": "https://web.vodafone.com.eg/ar/2019-news",
-          "section_path": [
-            "عن طريق \"فودافون كاش\" و بالشراكة مع \"فوري\" فودافون تمكن عملائها من تسديد فواتير الكهرباء والغاز والمصاريف الجامعية عبر المحمول"
-          ]
-        },
-        {
-          "index": 3,
-          "source_url": "https://web.vodafone.com.eg/ar/sdwan-new",
-          "section_path": [
-            "اتصال ثابت",
-            "اتصال ثابت"
-          ]
-        },
-        {
-          "index": 4,
-          "source_url": "https://web.vodafone.com.eg/en/574",
-          "section_path": [
-            "أحدث أخبارنا",
-            "فودافون مصر تطلق خدمة صرف المعاشات والنفقة للمطلقات عبر المحمول"
-          ]
-        },
-        {
-          "index": 5,
-          "source_url": "https://web.vodafone.com.eg/ar/sdwan-new",
-          "section_path": [
-            "اتصال ثابت",
-            "اتصال ثابت"
-          ]
-        }
-      ],
+      "answer": "المعلومات المتوفرة في قاعدة المعرفة غير كافية للإجابة على هذا السؤال.",
+      "has_sufficient_context": false,
+      "attempts": [],
+      "trace": [],
+      "citations": [],
       "deterministic": {
         "citation_validity": null,
-        "citation_correctness_lexical": 0.0,
+        "citation_correctness_lexical": null,
         "citation_completeness": null,
-        "lexical_groundedness": 0.0,
+        "lexical_groundedness": 0.1818,
         "answer_token_f1": null,
         "insufficient_context_handling": 0.0
       },
-      "judge": null,
+      "judge": {
+        "scores": {
+          "faithfulness": 1.0,
+          "answer_relevance": 1.0,
+          "context_relevance": 0.0,
+          "context_precision": 0.0,
+          "context_recall": 0.0,
+          "answer_correctness": null,
+          "unsupported_claim_rate": 0.0
+        },
+        "reason": "The answer correctly states that the information is not available in the provided context, and all claims in the answer are supported by the context (or lack thereof).",
+        "error": null
+      },
       "latency_ms": {
-        "embed_ms": 0.13,
-        "search_ms": 623.664,
-        "total_ms": 623.883,
-        "generate_ms": 0.09
+        "embed_ms": 290.203,
+        "search_ms": 626.608,
+        "total_ms": 6469.231,
+        "generate_ms": 5552.42
       }
     }
   ]
