@@ -11,7 +11,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Literal
 
-from pydantic import Field, field_validator
+from pydantic import Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 RAG_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -19,6 +19,7 @@ DEFAULT_DATA_DIR = RAG_ROOT / "data"
 DEFAULT_EVAL_DIR = DEFAULT_DATA_DIR / "evaluation"
 
 SECRET_FIELDS = {
+    "GEMINI_API_KEY",
     "CHROMA_API_KEY",
     "OPENAI_API_KEY",
     "COHERE_API_KEY",
@@ -47,6 +48,13 @@ class Settings(BaseSettings):
     ] = "embeddinggemma_hf"
     EMBEDDING_MODEL: str = "google/embeddinggemma-300m"
     EMBEDDING_BATCH_SIZE: int = 96
+    #: Provider used ONLY for sentence-boundary detection during chunking.
+    #: These vectors are never stored - they exist to compare neighbouring
+    #: sentences - and they outnumber the stored chunk vectors roughly 3:1.
+    #: Empty means "use EMBEDDING_PROVIDER". Setting it to a cheap local
+    #: provider (local_lexical) cuts hosted-API calls by ~75% at some cost to
+    #: boundary precision.
+    CHUNKING_EMBEDDING_PROVIDER: str = ""
     EMBEDDING_CACHE_ENABLED: bool = True
     OPENAI_API_KEY: str = ""
     OPENAI_BASE_URL: str = ""
@@ -61,8 +69,15 @@ class Settings(BaseSettings):
     LLM_MAX_TOKENS: int = 1024
     LLM_TEMPERATURE: float = 0.0
     LLM_STREAMING: bool = True
+    #: Client-side pacing. Free-tier Gemini is ~15 rpm; the agentic loop makes
+    #: several calls per question, so without this an evaluation run trips 429s.
+    #: 0 disables pacing.
+    LLM_REQUESTS_PER_MINUTE: int = 14
+    LLM_MAX_RETRIES: int = 5
     ANTHROPIC_API_KEY: str = ""
     GOOGLE_API_KEY: str = ""
+    #: Accepted alias - Google's own docs and SDKs use both names.
+    GEMINI_API_KEY: str = ""
 
     # ---- Judge / evaluator LLM -------------------------------------------
     # A separate, cheaper model grades retrieved context inside the agentic
@@ -123,6 +138,15 @@ class Settings(BaseSettings):
         if target and v < target:
             raise ValueError("CHUNK_MAX_SIZE must be >= CHUNK_TARGET_SIZE")
         return v
+
+    @model_validator(mode="after")
+    def _alias_gemini_key(self) -> "Settings":
+        """``GEMINI_API_KEY`` and ``GOOGLE_API_KEY`` are interchangeable."""
+        if not self.GOOGLE_API_KEY and self.GEMINI_API_KEY:
+            object.__setattr__(self, "GOOGLE_API_KEY", self.GEMINI_API_KEY)
+        elif not self.GEMINI_API_KEY and self.GOOGLE_API_KEY:
+            object.__setattr__(self, "GEMINI_API_KEY", self.GOOGLE_API_KEY)
+        return self
 
     # -- helpers ------------------------------------------------------------
     def chroma_is_configured(self) -> bool:
