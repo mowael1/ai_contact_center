@@ -80,13 +80,22 @@ class Container:
             workflow = self.agentic(max_attempts)
 
             class _GraphAdapter:
+                """Gives the graph the same surface as :class:`RagService`."""
+
+                def __init__(self, wf):
+                    self._workflow = wf
+                    self.retriever = wf.retriever
+                    self.generator = wf.generator
+                    self.evaluator = wf.evaluator
+                    self.rewriter = wf.rewriter
+
                 def query(self, question, top_k=None, filters=None):
-                    return workflow.run(question, top_k=top_k, filters=filters)
+                    return self._workflow.run(question, top_k=top_k, filters=filters)
 
                 def query_stream(self, question, top_k=None, filters=None):
-                    return workflow.run_stream(question, top_k=top_k, filters=filters)
+                    return self._workflow.run_stream(question, top_k=top_k, filters=filters)
 
-            return _GraphAdapter()
+            return _GraphAdapter(workflow)
         return self.rag()
 
     def ingestion(self) -> IngestionPipeline:
