@@ -1,4 +1,4 @@
-# Optional: run embeddings locally instead of via a hosted API.
-# Pulls in torch (~2 GB). Only needed for offline operation or for
-# benchmarking a local model against the hosted one.
-sentence-transformers>=3.0
+# Optional: run google/embeddinggemma-300m locally instead of via the
+# HuggingFace Inference API. Pulls in torch (~2 GB) and ~1.2 GB of weights.
+# Set EMBEDDING_PROVIDER=embeddinggemma_local afterwards.
+sentence-transformers>=5.0
