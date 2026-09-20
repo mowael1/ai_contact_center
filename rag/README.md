@@ -337,6 +337,36 @@ travels in an `x-goog-api-key` header rather than the URL, so it cannot leak
 through request logs. Gemini 2.5's thinking budget is set to 0: this is a
 grounded extraction task, not a reasoning one, and reasoning tokens are billed.
 
+### Answer language is resolved in code, not inferred
+
+Smaller models answer in the language of the **context** rather than the
+question. Measured on `gemini-2.5-flash-lite`: an English question over Arabic
+passages came back in Arabic, and an Arabic question that had to be refused was
+refused in English.
+
+The fix is deterministic - `detect_language()` resolves the question's language
+and the prompt carries an explicit `REQUIRED ANSWER LANGUAGE` line that
+overrides the context. Nothing is left to the model to infer.
+
+### Provider rate limits
+
+Gemini's free tier enforces
+`GenerateRequestsPerDayPerProjectPerModel-FreeTier = 20 requests/day`, **per
+model**. The agentic loop makes several calls per question, so a full
+51-question evaluation needs a paid tier.
+
+The client handles this rather than crashing:
+
+* `LLM_REQUESTS_PER_MINUTE` (default 14) paces requests process-wide.
+* HTTP 429 is retried up to `LLM_MAX_RETRIES` times, honouring the
+  `Retry-After` header and Google's `retryDelay` error detail.
+* Generator and judge are separate models, so their daily quotas are separate -
+  putting the judge on `gemini-2.5-flash` and the generator on
+  `gemini-2.5-flash-lite` doubles the usable budget.
+* `rag-cli eval rag --limit N` evaluates a **balanced subset** (round-robin
+  across categories) so a quota-constrained run still covers Arabic, English,
+  mixed and out-of-scope questions instead of just the first category.
+
 ### Streaming
 
 `generate_stream()` streams over `:streamGenerateContent?alt=sse`. Three
@@ -574,7 +604,8 @@ rag-cli store config    # effective settings, secrets redacted
 rag-cli eval build-dataset
 rag-cli eval chunking --limit 600 --compare
 rag-cli eval retrieval --top-k 10
-rag-cli eval rag --top-k 5 --judge
+rag-cli eval rag --top-k 5 --judge                  # agentic by default
+rag-cli eval rag --judge --linear --limit 16        # fits a constrained quota
 rag-cli eval summary
 
 # Tests
