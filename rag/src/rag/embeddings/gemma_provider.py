@@ -174,6 +174,50 @@ class HFInferenceEmbeddingGemma(EmbeddingService):
         }
 
 
+class HFInferenceEmbedding(HFInferenceEmbeddingGemma):
+    """Any feature-extraction model served by the HuggingFace Inference API.
+
+    EmbeddingGemma's task prefixes are model-specific, so this subclass swaps in
+    whatever prefixes the configured model expects. e5-family models require
+    ``query:`` / ``passage:``; bge-m3 and mpnet take raw text.
+    """
+
+    #: model-id substring -> (query prefix, document prefix)
+    PREFIXES: dict[str, tuple[str, str]] = {
+        "e5": ("query: ", "passage: "),
+        "embeddinggemma": (QUERY_PREFIX, DOCUMENT_PREFIX),
+        "bge-m3": ("", ""),
+        "gte-": ("", ""),
+        "mpnet": ("", ""),
+    }
+
+    def __init__(self, model: str, api_key: str | None = None, batch_size: int | None = None):
+        super().__init__(model=model, api_key=api_key, batch_size=batch_size)
+        self._dim = 0  # discovered from the first response
+        lowered = model.lower()
+        self._query_prefix, self._doc_prefix = "", ""
+        for key, (q, d) in self.PREFIXES.items():
+            if key in lowered:
+                self._query_prefix, self._doc_prefix = q, d
+                break
+
+    def embed_documents(self, texts):
+        return self._embed([f"{self._doc_prefix}{t}" for t in texts])
+
+    def embed_query(self, text):
+        return self._embed([f"{self._query_prefix}{text}"])[0]
+
+    def model_info(self):
+        return {
+            "provider": "HFInferenceEmbedding",
+            "model": self.model,
+            "dimension": self.dimension,
+            "backend": "huggingface_inference_api",
+            "query_prefix": self._query_prefix,
+            "document_prefix": self._doc_prefix,
+        }
+
+
 class LocalEmbeddingGemma(EmbeddingService):
     """EmbeddingGemma run locally through sentence-transformers.
 
