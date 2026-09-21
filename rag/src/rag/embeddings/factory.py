@@ -69,6 +69,10 @@ def build_embedding_service(
         from rag.embeddings.gemma_provider import HFInferenceEmbeddingGemma
 
         service = HFInferenceEmbeddingGemma(model=model)
+    elif provider in ("hf_inference", "hf"):
+        from rag.embeddings.gemma_provider import HFInferenceEmbedding
+
+        service = HFInferenceEmbedding(model=model)
     elif provider in ("embeddinggemma_local", "gemma_local"):
         from rag.embeddings.gemma_provider import LocalEmbeddingGemma
 
