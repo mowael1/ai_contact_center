@@ -235,3 +235,71 @@ def test_model_info_reports_the_backend():
     assert info["model"] == "google/embeddinggemma-300m"
     assert info["backend"] == "huggingface_inference_api"
     assert "hf_test" not in str(info)
+
+
+# ---- generic HF Inference provider ----------------------------------------
+def test_e5_models_get_query_and_passage_prefixes():
+    from rag.embeddings.gemma_provider import HFInferenceEmbedding
+
+    sent = {}
+
+    def handler(request):
+        sent.update(json.loads(request.content))
+        return httpx.Response(200, json=[[0.1] * 1024 for _ in sent["inputs"]])
+
+    service = HFInferenceEmbedding("intfloat/multilingual-e5-large", api_key="hf_test")
+    service._client = mock_client(handler)
+
+    service.embed_documents(["bundle renewal"])
+    assert sent["inputs"][0] == "passage: bundle renewal"
+    service.embed_query("how do I renew?")
+    assert sent["inputs"][0] == "query: how do I renew?"
+
+
+def test_bge_m3_gets_no_prefix():
+    from rag.embeddings.gemma_provider import HFInferenceEmbedding
+
+    sent = {}
+
+    def handler(request):
+        sent.update(json.loads(request.content))
+        return httpx.Response(200, json=[[0.1] * 1024])
+
+    service = HFInferenceEmbedding("BAAI/bge-m3", api_key="hf_test")
+    service._client = mock_client(handler)
+    service.embed_query("ازاي أجدد باقتي؟")
+    assert sent["inputs"][0] == "ازاي أجدد باقتي؟"
+
+
+def test_generic_provider_discovers_dimension_from_the_response():
+    from rag.embeddings.gemma_provider import HFInferenceEmbedding
+
+    service = HFInferenceEmbedding("BAAI/bge-m3", api_key="hf_test")
+    service._client = mock_client(lambda r: httpx.Response(200, json=[[0.1] * 1024]))
+    assert len(service.embed_query("x")) == 1024
+    assert service.dimension == 1024
+
+
+def test_embeddinggemma_prefixes_survive_the_generic_path():
+    from rag.embeddings.gemma_provider import HFInferenceEmbedding
+
+    sent = {}
+
+    def handler(request):
+        sent.update(json.loads(request.content))
+        return httpx.Response(200, json=[[0.1] * 768])
+
+    service = HFInferenceEmbedding("google/embeddinggemma-300m", api_key="hf_test")
+    service._client = mock_client(handler)
+    service.embed_query("renew")
+    assert sent["inputs"][0].startswith(QUERY_PREFIX)
+
+
+def test_factory_builds_the_generic_provider():
+    from rag.embeddings.factory import build_embedding_service
+
+    service = build_embedding_service(
+        provider="hf_inference", model="BAAI/bge-m3", cache=False
+    )
+    assert service.model == "BAAI/bge-m3"
+    assert service.model_info()["provider"] == "HFInferenceEmbedding"
