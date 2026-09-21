@@ -43,8 +43,8 @@ class Settings(BaseSettings):
     # ---- Embeddings -------------------------------------------------------
     # provider: openai | cohere | sentence_transformers | hash
     EMBEDDING_PROVIDER: Literal[
-        "embeddinggemma_hf", "embeddinggemma_local", "openai", "cohere",
-        "sentence_transformers", "local_lexical", "hash",
+        "embeddinggemma_hf", "embeddinggemma_local", "hf_inference", "openai",
+        "cohere", "sentence_transformers", "local_lexical", "hash",
     ] = "embeddinggemma_hf"
     EMBEDDING_MODEL: str = "google/embeddinggemma-300m"
     EMBEDDING_BATCH_SIZE: int = 96
