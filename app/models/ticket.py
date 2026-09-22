@@ -22,6 +22,7 @@ if TYPE_CHECKING:
     from app.models.company import Company
     from app.models.customer import Customer
     from app.models.user import User
+    from app.models.call import Call
 
 
 class Ticket(Base):
@@ -94,4 +95,8 @@ class Ticket(Base):
     assigned_agent: Mapped["User"] = relationship(
         back_populates="assigned_tickets",
         foreign_keys=[assigned_agent_id]
+    )
+
+    calls: Mapped[list["Call"]] = relationship(
+        back_populates="ticket"
     )
