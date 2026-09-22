@@ -39,6 +39,14 @@ class StubLLM(LLMService):
                            LLMUsage(100, 20, self.model, 0.001))
 
 
+@pytest.fixture(autouse=True)
+def dev_mode(monkeypatch):
+    """These tests address companies by header, which is dev mode."""
+    from rag.config import settings
+
+    monkeypatch.setattr(settings, "RAG_AUTH_MODE", "dev")
+
+
 @pytest.fixture
 def client():
     """One in-memory collection per company, resolved from X-Company-Id."""
@@ -189,9 +197,63 @@ def test_info_reports_the_scoped_collection(client):
     assert "chunking" in body
 
 
-def test_dev_mode_falls_back_to_the_configured_company(client):
-    """Without a header, dev mode uses RAG_DEV_COMPANY_ID rather than failing open."""
-    from rag.config import settings
+def test_a_request_without_a_company_is_refused(client):
+    """No scope must be an error.
 
-    body = client.get("/api/v1/kb/info").json()
-    assert body["company_id"] == settings.RAG_DEV_COMPANY_ID
+    This previously defaulted to a fixed company, so every admin resolved to
+    the same tenant and saw one company's documents.
+    """
+    assert client.get("/api/v1/kb/info").status_code == 400
+
+
+# ---- conversation memory --------------------------------------------------
+def test_follow_up_is_expanded_for_retrieval(client):
+    upload(client, 1, "returns.md", COMPANY_A_DOC)
+    headers = {"X-Company-Id": "1"}
+    client.post("/api/v1/kb/ask", headers=headers,
+                json={"query": "What is the refund policy?", "conversation_id": "c1"})
+    body = client.post("/api/v1/kb/ask", headers=headers,
+                       json={"query": "وكام مدته؟", "conversation_id": "c1"}).json()
+    assert body["search_query"], "a follow-up should be expanded"
+    assert "refund" in body["search_query"].lower()
+
+
+def test_a_standalone_question_is_not_expanded(client):
+    upload(client, 1, "returns.md", COMPANY_A_DOC)
+    body = client.post(
+        "/api/v1/kb/ask", headers={"X-Company-Id": "1"},
+        json={"query": "What is the minimum eligible order value?", "conversation_id": "c2"},
+    ).json()
+    assert body["search_query"] is None
+
+
+def test_conversations_do_not_leak_between_companies(client):
+    """The same conversation id under two companies must stay separate."""
+    upload(client, 1, "returns.md", COMPANY_A_DOC)
+    upload(client, 2, "escalation.md", COMPANY_B_DOC)
+    client.post("/api/v1/kb/ask", headers={"X-Company-Id": "1"},
+                json={"query": "What is the refund policy?", "conversation_id": "shared"})
+    body = client.post("/api/v1/kb/ask", headers={"X-Company-Id": "2"},
+                       json={"query": "وكام مدته؟", "conversation_id": "shared"}).json()
+    # Company 2 has no history under that id, so nothing is carried over.
+    assert body["search_query"] is None
+
+
+def test_clearing_a_conversation_forgets_it(client):
+    upload(client, 1, "returns.md", COMPANY_A_DOC)
+    headers = {"X-Company-Id": "1"}
+    client.post("/api/v1/kb/ask", headers=headers,
+                json={"query": "What is the refund policy?", "conversation_id": "c3"})
+    assert client.delete("/api/v1/kb/conversations/c3", headers=headers).json()["cleared"]
+    body = client.post("/api/v1/kb/ask", headers=headers,
+                       json={"query": "وكام مدته؟", "conversation_id": "c3"}).json()
+    assert body["search_query"] is None
+
+
+def test_a_question_without_a_conversation_id_is_not_remembered(client):
+    upload(client, 1, "returns.md", COMPANY_A_DOC)
+    headers = {"X-Company-Id": "1"}
+    client.post("/api/v1/kb/ask", headers=headers, json={"query": "What is the refund policy?"})
+    body = client.post("/api/v1/kb/ask", headers=headers,
+                       json={"query": "وكام مدته؟"}).json()
+    assert body["search_query"] is None

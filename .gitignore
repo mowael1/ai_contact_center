@@ -221,3 +221,14 @@ __marimo__/
 
 #word
 details.docx
+
+# Uploaded knowledge-base documents. Customer data - never committed.
+uploads/
+
+# SQL Server backup handed over for migration. Binary, and not needed once the
+# schema lives in migrations/.
+contact_center_db
+*.bak
+
+# Local vector-store snapshots used for offline runs.
+*.offline.json
