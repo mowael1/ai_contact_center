@@ -46,6 +46,10 @@ class VectorStore(ABC):
     def delete_chunks(self, chunk_ids: Sequence[str]) -> int:
         """Remove specific chunks by id (used for stale-chunk pruning)."""
 
+    def list_documents(self) -> list[dict[str, Any]]:
+        """Distinct documents indexed in this collection."""
+        raise NotImplementedError
+
     def get_document_chunk_ids(self, document_id: str) -> list[str]:
         """Ids currently stored for a document (used for stale-chunk pruning)."""
         raise NotImplementedError
