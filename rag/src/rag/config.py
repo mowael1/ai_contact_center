@@ -45,8 +45,13 @@ class Settings(BaseSettings):
     EMBEDDING_PROVIDER: Literal[
         "embeddinggemma_hf", "embeddinggemma_local", "hf_inference", "openai",
         "cohere", "sentence_transformers", "local_lexical", "hash",
-    ] = "embeddinggemma_hf"
-    EMBEDDING_MODEL: str = "google/embeddinggemma-300m"
+    ] = "hf_inference"
+    #: BGE-M3 is the default because the real scenario is cross-lingual -
+    #: Arabic questions against English documents. Measured on a real
+    #: help-centre PDF: BGE-M3 found the right section for 4/4 questions,
+    #: EmbeddingGemma for 2/4 (it failed every Arabic-query/English-passage
+    #: case). EmbeddingGemma remains faster if the KB is same-language.
+    EMBEDDING_MODEL: str = "BAAI/bge-m3"
     EMBEDDING_BATCH_SIZE: int = 96
     #: Provider used ONLY for sentence-boundary detection during chunking.
     #: These vectors are never stored - they exist to compare neighbouring
@@ -66,9 +71,10 @@ class Settings(BaseSettings):
     # provider: gemini | anthropic | openai | echo (offline stub, never fabricates)
     LLM_PROVIDER: Literal["gemini", "anthropic", "openai", "echo"] = "gemini"
     LLM_MODEL: str = "gemini-2.5-pro"
-    LLM_MAX_TOKENS: int = 1024
+    # 400 is enough for a grounded support answer and cuts generation time,
+    # which measured at ~70% of total latency.
+    LLM_MAX_TOKENS: int = 400
     LLM_TEMPERATURE: float = 0.0
-    LLM_STREAMING: bool = True
     #: Client-side pacing. Free-tier Gemini is ~15 rpm; the agentic loop makes
     #: several calls per question, so without this an evaluation run trips 429s.
     #: 0 disables pacing.
@@ -104,6 +110,18 @@ class Settings(BaseSettings):
     ] = "enhanced_first"
 
     # ---- Chunking ---------------------------------------------------------
+    # Strategy: section_based where a document has clear sections, fixed_size
+    # otherwise. Sizes are counted in CHUNK_UNIT.
+    CHUNK_SIZE_TOKENS: int = 150
+    CHUNK_OVERLAP_TOKENS: int = 20
+    #: tokens | words | chars. NOTE: with "tokens" (cl100k), Arabic costs ~1.44
+    #: chars/token vs ~5.36 for English, so 150 tokens is ~216 Arabic chars but
+    #: ~803 English ones. Use "chars" to treat both scripts equally.
+    CHUNK_UNIT: Literal["tokens", "words", "chars"] = "tokens"
+    CHUNK_TOKEN_ENCODING: str = "cl100k_base"
+    CHUNK_MIN_UNITS: int = 20
+
+    # ---- Legacy semantic chunker (kept available, not the default) --------
     CHUNK_TARGET_SIZE: int = 700
     CHUNK_MIN_SIZE: int = 200
     CHUNK_MAX_SIZE: int = 1400
@@ -111,8 +129,20 @@ class Settings(BaseSettings):
     CHUNK_OVERLAP: int = 1  # measured in sentences
     MIN_SECTION_CHARS: int = 40
 
+    # ---- Query translation ------------------------------------------------
+    # Translate the question into KB_LANGUAGE before embedding. Measured cost:
+    # +716 ms per uncached query (gemini-2.5-flash-lite) versus +27 ms for
+    # using a cross-lingual embedding model directly, so this is OFF by
+    # default. Worth enabling only if the embedding model aligns languages
+    # poorly, or question repetition is high enough for the cache to pay.
+    QUERY_TRANSLATION: bool = False
+    #: Dominant language of the indexed documents.
+    KB_LANGUAGE: Literal["en", "ar"] = "en"
+
     # ---- Retrieval --------------------------------------------------------
-    TOP_K: int = 5
+    # 3 passages keep the prompt small; retrieval HitRate@3 was already 0.67
+    # on the web corpus and 4/4 on the uploaded-PDF tests.
+    TOP_K: int = 3
     #: Collapse retrieved passages with identical text (same content published
     #: under several URLs). Keeps the best-scoring copy.
     DEDUPLICATE_RESULTS: bool = True
@@ -121,6 +151,16 @@ class Settings(BaseSettings):
     # ---- Ingestion --------------------------------------------------------
     INGEST_BATCH_SIZE: int = 128
     SUCCESS_STATUS: str = "success"
+
+    # ---- API auth ---------------------------------------------------------
+    # jwt -> company_id comes from the authenticated user (production).
+    # dev -> company_id comes from the X-Company-Id header, so the KB can be
+    #        exercised before the SQL Server database is reachable.
+    RAG_AUTH_MODE: Literal["jwt", "dev"] = "dev"
+    RAG_DEV_COMPANY_ID: int = 1
+    #: Where uploaded files are stored. Kept outside rag/data/.
+    KB_UPLOAD_DIR: Path = RAG_ROOT.parent / "uploads"
+    KB_MAX_UPLOAD_MB: int = 25
 
     # ---- Logging ----------------------------------------------------------
     LOG_LEVEL: str = "INFO"
