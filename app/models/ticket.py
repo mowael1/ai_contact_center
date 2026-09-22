@@ -8,7 +8,7 @@ from sqlalchemy import (
     UnicodeText,
     text,
 )
-from sqlalchemy.dialects.mssql import DATETIME2
+from app.db.types import UtcDateTime, utcnow
 from sqlalchemy.orm import (
     Mapped,
     mapped_column,
@@ -73,13 +73,13 @@ class Ticket(Base):
     )
 
     created_at: Mapped[datetime] = mapped_column(
-        DATETIME2,
+        UtcDateTime,
         nullable=False,
-        server_default=text("SYSUTCDATETIME()")
+        server_default=utcnow()
     )
 
     updated_at: Mapped[datetime | None] = mapped_column(
-        DATETIME2,
+        UtcDateTime,
         nullable=True
     )
 

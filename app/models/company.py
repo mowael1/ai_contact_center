@@ -1,7 +1,9 @@
 from datetime import datetime
 
 from sqlalchemy import Integer, Boolean, Unicode, text
-from sqlalchemy.dialects.mssql import DATETIME2
+from sqlalchemy.sql import expression
+
+from app.db.types import UtcDateTime, utcnow
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
@@ -41,17 +43,17 @@ class Company(Base):
     is_active: Mapped[bool] = mapped_column(
         Boolean,
         nullable=False,
-        server_default=text("1")
+        server_default=expression.true()
     )
 
     created_at: Mapped[datetime] = mapped_column(
-        DATETIME2,
+        UtcDateTime,
         nullable=False,
-        server_default=text("SYSUTCDATETIME()")
+        server_default=utcnow()
     )
 
     updated_at: Mapped[datetime | None] = mapped_column(
-        DATETIME2,
+        UtcDateTime,
         nullable=True
     )
     

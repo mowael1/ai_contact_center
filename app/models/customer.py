@@ -8,7 +8,9 @@ from sqlalchemy import (
     Unicode,
     text,
 )
-from sqlalchemy.dialects.mssql import DATETIME2
+from sqlalchemy.sql import expression
+
+from app.db.types import UtcDateTime, utcnow
 from sqlalchemy.orm import (
     Mapped,
     mapped_column,
@@ -57,17 +59,17 @@ class Customer(Base):
     is_active: Mapped[bool] = mapped_column(
         Boolean,
         nullable=False,
-        server_default=text("1")
+        server_default=expression.true()
     )
 
     created_at: Mapped[datetime] = mapped_column(
-        DATETIME2,
+        UtcDateTime,
         nullable=False,
-        server_default=text("SYSUTCDATETIME()")
+        server_default=utcnow()
     )
 
     updated_at: Mapped[datetime | None] = mapped_column(
-        DATETIME2,
+        UtcDateTime,
         nullable=True
     )
 
