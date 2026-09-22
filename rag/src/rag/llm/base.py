@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Iterator, Optional
+from typing import Optional
 
 from rag.models import LLMUsage
 
@@ -13,21 +13,6 @@ from rag.models import LLMUsage
 class LLMResponse:
     text: str
     usage: LLMUsage
-
-
-@dataclass(slots=True)
-class StreamChunk:
-    """One incremental piece of a streamed completion.
-
-    ``delta`` carries new text. The final chunk has ``done=True`` and carries
-    the accumulated ``text`` plus token ``usage``, which most providers only
-    report at the end of the stream.
-    """
-
-    delta: str = ""
-    text: str = ""
-    done: bool = False
-    usage: Optional[LLMUsage] = None
 
 
 class LLMService(ABC):
