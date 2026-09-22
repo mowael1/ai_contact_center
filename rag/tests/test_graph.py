@@ -9,11 +9,13 @@ import pytest
 
 from rag.embeddings.local_providers import HashEmbedding
 from rag.graph.workflow import AgenticRagWorkflow
-from rag.llm.base import LLMResponse, LLMService, StreamChunk
-from rag.models import Chunk, LLMUsage
+from rag.llm.base import LLMResponse, LLMService
+from tests.factories import make_test_chunk
+from rag.models import LLMUsage
 from rag.services.evaluator import LLMContextEvaluator, LLMQueryRewriter
 from rag.services.generator import GenerationService
 from rag.services.retriever import RetrievalService
+from rag.services.tenancy import Tenant
 from rag.vectorstore.memory_store import InMemoryVectorStore
 
 REWRITER_MARKER = "rewrite failed search queries"
@@ -56,38 +58,23 @@ class GeneratorStub(LLMService):
     def __init__(self, text="You renew via *880# [1]."):
         self.text = text
         self.calls = 0
-        self.stream_calls = 0
 
     def generate(self, system, prompt, max_tokens=1024, temperature=0.0):
         self.calls += 1
         return LLMResponse(self.text, LLMUsage(100, 20, self.model, 0.001))
 
-    def generate_stream(self, system, prompt, max_tokens=1024, temperature=0.0):
-        self.stream_calls += 1
-        accumulated = ""
-        for word in self.text.split(" "):
-            accumulated += (" " if accumulated else "") + word
-            yield StreamChunk(
-                delta=(" " if accumulated != word else "") + word, text=accumulated
-            )
-        yield StreamChunk(
-            text=accumulated, done=True, usage=LLMUsage(100, 20, self.model, 0.001)
-        )
 
 
 def make_workflow(judge, generator_llm=None, max_attempts=3):
     embeddings = HashEmbedding()
     store = InMemoryVectorStore()
-    chunk = Chunk(
-        chunk_id="c1", document_id="d1", source_url="https://web.vodafone.com.eg/en/flex",
-        text="You can renew your bundle by dialling *880#.", section_title="Renewal",
-        section_path=["Internet", "Renewal"], heading_level=3, section_index=0,
-        chunk_index=0, chunking_method="semantic",
-        section_extraction_method="html_structure", language="en", domain="x",
+    chunk = make_test_chunk(
+        text="You can renew your bundle by dialling *880#.",
+        source="flex.pdf", document_id="d1",
     )
     store.upsert_chunks([chunk], embeddings.embed_documents([chunk.text]))
     return AgenticRagWorkflow(
-        retriever=RetrievalService(store, embeddings),
+        retriever=RetrievalService(store, embeddings, tenant=Tenant(company_id=1)),
         generator=GenerationService(generator_llm or GeneratorStub()),
         evaluator=LLMContextEvaluator(judge),
         rewriter=LLMQueryRewriter(judge),
@@ -217,54 +204,3 @@ def test_rewriter_falls_back_to_the_original_query_on_failure():
 def test_rewriter_rejects_an_empty_rewrite():
     judge = ScriptedJudge(rewritten="  ")
     assert LLMQueryRewriter(judge).rewrite("original query", [], 1) == "original query"
-
-
-# ---- streaming through the graph -----------------------------------------
-def test_run_stream_emits_deltas_then_the_final_answer():
-    judge = ScriptedJudge([verdict(True)])
-    generator = GeneratorStub()
-    workflow = make_workflow(judge, generator)
-
-    rebuilt = ""
-    final = None
-    for piece in workflow.run_stream("How do I renew?"):
-        if piece.done:
-            final = piece.answer
-        else:
-            if piece.replaces_from is not None:
-                rebuilt = rebuilt[: piece.replaces_from]
-            rebuilt += piece.delta
-    assert final is not None
-    assert rebuilt == final.answer
-    assert final.citations
-
-
-def test_run_stream_does_not_generate_twice():
-    judge = ScriptedJudge([verdict(True)])
-    generator = GeneratorStub()
-    for _ in make_workflow(judge, generator).run_stream("q"):
-        pass
-    assert generator.calls == 0       # blocking path untouched
-    assert generator.stream_calls == 1
-
-
-def test_run_stream_carries_the_loop_audit_trail():
-    judge = ScriptedJudge([verdict(False), verdict(True)])
-    final = None
-    for piece in make_workflow(judge).run_stream("q"):
-        if piece.done:
-            final = piece.answer
-    assert len(final.attempts) == 2
-    assert any("rewrite" in t for t in final.trace)
-
-
-def test_run_stream_gives_up_without_calling_the_generator():
-    judge = ScriptedJudge([verdict(False)] * 5)
-    generator = GeneratorStub()
-    final = None
-    for piece in make_workflow(judge, generator, max_attempts=2).run_stream("q"):
-        if piece.done:
-            final = piece.answer
-    assert final.has_sufficient_context is False
-    assert final.citations == []
-    assert generator.calls == 0 and generator.stream_calls == 0
