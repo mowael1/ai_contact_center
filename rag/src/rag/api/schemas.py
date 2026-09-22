@@ -68,11 +68,15 @@ class QueryRequest(BaseModel):
 
 class CitationModel(BaseModel):
     index: int
-    source_url: str
-    section_title: Optional[str] = None
-    section_path: Optional[list[str]] = None
     chunk_id: str
     document_id: str
+    source: str = Field("", description="Filename of the cited document")
+    document_title: str = ""
+    section_title: Optional[str] = None
+    section_path: Optional[list[str]] = None
+    page_number: Optional[int] = None
+    source_url: str = Field("", description="Web-scrape only; empty for uploads")
+    label: str = Field("", description="Ready-to-display reference string")
 
 
 class UsageModel(BaseModel):
