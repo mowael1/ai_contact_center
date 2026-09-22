@@ -15,6 +15,11 @@ from rag.api.schemas import CitationModel, RetrievedChunkModel, UsageModel
 from rag.config import settings
 from rag.documents.loader import SUPPORTED
 from rag.logging_utils import get_logger
+from rag.services.conversation import (
+    contextual_query,
+    conversations,
+    format_history,
+)
 from rag.services.tenancy import Tenant
 
 logger = get_logger(__name__)
@@ -54,13 +59,21 @@ class AskRequest(BaseModel):
     query: str = Field(..., min_length=1, max_length=2000)
     top_k: int = Field(5, ge=1, le=20)
     include_chunks: bool = False
+    conversation_id: Optional[str] = Field(
+        None, max_length=64,
+        description=(
+            "Opaque id that groups messages into a conversation, so follow-up "
+            "questions resolve. Omit it for a one-off question."
+        ),
+    )
 
 
 class AskResponse(BaseModel):
     query: str
-    #: Present only when query translation is enabled; carries an ``error``
-    #: key if translation was attempted and failed.
-    translation: Optional[dict] = None
+    #: The query actually embedded. Differs from ``query`` when a follow-up was
+    #: expanded with terms from the previous turn.
+    search_query: Optional[str] = None
+    conversation_id: Optional[str] = None
     answer: str
     has_sufficient_context: bool
     citations: list[CitationModel]
@@ -186,13 +199,28 @@ def ask(
     tenant: Tenant = Depends(get_tenant),
     container=Depends(get_kb_container),
 ) -> AskResponse:
-    """Retrieve from this company's collection, then answer with citations."""
-    results = container.retriever.retrieve(payload.query, top_k=payload.top_k)
-    answer = container.generator().generate(payload.query, results)
+    """Retrieve from this company's collection, then answer with citations.
+
+    With a ``conversation_id`` the previous turns are used twice: to expand a
+    follow-up into a self-contained retrieval query, and as conversational
+    context for the model. Facts still come only from retrieved passages.
+    """
+    conversation = conversations.get(tenant.company_id, payload.conversation_id)
+    search_query = contextual_query(payload.query, conversation)
+    history = format_history(conversation, settings.CHAT_HISTORY_IN_PROMPT)
+
+    results = container.retriever.retrieve(search_query, top_k=payload.top_k)
+    answer = container.generator().generate(payload.query, results, history=history)
     answer.latency_ms = {**container.retriever.last_latency, **answer.latency_ms}
+
+    conversations.append(
+        tenant.company_id, payload.conversation_id, payload.query, answer.answer
+    )
+
     return AskResponse(
         query=answer.query,
-        translation=container.retriever.last_translation,
+        search_query=search_query if search_query != payload.query else None,
+        conversation_id=payload.conversation_id,
         answer=answer.answer,
         has_sufficient_context=answer.has_sufficient_context,
         citations=[
@@ -207,6 +235,19 @@ def ask(
     )
 
 
+@router.delete(
+    "/conversations/{conversation_id}",
+    summary="Forget a conversation's history",
+)
+def clear_conversation(
+    conversation_id: str,
+    tenant: Tenant = Depends(get_tenant),
+) -> dict:
+    """Start fresh. Scoped to the caller's company, so ids cannot collide."""
+    cleared = conversations.clear(tenant.company_id, conversation_id)
+    return {"cleared": cleared, "conversation_id": conversation_id}
+
+
 @router.get("/info", summary="Collection and model diagnostics")
 def info(
     tenant: Tenant = Depends(get_tenant),
@@ -214,6 +255,9 @@ def info(
 ) -> dict:
     return {
         "company_id": tenant.company_id,
+        # True when a super admin is viewing a company they do not belong to.
+        # Surfaced so the UI can make the borrowed scope obvious.
+        "delegated": tenant.is_delegated,
         "collection": tenant.collection_name,
         "vectors": container.store.count(),
         "embedding": container.embeddings.model_info(),
@@ -221,6 +265,11 @@ def info(
             "size": settings.CHUNK_SIZE_TOKENS,
             "overlap": settings.CHUNK_OVERLAP_TOKENS,
             "unit": settings.CHUNK_UNIT,
+        },
+        "memory": {
+            "turns_kept": settings.CHAT_MEMORY_TURNS,
+            "turns_in_prompt": settings.CHAT_HISTORY_IN_PROMPT,
+            **conversations.stats(),
         },
         "auth_mode": settings.RAG_AUTH_MODE,
     }

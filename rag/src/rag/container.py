@@ -124,17 +124,12 @@ def build_tenant_container(
         embeddings, offline=offline, offline_path=offline_path,
         collection=tenant.collection_name,
     )
-    container = Container(embeddings=embeddings, store=store,
-                          retriever=None, tenant=tenant)  # type: ignore[arg-type]
-    translator = None
-    if settings.QUERY_TRANSLATION:
-        from rag.services.query_translator import QueryTranslator
-
-        translator = QueryTranslator(container.llm)
-    container.retriever = RetrievalService(
-        store, embeddings, tenant=tenant, translator=translator
+    return Container(
+        embeddings=embeddings,
+        store=store,
+        retriever=RetrievalService(store, embeddings, tenant=tenant),
+        tenant=tenant,
     )
-    return container
 
 
 def build_vector_store(

@@ -12,6 +12,7 @@ from rag.models import Citation, RagAnswer, RetrievedChunk
 from rag.services.citations import resolve_citations, strip_invalid_markers
 from rag.services.context_builder import build_context
 from rag.services.prompts import (
+    HISTORY_BLOCK,
     INSUFFICIENT_MARKER,
     LANGUAGE_INSTRUCTIONS,
     NO_CONTEXT_ANSWERS,
@@ -29,7 +30,7 @@ class GenerationService:
         self.max_context_chars = max_context_chars or settings.MAX_CONTEXT_CHARS
 
     @staticmethod
-    def _user_prompt(query: str, context_text: str) -> str:
+    def _user_prompt(query: str, context_text: str, history: str = "") -> str:
         """Resolve the answer language deterministically from the question.
 
         Smaller models tend to answer in the language of the *context* rather
@@ -39,6 +40,7 @@ class GenerationService:
         """
         language = detect_language(query)
         return USER_PROMPT.format(
+            history_block=HISTORY_BLOCK.format(history=history) if history else "",
             context=context_text,
             question=query,
             language_instruction=LANGUAGE_INSTRUCTIONS.get(
@@ -88,7 +90,12 @@ class GenerationService:
             latency_ms={"generate_ms": 0.0},
         )
 
-    def generate(self, query: str, chunks: Sequence[RetrievedChunk]) -> RagAnswer:
+    def generate(
+        self,
+        query: str,
+        chunks: Sequence[RetrievedChunk],
+        history: str = "",
+    ) -> RagAnswer:
         t0 = time.perf_counter()
         context = build_context(chunks, self.max_context_chars)
 
@@ -97,7 +104,7 @@ class GenerationService:
 
         response = self.llm.generate(
             system=SYSTEM_PROMPT,
-            prompt=self._user_prompt(query, context.text),
+            prompt=self._user_prompt(query, context.text, history),
             max_tokens=settings.LLM_MAX_TOKENS,
             temperature=settings.LLM_TEMPERATURE,
         )

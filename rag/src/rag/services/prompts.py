@@ -29,7 +29,7 @@ followed by one short sentence, in the REQUIRED ANSWER LANGUAGE, saying the
 knowledge base does not contain enough information to answer.
 """
 
-USER_PROMPT = """Context passages:
+USER_PROMPT = """{history_block}Context passages:
 ------------------
 {context}
 ------------------
@@ -39,6 +39,16 @@ Question: {question}
 REQUIRED ANSWER LANGUAGE: {language_instruction}
 
 Answer using only the context above, citing passage numbers."""
+
+HISTORY_BLOCK = """Earlier in this conversation:
+------------------
+{history}
+------------------
+The history is for understanding what the user is referring to. It is NOT a
+source of facts - every claim in your answer must still come from the context
+passages below.
+
+"""
 
 #: Resolved from the question, never guessed by the model.
 LANGUAGE_INSTRUCTIONS = {

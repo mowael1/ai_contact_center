@@ -129,19 +129,14 @@ class Settings(BaseSettings):
     CHUNK_OVERLAP: int = 1  # measured in sentences
     MIN_SECTION_CHARS: int = 40
 
-    # ---- Query translation ------------------------------------------------
-    # Translate the question into KB_LANGUAGE before embedding. Measured cost:
-    # +716 ms per uncached query (gemini-2.5-flash-lite) versus +27 ms for
-    # using a cross-lingual embedding model directly, so this is OFF by
-    # default. Worth enabling only if the embedding model aligns languages
-    # poorly, or question repetition is high enough for the cache to pay.
-    QUERY_TRANSLATION: bool = False
-    #: Dominant language of the indexed documents.
-    KB_LANGUAGE: Literal["en", "ar"] = "en"
+    # ---- Conversation memory ----------------------------------------------
+    #: Turns kept per conversation. Short on purpose: it is a UX aid for
+    #: follow-up questions, not a transcript.
+    CHAT_MEMORY_TURNS: int = 6
+    #: Turns shown to the model when generating.
+    CHAT_HISTORY_IN_PROMPT: int = 3
+    CHAT_MEMORY_TTL_SECONDS: int = 3600
 
-    # ---- Retrieval --------------------------------------------------------
-    # 3 passages keep the prompt small; retrieval HitRate@3 was already 0.67
-    # on the web corpus and 4/4 on the uploaded-PDF tests.
     TOP_K: int = 3
     #: Collapse retrieved passages with identical text (same content published
     #: under several URLs). Keeps the best-scoring copy.
@@ -153,11 +148,12 @@ class Settings(BaseSettings):
     SUCCESS_STATUS: str = "success"
 
     # ---- API auth ---------------------------------------------------------
-    # jwt -> company_id comes from the authenticated user (production).
-    # dev -> company_id comes from the X-Company-Id header, so the KB can be
-    #        exercised before the SQL Server database is reachable.
-    RAG_AUTH_MODE: Literal["jwt", "dev"] = "dev"
-    RAG_DEV_COMPANY_ID: int = 1
+    # jwt -> company_id comes from the authenticated user. The only safe mode
+    #        once several companies exist.
+    # dev  -> company_id comes from an explicit X-Company-Id header, for
+    #         exercising the KB before the database is reachable. The header is
+    #         mandatory: there is deliberately no default company.
+    RAG_AUTH_MODE: Literal["jwt", "dev"] = "jwt"
     #: Where uploaded files are stored. Kept outside rag/data/.
     KB_UPLOAD_DIR: Path = RAG_ROOT.parent / "uploads"
     KB_MAX_UPLOAD_MB: int = 25

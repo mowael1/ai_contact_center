@@ -10,7 +10,6 @@ from rag.text_utils import content_hash
 from rag.embeddings.base import EmbeddingService
 from rag.logging_utils import get_logger
 from rag.models import RetrievedChunk
-from rag.services.query_translator import QueryTranslator
 from rag.services.tenancy import Tenant, require_tenant
 from rag.vectorstore.base import VectorStore
 
@@ -38,16 +37,11 @@ class RetrievalService:
         vector_store: VectorStore,
         embedding_service: EmbeddingService,
         tenant: Optional[Tenant] = None,
-        translator: Optional["QueryTranslator"] = None,
     ):
         self.store = vector_store
         self.embeddings = embedding_service
         self.tenant = tenant
-        #: When set, the query is translated into the KB language before it is
-        #: embedded. See rag.services.query_translator for the trade-off.
-        self.translator = translator
         self.last_latency: dict[str, float] = {}
-        self.last_translation: Optional[dict] = None
 
     def retrieve(
         self,
@@ -69,17 +63,8 @@ class RetrievalService:
         # extra candidates and collapse them after scoring.
         fetch_k = min(top_k * 3, 100) if dedupe else top_k
 
-        search_query = query
-        self.last_translation = None
-        t_translate = 0.0
-        if self.translator is not None:
-            result = self.translator.translate(query)
-            search_query = result.query
-            t_translate = result.latency_ms
-            self.last_translation = result.to_dict()
-
         t0 = time.perf_counter()
-        vector = self.embeddings.embed_query(search_query)
+        vector = self.embeddings.embed_query(query)
         t1 = time.perf_counter()
         results = self.store.similarity_search(vector, top_k=fetch_k, filters=clean_filters)
         t2 = time.perf_counter()
@@ -89,10 +74,9 @@ class RetrievalService:
         results = results[:top_k]
 
         self.last_latency = {
-            "translate_ms": round(t_translate, 3),
             "embed_ms": round((t1 - t0) * 1000, 3),
             "search_ms": round((t2 - t1) * 1000, 3),
-            "total_ms": round(t_translate + (t2 - t0) * 1000, 3),
+            "total_ms": round((t2 - t0) * 1000, 3),
         }
         logger.info(
             "Retrieved %d chunks for query (%d chars) in %.1f ms",
