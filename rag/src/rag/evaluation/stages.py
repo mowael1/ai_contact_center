@@ -12,64 +12,19 @@ from rag.embeddings.factory import build_embedding_service
 from rag.evaluation.chunking_metrics import chunk_diagnostics, compare_configs
 from rag.htmlx.section_extractor import SectionExtractor
 from rag.logging_utils import get_logger
-from rag.services.ingest_service import iter_documents
 
 logger = get_logger(__name__)
 
 
-def run_chunking_evaluation(
-    file: Optional[Path] = None,
-    directory: Optional[Path] = None,
-    limit: int = 200,
-    compare: bool = False,
-    provider: Optional[str] = None,
-    model: Optional[str] = None,
-) -> dict:
-    """Stage 1: structural chunk quality, with optional A/B config comparison."""
-    embeddings = build_embedding_service(provider=provider, model=model)
-    extractor = SectionExtractor()
-    documents = list(iter_documents(file=file, directory=directory, limit=limit))
-    logger.info("Chunking evaluation over %d documents", len(documents))
+def run_chunking_evaluation(*args, **kwargs) -> dict:
+    """Removed with the Parquet web-scrape pipeline.
 
-    # Sections are independent of chunking config, so extract once.
-    sections_by_doc = {d.document_id: extractor.extract(d.raw_html, d.retrieval_text)
-                       for d in documents}
-    section_count = sum(len(v) for v in sections_by_doc.values())
-
-    configs = [ChunkingConfig.from_settings()]
-    if compare:
-        configs.append(
-            ChunkingConfig(
-                target_size=max(200, settings.CHUNK_TARGET_SIZE // 2),
-                min_size=max(80, settings.CHUNK_MIN_SIZE // 2),
-                max_size=max(400, settings.CHUNK_MAX_SIZE // 2),
-                similarity_threshold=settings.SEMANTIC_SIMILARITY_THRESHOLD,
-                overlap_sentences=settings.CHUNK_OVERLAP,
-            )
-        )
-
-    reports = []
-    for config in configs:
-        chunker = SemanticChunker(embeddings, config)
-        chunks = []
-        for document in documents:
-            chunks.extend(chunker.chunk_document(document, sections_by_doc[document.document_id]))
-        reports.append(
-            chunk_diagnostics(
-                chunks, len(documents), section_count, config.to_dict(),
-                min_size=config.min_size, max_size=config.max_size,
-            )
-        )
-
-    payload: dict = {
-        "stage": "chunking",
-        "documents": len(documents),
-        "sections": section_count,
-        "embedding_model": embeddings.model,
-        "embedding_dimension": embeddings.dimension,
-    }
-    payload.update(compare_configs(reports) if compare else {"report": reports[0]})
-    return payload
+    Chunk diagnostics now live behind ``rag-cli kb inspect``, which reports
+    per-document strategy, sizes and extraction quality for uploaded files.
+    """
+    raise NotImplementedError(
+        "chunking evaluation moved to 'rag-cli kb inspect --file <doc>'"
+    )
 
 
 def _load(path: Path) -> Optional[dict]:
