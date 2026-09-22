@@ -77,6 +77,22 @@ class InMemoryVectorStore(VectorStore):
                 removed += 1
         return removed
 
+    def list_documents(self) -> list[dict[str, Any]]:
+        by_doc: dict[str, dict[str, Any]] = {}
+        for rec in self._docs.values():
+            meta = rec["metadata"]
+            doc_id = meta.get("document_id")
+            if not doc_id:
+                continue
+            entry = by_doc.setdefault(doc_id, {
+                "document_id": doc_id, "source": meta.get("source", ""),
+                "document_title": meta.get("document_title", ""),
+                "source_type": meta.get("source_type", ""),
+                "company_id": meta.get("company_id"), "chunks": 0,
+            })
+            entry["chunks"] += 1
+        return sorted(by_doc.values(), key=lambda d: d["source"])
+
     def get_document_chunk_ids(self, document_id: str) -> list[str]:
         return [
             cid for cid, rec in self._docs.items()
