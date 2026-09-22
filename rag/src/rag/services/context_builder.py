@@ -35,12 +35,18 @@ def build_context(
     total = 0
 
     for chunk in chunks:
+        meta = chunk.metadata or {}
         header_bits = []
         if chunk.section_path:
             header_bits.append(" > ".join(chunk.section_path))
         elif chunk.section_title:
             header_bits.append(chunk.section_title)
-        header_bits.append(chunk.source_url)
+        origin = meta.get("document_title") or meta.get("source") or chunk.source_url
+        if origin:
+            header_bits.append(str(origin))
+        page = meta.get("page_number")
+        if isinstance(page, int) and page > 0:
+            header_bits.append(f"page {page}")
         header = " | ".join(b for b in header_bits if b)
 
         index = len(used) + 1
@@ -50,14 +56,18 @@ def build_context(
         blocks.append(block)
         total += len(block)
         used.append(chunk)
+        page = meta.get("page_number")
         citations.append(
             Citation(
                 index=index,
-                source_url=chunk.source_url,
-                section_title=chunk.section_title,
-                section_path=chunk.section_path,
                 chunk_id=chunk.chunk_id,
                 document_id=chunk.document_id,
+                source=str(meta.get("source") or ""),
+                document_title=str(meta.get("document_title") or ""),
+                section_title=chunk.section_title,
+                section_path=chunk.section_path,
+                page_number=page if isinstance(page, int) and page > 0 else None,
+                source_url=chunk.source_url or "",
             )
         )
     return BuiltContext("\n\n".join(blocks), used, citations)
