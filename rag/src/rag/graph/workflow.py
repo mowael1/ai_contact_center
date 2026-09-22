@@ -28,7 +28,7 @@ only as a transitive dependency of langgraph.
 from __future__ import annotations
 
 import time
-from typing import Any, Iterator, Optional
+from typing import Any, Optional
 
 from langgraph.graph import END, START, StateGraph
 
@@ -37,7 +37,7 @@ from rag.graph.state import RagState
 from rag.logging_utils import get_logger
 from rag.models import RagAnswer
 from rag.services.evaluator import LLMContextEvaluator, LLMQueryRewriter
-from rag.services.generator import AnswerChunk, GenerationService
+from rag.services.generator import GenerationService
 from rag.services.prompts import NO_CONTEXT_ANSWERS
 from rag.services.retriever import RetrievalService
 from rag.text_utils import detect_language
@@ -188,62 +188,6 @@ class AgenticRagWorkflow:
         if state.get("attempt", 1) >= max_attempts:
             return "give_up"
         return "rewrite"
-
-    def run_stream(
-        self,
-        question: str,
-        top_k: Optional[int] = None,
-        filters: Optional[dict[str, Any]] = None,
-        max_attempts: Optional[int] = None,
-    ) -> Iterator[AnswerChunk]:
-        """Run the loop, then stream the final generation.
-
-        The retrieve/evaluate/rewrite cycle is not streamed - it produces
-        verdicts, not prose. Only the answer itself streams, which is what a
-        caller actually renders. The loop's audit trail rides on the final
-        event's ``answer.attempts`` / ``answer.trace``.
-        """
-        started = time.perf_counter()
-        state: RagState = {
-            "question": question,
-            "query": question,
-            "top_k": top_k or settings.TOP_K,
-            "filters": filters,
-            "attempt": 0,
-            "max_attempts": max_attempts or self.max_attempts,
-            "attempts": [],
-            "trace": [],
-            "latency_ms": {},
-        }
-        # Stop before generation so the answer can be streamed by this method.
-        resolved = self.graph.invoke(state, interrupt_before=["generate", "give_up"])
-
-        chunks = resolved.get("chunks") or []
-        attempts = resolved.get("attempts") or []
-        trace = list(resolved.get("trace") or [])
-        latency = dict(resolved.get("latency_ms") or {})
-
-        if not resolved.get("is_relevant"):
-            final = self._give_up(resolved)
-            answer = RagAnswer(
-                query=question, answer=final["answer"], citations=[], retrieved=chunks,
-                has_sufficient_context=False,
-                latency_ms={**latency, "total_ms": round((time.perf_counter() - started) * 1000, 3)},
-                attempts=attempts, trace=trace + final["trace"],
-            )
-            yield AnswerChunk(delta=answer.answer, text=answer.answer)
-            yield AnswerChunk(text=answer.answer, done=True, answer=answer)
-            return
-
-        for piece in self.generator.generate_stream(question, chunks):
-            if piece.done and piece.answer is not None:
-                piece.answer.attempts = attempts
-                piece.answer.trace = trace + [f"generate: {len(piece.answer.citations)} citations"]
-                piece.answer.latency_ms = {
-                    **latency, **piece.answer.latency_ms,
-                    "total_ms": round((time.perf_counter() - started) * 1000, 3),
-                }
-            yield piece
 
     # -- entry point --------------------------------------------------------
     def run(
