@@ -19,7 +19,6 @@ from rag.llm.base import LLMService
 from rag.llm.providers import build_judge_llm_service, build_llm_service
 from rag.logging_utils import get_logger
 from rag.services.generator import GenerationService
-from rag.services.ingest_service import IngestionPipeline
 from rag.services.rag_service import RagService
 from rag.services.retriever import RetrievalService
 from rag.vectorstore.base import VectorStore
@@ -36,6 +35,7 @@ class Container:
     embeddings: EmbeddingService
     store: VectorStore
     retriever: RetrievalService
+    tenant: Optional[object] = None
 
     _llm: Optional[LLMService] = None
     _judge_llm: Optional[LLMService] = None
@@ -92,14 +92,49 @@ class Container:
                 def query(self, question, top_k=None, filters=None):
                     return self._workflow.run(question, top_k=top_k, filters=filters)
 
-                def query_stream(self, question, top_k=None, filters=None):
-                    return self._workflow.run_stream(question, top_k=top_k, filters=filters)
-
             return _GraphAdapter(workflow)
         return self.rag()
 
-    def ingestion(self) -> IngestionPipeline:
-        return IngestionPipeline(self.store, self.embeddings)
+
+    def kb(self, chunking=None):
+        """Knowledge-base service for this container's tenant."""
+        from rag.services.kb_service import KnowledgeBaseService
+        from rag.services.tenancy import require_tenant
+
+        return KnowledgeBaseService(
+            require_tenant(self.tenant), self.store, self.embeddings, chunking
+        )
+
+
+def build_tenant_container(
+    company_id: int,
+    offline: bool = False,
+    offline_path: Optional[Path] = None,
+    embedding_provider: Optional[str] = None,
+    embedding_model: Optional[str] = None,
+) -> "Container":
+    """Container scoped to one company's own collection."""
+    from rag.services.tenancy import Tenant
+
+    tenant = Tenant(company_id=company_id)
+    embeddings = build_embedding_service(
+        provider=embedding_provider, model=embedding_model
+    )
+    store = build_vector_store(
+        embeddings, offline=offline, offline_path=offline_path,
+        collection=tenant.collection_name,
+    )
+    container = Container(embeddings=embeddings, store=store,
+                          retriever=None, tenant=tenant)  # type: ignore[arg-type]
+    translator = None
+    if settings.QUERY_TRANSLATION:
+        from rag.services.query_translator import QueryTranslator
+
+        translator = QueryTranslator(container.llm)
+    container.retriever = RetrievalService(
+        store, embeddings, tenant=tenant, translator=translator
+    )
+    return container
 
 
 def build_vector_store(
