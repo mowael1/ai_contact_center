@@ -121,6 +121,25 @@ class ChromaCloudStore(VectorStore):
             self._retry(self._collection.delete, ids=ids[start : start + DEFAULT_BATCH])
         return len(ids)
 
+    def list_documents(self) -> list[dict[str, Any]]:
+        result = self._retry(self._collection.get, include=["metadatas"])
+        by_doc: dict[str, dict[str, Any]] = {}
+        for meta in (result.get("metadatas") or []):
+            meta = meta or {}
+            doc_id = meta.get("document_id")
+            if not doc_id:
+                continue
+            entry = by_doc.setdefault(doc_id, {
+                "document_id": doc_id,
+                "source": meta.get("source", ""),
+                "document_title": meta.get("document_title", ""),
+                "source_type": meta.get("source_type", ""),
+                "company_id": meta.get("company_id"),
+                "chunks": 0,
+            })
+            entry["chunks"] += 1
+        return sorted(by_doc.values(), key=lambda d: d["source"])
+
     def get_document_chunk_ids(self, document_id: str) -> list[str]:
         result = self._retry(
             self._collection.get,
