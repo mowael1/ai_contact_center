@@ -5,7 +5,7 @@ No live Chroma Cloud credentials are required.
 
 import pytest
 
-from rag.models import Chunk
+from tests.factories import make_test_chunk
 from rag.vectorstore.chroma_cloud import ChromaCloudStore, build_where, parse_query_result
 from rag.vectorstore.memory_store import InMemoryVectorStore
 
@@ -66,22 +66,8 @@ class FakeClient:
         return self.collection
 
 
-def make_chunk(i=0, document_id="doc1", text="some chunk text"):
-    return Chunk(
-        chunk_id=f"{document_id}:0:{i}:hash{i}",
-        document_id=document_id,
-        source_url="https://web.vodafone.com.eg/en/flex",
-        text=text,
-        section_title="Renewal",
-        section_path=["Internet", "Renewal"],
-        heading_level=3,
-        section_index=0,
-        chunk_index=i,
-        chunking_method="semantic",
-        section_extraction_method="html_structure",
-        language="en",
-        domain="web.vodafone.com.eg",
-    )
+def make_chunk(i=0, document_id="doc1", text="some chunk text", **kw):
+    return make_test_chunk(part=i, text=text, document_id=document_id, **kw)
 
 
 @pytest.fixture
