@@ -86,8 +86,8 @@
     <div class="hint">PDF, DOCX, TXT or Markdown. Indexed into this company's collection only.</div>
     <div id="drop" class="drop">
       <strong>Choose a file</strong> or drag it here
-      <input id="file" type="file" accept=".pdf,.docx,.txt,.md,.markdown" hidden />
     </div>
+    <input id="file" type="file" accept=".pdf,.docx,.txt,.md,.markdown" hidden />
     <div class="row" style="margin-top:14px">
       <button id="upload" disabled>Upload &amp; index</button>
     </div>
@@ -138,22 +138,24 @@ async function call(path, options = {}) {
 
 /* ---------- upload ---------- */
 let picked = null;
-$("drop").onclick = () => $("file").click();
-$("file").onchange = (e) => setFile(e.target.files[0]);
+$("drop").onclick = () => { $("file").value = ""; $("file").click(); };
+$("file").onchange = (e) => { if (e.target.files.length) setFile(e.target.files[0]); };
 ["dragover", "dragleave", "drop"].forEach((ev) =>
   $("drop").addEventListener(ev, (e) => {
     e.preventDefault();
     $("drop").classList.toggle("over", ev === "dragover");
-    if (ev === "drop") setFile(e.dataTransfer.files[0]);
+    if (ev === "drop" && e.dataTransfer.files.length) setFile(e.dataTransfer.files[0]);
   }));
 
 function setFile(f) {
   picked = f || null;
   $("upload").disabled = !picked;
+  // The input lives outside #drop, so rewriting the drop zone's contents
+  // cannot detach it.
   $("drop").innerHTML = picked
     ? `<strong>${esc(picked.name)}</strong><div class="meta">${(picked.size / 1024).toFixed(0)} KB — click to change</div>`
     : "<strong>Choose a file</strong> or drag it here";
-  $("drop").appendChild($("file"));
+  if (!picked) $("file").value = "";
 }
 
 $("upload").onclick = async () => {
