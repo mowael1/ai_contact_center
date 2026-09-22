@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Knowledge Base</title>
+<style>
+  :root{
+    --bg:#f5f7fb; --surface:#fff; --surface-2:#f8fafc; --sidebar:#101827;
+    --text:#152033; --muted:#6b7587; --primary:#2563eb; --primary-hover:#1d4ed8;
+    --success:#15803d; --success-bg:#dcfce7; --danger:#b91c1c; --danger-bg:#fee2e2;
+    --warning:#a16207; --warning-bg:#fef3c7; --border:#e5e9f0;
+    --shadow:0 10px 30px rgba(15,23,42,.07); --radius:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);
+    font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:1080px;margin:0 auto;padding:28px 16px 60px}
+  header{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+  h1{font-size:22px;font-weight:650}
+  .sub{color:var(--muted);font-size:13px;margin-top:3px}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:20px;margin-bottom:18px}
+  .card h2{font-size:15px;font-weight:650;margin-bottom:4px}
+  .card .hint{color:var(--muted);font-size:12.5px;margin-bottom:14px}
+  label{display:block;font-size:12.5px;font-weight:600;color:var(--muted);margin-bottom:6px}
+  input,textarea,select{width:100%;padding:10px 12px;border:1px solid var(--border);
+    border-radius:10px;font:inherit;background:var(--surface-2);color:var(--text)}
+  textarea{min-height:76px;resize:vertical}
+  input:focus,textarea:focus,select:focus{outline:2px solid #bfdbfe;border-color:var(--primary)}
+  .row{display:flex;gap:12px;flex-wrap:wrap}
+  .row>*{flex:1;min-width:160px}
+  button{padding:10px 18px;border:0;border-radius:10px;background:var(--primary);color:#fff;
+    font:inherit;font-weight:600;cursor:pointer}
+  button:hover{background:var(--primary-hover)}
+  button:disabled{opacity:.55;cursor:not-allowed}
+  button.ghost{background:transparent;color:var(--danger);border:1px solid var(--border);padding:6px 12px;font-size:12.5px}
+  .pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11.5px;font-weight:650}
+  .ok{background:var(--success-bg);color:var(--success)}
+  .bad{background:var(--danger-bg);color:var(--danger)}
+  .warn{background:var(--warning-bg);color:var(--warning)}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--border);vertical-align:top}
+  th{color:var(--muted);font-size:11.5px;text-transform:uppercase;letter-spacing:.04em}
+  .tablewrap{overflow-x:auto}
+  .answer{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;
+    padding:16px;white-space:pre-wrap;line-height:1.7}
+  .answer:dir(rtl){text-align:right}
+  .cites{margin-top:14px;display:flex;flex-direction:column;gap:8px}
+  .cite{display:flex;gap:10px;align-items:flex-start;background:var(--surface-2);
+    border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-size:12.5px}
+  .cite b{flex:0 0 auto;color:var(--primary)}
+  .meta{color:var(--muted);font-size:12px;margin-top:10px}
+  .drop{border:2px dashed var(--border);border-radius:12px;padding:26px;text-align:center;
+    color:var(--muted);background:var(--surface-2);cursor:pointer}
+  .drop.over{border-color:var(--primary);background:#eff6ff;color:var(--primary)}
+  .spin{display:inline-block;width:13px;height:13px;border:2px solid #fff;
+    border-top-color:transparent;border-radius:50%;animation:s .7s linear infinite;vertical-align:-2px}
+  @keyframes s{to{transform:rotate(360deg)}}
+  .empty{color:var(--muted);font-size:13px;padding:14px 0}
+  code{background:var(--surface-2);border:1px solid var(--border);border-radius:6px;padding:1px 6px;font-size:12px}
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme=light]){
+      --bg:#0b1120;--surface:#111827;--surface-2:#0f172a;--text:#e5e9f0;--muted:#94a3b8;
+      --border:#1f2a3c;--success-bg:#052e16;--danger-bg:#450a0a;--warning-bg:#422006;
+      --shadow:0 10px 30px rgba(0,0,0,.35)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <h1>Knowledge Base</h1>
+      <div class="sub">Upload your company's documents, then test the agent assistant against them.</div>
+    </div>
+    <div style="flex:0 0 150px">
+      <label for="company">Company ID</label>
+      <input id="company" type="number" min="1" value="1" />
+    </div>
+  </header>
+
+  <div class="card">
+    <h2>Upload a document</h2>
+    <div class="hint">PDF, DOCX, TXT or Markdown. Indexed into this company's collection only.</div>
+    <div id="drop" class="drop">
+      <strong>Choose a file</strong> or drag it here
+      <input id="file" type="file" accept=".pdf,.docx,.txt,.md,.markdown" hidden />
+    </div>
+    <div class="row" style="margin-top:14px">
+      <button id="upload" disabled>Upload &amp; index</button>
+    </div>
+    <div id="uploadResult"></div>
+  </div>
+
+  <div class="card">
+    <h2>Indexed documents</h2>
+    <div class="hint">Everything currently searchable for this company.</div>
+    <div id="docs"><div class="empty">Loading…</div></div>
+  </div>
+
+  <div class="card">
+    <h2>Test the agent</h2>
+    <div class="hint">Ask in Arabic or English. Answers come only from this company's documents, with citations.</div>
+    <label for="q">Question</label>
+    <textarea id="q" placeholder="لو رجّعت حاجة اشتريتها بالتقسيط، الفلوس ترجع إزاي؟"></textarea>
+    <div class="row" style="margin-top:12px;align-items:flex-end">
+      <div style="flex:0 0 110px">
+        <label for="topk">Top K</label>
+        <input id="topk" type="number" min="1" max="20" value="5" />
+      </div>
+      <div style="flex:0 0 auto"><button id="ask">Ask</button></div>
+    </div>
+    <div id="askResult"></div>
+  </div>
+
+</div>
+
+<script>
+const API = "/api/v1/kb";
+const $ = (id) => document.getElementById(id);
+const companyId = () => Math.max(1, parseInt($("company").value || "1", 10));
+const headers = () => ({ "X-Company-Id": String(companyId()) });
+
+function esc(s) {
+  return String(s ?? "").replace(/[&<>"']/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+const isRTL = (s) => /[؀-ۿ]/.test(s || "");
+
+async function call(path, options = {}) {
+  const res = await fetch(API + path, { ...options, headers: { ...headers(), ...(options.headers || {}) } });
+  const body = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(body.detail || `HTTP ${res.status}`);
+  return body;
+}
+
+/* ---------- upload ---------- */
+let picked = null;
+$("drop").onclick = () => $("file").click();
+$("file").onchange = (e) => setFile(e.target.files[0]);
+["dragover", "dragleave", "drop"].forEach((ev) =>
+  $("drop").addEventListener(ev, (e) => {
+    e.preventDefault();
+    $("drop").classList.toggle("over", ev === "dragover");
+    if (ev === "drop") setFile(e.dataTransfer.files[0]);
+  }));
+
+function setFile(f) {
+  picked = f || null;
+  $("upload").disabled = !picked;
+  $("drop").innerHTML = picked
+    ? `<strong>${esc(picked.name)}</strong><div class="meta">${(picked.size / 1024).toFixed(0)} KB — click to change</div>`
+    : "<strong>Choose a file</strong> or drag it here";
+  $("drop").appendChild($("file"));
+}
+
+$("upload").onclick = async () => {
+  if (!picked) return;
+  const btn = $("upload");
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span> Indexing…';
+  $("uploadResult").innerHTML = "";
+  try {
+    const form = new FormData();
+    form.append("file", picked);
+    const r = await call("/documents", { method: "POST", body: form });
+    const good = r.status === "ingested";
+    const q = r.quality || {};
+    const flags = [];
+    if (q.needs_ocr) flags.push('<span class="pill warn">needs OCR</span>');
+    if (q.reversed_arabic) flags.push('<span class="pill warn">reversed Arabic repaired</span>');
+    $("uploadResult").innerHTML = `
+      <div class="meta" style="margin-top:14px">
+        <span class="pill ${good ? "ok" : "bad"}">${esc(r.status)}</span> ${flags.join(" ")}
+      </div>
+      <table style="margin-top:10px">
+        <tr><th>File</th><td>${esc(r.source)}</td></tr>
+        <tr><th>Pages</th><td>${r.pages}</td></tr>
+        <tr><th>Chunks</th><td>${r.chunks}</td></tr>
+        <tr><th>Strategy</th><td><code>${esc(r.strategy || "-")}</code></td></tr>
+        <tr><th>Collection</th><td><code>${esc(r.collection)}</code></td></tr>
+        ${r.reason ? `<tr><th>Reason</th><td>${esc(r.reason)}</td></tr>` : ""}
+      </table>`;
+    if (good) { picked = null; setFile(null); loadDocs(); }
+  } catch (err) {
+    $("uploadResult").innerHTML =
+      `<div class="meta" style="margin-top:14px"><span class="pill bad">failed</span> ${esc(err.message)}</div>`;
+  } finally {
+    btn.disabled = !picked;
+    btn.textContent = "Upload & index";
+  }
+};
+
+/* ---------- documents ---------- */
+async function loadDocs() {
+  $("docs").innerHTML = '<div class="empty">Loading…</div>';
+  try {
+    const r = await call("/documents");
+    if (!r.documents.length) {
+      $("docs").innerHTML =
+        `<div class="empty">No documents yet for company ${r.company_id}. Upload one above.</div>`;
+      return;
+    }
+    $("docs").innerHTML = `
+      <div class="tablewrap"><table>
+        <tr><th>Title</th><th>File</th><th>Type</th><th>Chunks</th><th></th></tr>
+        ${r.documents.map((d) => `
+          <tr>
+            <td>${esc(d.document_title || "—")}</td>
+            <td>${esc(d.source)}</td>
+            <td><code>${esc(d.source_type)}</code></td>
+            <td>${d.chunks}</td>
+            <td><button class="ghost" data-del="${esc(d.document_id)}">Delete</button></td>
+          </tr>`).join("")}
+      </table></div>
+      <div class="meta">${r.vectors} vectors in <code>${esc(r.collection)}</code></div>`;
+    $("docs").querySelectorAll("[data-del]").forEach((b) => {
+      b.onclick = async () => {
+        if (!confirm("Delete this document and its vectors?")) return;
+        b.disabled = true;
+        try { await call("/documents/" + encodeURIComponent(b.dataset.del), { method: "DELETE" }); }
+        catch (e) { alert(e.message); }
+        loadDocs();
+      };
+    });
+  } catch (err) {
+    $("docs").innerHTML = `<div class="empty"><span class="pill bad">error</span> ${esc(err.message)}</div>`;
+  }
+}
+
+/* ---------- ask ---------- */
+$("ask").onclick = async () => {
+  const query = $("q").value.trim();
+  if (!query) return;
+  const btn = $("ask");
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span> Thinking…';
+  $("askResult").innerHTML = "";
+  try {
+    const r = await call("/ask", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query, top_k: parseInt($("topk").value, 10) || 5 }),
+    });
+    const dir = isRTL(r.answer) ? "rtl" : "ltr";
+    const cites = r.citations.length
+      ? `<div class="cites">${r.citations.map((c) =>
+          `<div class="cite"><b>[${c.index}]</b><div>${esc(c.label || c.source)}</div></div>`).join("")}</div>`
+      : `<div class="meta"><span class="pill warn">no citations</span> nothing in this company's documents supports an answer</div>`;
+    const t = r.latency_ms || {};
+    $("askResult").innerHTML = `
+      <div class="answer" dir="${dir}" style="margin-top:14px">${esc(r.answer)}</div>
+      ${cites}
+      <div class="meta">
+        ${r.has_sufficient_context ? '<span class="pill ok">grounded</span>' : '<span class="pill warn">insufficient context</span>'}
+        &nbsp; retrieval ${Math.round(t.total_ms || 0)}ms · generation ${Math.round(t.generate_ms || 0)}ms
+        ${r.usage ? ` · ${r.usage.total_tokens} tokens · $${(r.usage.estimated_cost_usd || 0).toFixed(6)}` : ""}
+      </div>`;
+  } catch (err) {
+    $("askResult").innerHTML =
+      `<div class="meta" style="margin-top:14px"><span class="pill bad">error</span> ${esc(err.message)}</div>`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Ask";
+  }
+};
+
+$("company").onchange = loadDocs;
+loadDocs();
+</script>
+</body>
+</html>
