@@ -27,9 +27,10 @@ def chunk_diagnostics(
         return {"config": config or {}, "total_chunks": 0, "note": "no chunks produced"}
 
     sizes = [c.char_len() for c in chunks]
-    sentences = [c.sentence_count for c in chunks]
+    sentences = [c.unit_count for c in chunks]
     per_doc = Counter(c.document_id for c in chunks)
     per_section = Counter((c.document_id, c.section_index) for c in chunks)
+    per_company = Counter(c.company_id for c in chunks)
 
     # A boundary violation would mean one chunk spanning two sections. The
     # chunker builds chunks strictly inside a section, so this must stay 0;
@@ -65,11 +66,12 @@ def chunk_diagnostics(
         "pct_at_max_size": round(100 * sum(1 for s in sizes if s >= max_size) / len(sizes), 2),
         "pct_below_min_size": round(100 * sum(1 for s in sizes if s < min_size) / len(sizes), 2),
         "pct_over_max_size": round(100 * sum(1 for s in sizes if s > max_size) / len(sizes), 2),
+        "companies": len(per_company),
         "section_boundary_violations": violations,
         "empty_chunks": empty,
         "duplicate_chunks": duplicates,
         "duplicate_pct": round(100 * duplicates / len(chunks), 2),
-        "chunking_methods": dict(Counter(c.chunking_method for c in chunks)),
+        "chunking_strategies": dict(Counter(c.chunking_strategy for c in chunks)),
         "section_extraction_methods": dict(
             Counter(c.section_extraction_method for c in chunks)
         ),
