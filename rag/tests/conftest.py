@@ -37,3 +37,17 @@ def document():
         scraped_at=None,
         dataset_file="batch_0000.parquet",
     )
+
+
+@pytest.fixture
+def tenant():
+    from rag.services.tenancy import Tenant
+
+    return Tenant(company_id=1)
+
+
+@pytest.fixture
+def chunk_factory():
+    from tests.factories import make_test_chunk
+
+    return make_test_chunk
