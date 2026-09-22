@@ -11,12 +11,12 @@ import json
 import os
 import threading
 import time
-from typing import Any, Iterator
+from typing import Any
 
 import httpx
 
 from rag.config import settings
-from rag.llm.base import LLMResponse, LLMService, StreamChunk
+from rag.llm.base import LLMResponse, LLMService
 from rag.logging_utils import get_logger
 from rag.models import LLMUsage
 
@@ -159,47 +159,6 @@ class GeminiLLM(LLMService):
                     time.sleep(delay)
                     delay *= 2
         raise RuntimeError(f"Gemini request failed after {attempts} attempts") from last
-
-    # -- streaming ----------------------------------------------------------
-    def generate_stream(
-        self, system, prompt, max_tokens=1024, temperature=0.0
-    ) -> Iterator[StreamChunk]:
-        """Stream via ``:streamGenerateContent?alt=sse``.
-
-        Yields a chunk per delta, then a final ``done`` chunk carrying the full
-        text and the usage metadata Gemini reports on the last event.
-        """
-        url = f"{API_ROOT}/{self.model}:streamGenerateContent"
-        payload = self._payload(system, prompt, max_tokens, temperature)
-        accumulated: list[str] = []
-        usage = LLMUsage(0, 0, self.model, 0.0)
-
-        self._limiter.wait()
-        with self._client.stream(
-            "POST", url, headers=self._headers, json=payload, params={"alt": "sse"}
-        ) as response:
-            response.raise_for_status()
-            for line in response.iter_lines():
-                if not line or not line.startswith("data:"):
-                    continue
-                raw = line[len("data:"):].strip()
-                if not raw or raw == "[DONE]":
-                    continue
-                try:
-                    data = json.loads(raw)
-                except json.JSONDecodeError:
-                    logger.debug("Skipping unparseable SSE frame")
-                    continue
-
-                delta = self._text_of(data)
-                if data.get("usageMetadata"):
-                    usage = self._usage(data)
-                if delta:
-                    accumulated.append(delta)
-                    yield StreamChunk(delta=delta, text="".join(accumulated))
-
-        full = "".join(accumulated).strip()
-        yield StreamChunk(delta="", text=full, done=True, usage=usage)
 
 
 def _retry_after(response: httpx.Response, fallback: float) -> float:
