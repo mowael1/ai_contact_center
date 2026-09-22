@@ -30,7 +30,7 @@ from rag.evaluation.retrieval_metrics import (
 )
 from rag.evaluation.runner import grade_results
 from rag.llm.base import LLMResponse, LLMService
-from rag.models import Citation, Chunk, LLMUsage, RagAnswer, RetrievedChunk
+from rag.models import Citation, LLMUsage, RagAnswer, RetrievedChunk
 
 
 # ---- retrieval metrics ----------------------------------------------------
@@ -220,13 +220,10 @@ def test_judge_clamps_out_of_range_scores():
 
 # ---- chunking diagnostics -------------------------------------------------
 def _chunk(i, text, section_index=0):
-    return Chunk(
-        chunk_id=f"c{i}", document_id="d1", source_url="https://x", text=text,
-        section_title="S", section_path=["S"], heading_level=2,
-        section_index=section_index, chunk_index=i, chunking_method="semantic",
-        section_extraction_method="html_structure", language="en", domain="x",
-        sentence_count=2,
-    )
+    from tests.factories import make_test_chunk
+
+    return make_test_chunk(part=i + 1, text=text, section_index=section_index,
+                           unit_count=2)
 
 
 def test_chunk_diagnostics_detects_duplicates_and_sizes():
