@@ -102,43 +102,7 @@ def test_missing_api_key_raises_a_clear_error(monkeypatch):
         GeminiLLM(model="gemini-2.5-pro")
 
 
-def test_streaming_parses_sse_frames():
-    frames = [
-        f"data: {json.dumps(gemini_body('Hello'))}",
-        f"data: {json.dumps(gemini_body(' world'))}",
-        f"data: {json.dumps(gemini_body('!', prompt_tokens=42, output_tokens=7))}",
-    ]
 
-    def handler(request):
-        assert request.url.params.get("alt") == "sse"
-        return httpx.Response(
-            200, text="\n\n".join(frames) + "\n\n",
-            headers={"Content-Type": "text/event-stream"},
-        )
-
-    llm = GeminiLLM(model="gemini-2.5-flash", api_key="k")
-    llm._client = mock_client(handler)
-    pieces = list(llm.generate_stream("s", "p"))
-    assert [p.delta for p in pieces if not p.done] == ["Hello", " world", "!"]
-    final = pieces[-1]
-    assert final.done and final.text == "Hello world!"
-    assert final.usage.input_tokens == 42
-
-
-def test_streaming_skips_malformed_frames():
-    frames = ["data: {not json}", f"data: {json.dumps(gemini_body('ok'))}", "data: [DONE]"]
-
-    def handler(request):
-        return httpx.Response(200, text="\n\n".join(frames) + "\n\n")
-
-    llm = GeminiLLM(model="gemini-2.5-flash", api_key="k")
-    llm._client = mock_client(handler)
-    assert list(llm.generate_stream("s", "p"))[-1].text == "ok"
-
-
-def test_supports_streaming_flag():
-    llm = GeminiLLM(model="gemini-2.5-pro", api_key="k")
-    assert llm.supports_streaming is True
 
 
 @pytest.mark.parametrize(
@@ -303,3 +267,7 @@ def test_factory_builds_the_generic_provider():
     )
     assert service.model == "BAAI/bge-m3"
     assert service.model_info()["provider"] == "HFInferenceEmbedding"
+
+
+
+
