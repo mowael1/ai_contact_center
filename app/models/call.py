@@ -2,13 +2,13 @@ from datetime import datetime
 from typing import TYPE_CHECKING
 
 from sqlalchemy import (
-    DateTime,
     ForeignKey,
     Integer,
     Unicode,
     UnicodeText,
     text,
 )
+from app.db.types import UtcDateTime, utcnow
 from sqlalchemy.orm import (
     Mapped,
     mapped_column,
@@ -80,12 +80,12 @@ class Call(Base):
     )
 
     started_at: Mapped[datetime | None] = mapped_column(
-        DateTime,
+        UtcDateTime,
         nullable=True
     )
 
     ended_at: Mapped[datetime | None] = mapped_column(
-        DateTime,
+        UtcDateTime,
         nullable=True
     )
 
@@ -95,9 +95,9 @@ class Call(Base):
     )
 
     created_at: Mapped[datetime] = mapped_column(
-        DateTime,
+        UtcDateTime,
         nullable=False,
-        server_default=text("(now() at time zone 'utc')")
+        server_default=utcnow()
     )
 
     company: Mapped["Company"] = relationship(

@@ -1,0 +1,73 @@
+"""Builds the grounded context block handed to the LLM.
+
+Each chunk becomes a numbered source carrying its section path and URL, so the
+model can cite ``[1]`` and the citation builder can resolve that number back to
+real retrieved metadata. The model is never asked to produce a URL itself.
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+from typing import Sequence
+
+from rag.config import settings
+from rag.models import Citation, RetrievedChunk
+
+
+@dataclass(slots=True)
+class BuiltContext:
+    text: str
+    used: list[RetrievedChunk]
+    citations: list[Citation]
+
+    @property
+    def is_empty(self) -> bool:
+        return not self.used
+
+
+def build_context(
+    chunks: Sequence[RetrievedChunk], max_chars: int | None = None
+) -> BuiltContext:
+    budget = max_chars or settings.MAX_CONTEXT_CHARS
+    blocks: list[str] = []
+    used: list[RetrievedChunk] = []
+    citations: list[Citation] = []
+    total = 0
+
+    for chunk in chunks:
+        meta = chunk.metadata or {}
+        header_bits = []
+        if chunk.section_path:
+            header_bits.append(" > ".join(chunk.section_path))
+        elif chunk.section_title:
+            header_bits.append(chunk.section_title)
+        origin = meta.get("document_title") or meta.get("source") or chunk.source_url
+        if origin:
+            header_bits.append(str(origin))
+        page = meta.get("page_number")
+        if isinstance(page, int) and page > 0:
+            header_bits.append(f"page {page}")
+        header = " | ".join(b for b in header_bits if b)
+
+        index = len(used) + 1
+        block = f"[{index}] {header}\n{chunk.text}"
+        if total + len(block) > budget and used:
+            break
+        blocks.append(block)
+        total += len(block)
+        used.append(chunk)
+        page = meta.get("page_number")
+        citations.append(
+            Citation(
+                index=index,
+                chunk_id=chunk.chunk_id,
+                document_id=chunk.document_id,
+                source=str(meta.get("source") or ""),
+                document_title=str(meta.get("document_title") or ""),
+                section_title=chunk.section_title,
+                section_path=chunk.section_path,
+                page_number=page if isinstance(page, int) and page > 0 else None,
+                source_url=chunk.source_url or "",
+            )
+        )
+    return BuiltContext("\n\n".join(blocks), used, citations)

@@ -2,13 +2,13 @@ from datetime import datetime
 from typing import TYPE_CHECKING
 
 from sqlalchemy import (
-    DateTime,
     Integer,
     ForeignKey,
     Unicode,
     UnicodeText,
     text,
 )
+from app.db.types import UtcDateTime, utcnow
 from sqlalchemy.orm import (
     Mapped,
     mapped_column,
@@ -22,7 +22,7 @@ if TYPE_CHECKING:
     from app.models.company import Company
     from app.models.customer import Customer
     from app.models.user import User
-    from app.models.call import Call
+
 
 class Ticket(Base):
     __tablename__ = "tickets"
@@ -73,13 +73,13 @@ class Ticket(Base):
     )
 
     created_at: Mapped[datetime] = mapped_column(
-        DateTime,
+        UtcDateTime,
         nullable=False,
-        server_default=text("(now() at time zone 'utc')")
+        server_default=utcnow()
     )
 
     updated_at: Mapped[datetime | None] = mapped_column(
-        DateTime,
+        UtcDateTime,
         nullable=True
     )
 
@@ -95,7 +95,3 @@ class Ticket(Base):
         back_populates="assigned_tickets",
         foreign_keys=[assigned_agent_id]
     )
-    
-    calls: Mapped[list["Call"]] = relationship(
-    back_populates="ticket"
-)

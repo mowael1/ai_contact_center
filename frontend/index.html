@@ -859,6 +859,107 @@
         display: none;
       }
     }
+
+    .kb-drop {
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      padding: 26px;
+      text-align: center;
+      color: var(--muted);
+      background: var(--surface-2);
+      cursor: pointer;
+    }
+    .kb-drop-over { border-color: var(--primary); background: #eff6ff; color: var(--primary); }
+    /* ---- chat ---- */
+    .kb-chat-card { display: flex; flex-direction: column; }
+    .kb-chat-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+
+    .kb-chat {
+      min-height: 220px;
+      max-height: 460px;
+      overflow-y: auto;
+      padding: 18px 20px;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--surface-2);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      scroll-behavior: smooth;
+    }
+    .kb-chat-empty { margin: auto; text-align: center; max-width: 380px; }
+
+    .kb-msg { display: flex; }
+    .kb-msg-user { justify-content: flex-end; }
+    .kb-msg-bot { justify-content: flex-start; }
+
+    .kb-bubble {
+      max-width: min(86%, 620px);
+      padding: 12px 16px;
+      border-radius: 16px;
+      line-height: 1.65;
+      font-size: 14px;
+      word-break: break-word;
+    }
+    .kb-msg-user .kb-bubble {
+      background: var(--primary);
+      color: #fff;
+      border-bottom-right-radius: 5px;
+    }
+    .kb-msg-bot .kb-bubble {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-bottom-left-radius: 5px;
+    }
+    .kb-bubble[dir="rtl"] { text-align: right; }
+    .kb-bubble-error { background: var(--danger-bg); color: var(--danger); border: 0; }
+    .kb-text { white-space: pre-wrap; }
+
+    .kb-citations {
+      margin: 10px 0 0;
+      padding: 10px 0 0;
+      border-top: 1px solid var(--border);
+      list-style: none;
+      font-size: 12.5px;
+      color: var(--muted);
+    }
+    .kb-citations li { margin-bottom: 4px; }
+    .kb-citations strong { color: var(--primary); }
+    .kb-meta { margin: 8px 0 0; font-size: 11.5px; color: var(--muted); }
+    .kb-warn { margin: 8px 0 0; font-size: 12.5px; color: var(--warning); }
+
+    .kb-composer { display: flex; gap: 10px; align-items: flex-end; padding: 14px 20px; }
+    .kb-composer textarea {
+      flex: 1;
+      resize: none;
+      overflow-y: auto;
+      max-height: 140px;
+      padding: 11px 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font: inherit;
+      background: var(--surface-2);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .kb-composer textarea:focus { outline: 2px solid #bfdbfe; border-color: var(--primary); }
+
+    /* typing indicator */
+    .kb-typing { display: inline-flex; gap: 4px; padding: 3px 0; }
+    .kb-typing i {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--muted); display: inline-block;
+      animation: kbBlink 1.3s infinite ease-in-out both;
+    }
+    .kb-typing i:nth-child(2) { animation-delay: .16s; }
+    .kb-typing i:nth-child(3) { animation-delay: .32s; }
+    @keyframes kbBlink { 0%, 80%, 100% { opacity: .25 } 40% { opacity: 1 } }
+
+    @media (max-width: 640px) {
+      .kb-bubble { max-width: 94%; }
+      .kb-chat { padding: 14px; }
+      .kb-composer { padding: 12px 14px; }
+    }
   </style>
 </head>
 
@@ -1258,6 +1359,8 @@
 
         if (route === "/dashboard") {
           await renderDashboard();
+        } else if (route === "/knowledge") {
+          await renderKnowledgeBase();
         } else if (route === "/profile") {
           renderProfile();
 
@@ -1372,6 +1475,16 @@
         `
         : "";
 
+      const knowledgeNav = ["SUPER_ADMIN", "ADMIN", "AGENT"].includes(role)
+        ? `
+          <button class="nav-btn ${activeItem === "knowledge" ? "active" : ""}"
+                  onclick="navigate('/knowledge')">
+            <span>📚</span>
+            <span>Knowledge Base</span>
+          </button>
+        `
+        : "";
+
       const customersNav = role === "ADMIN"
         ? `
           <button class="nav-btn ${activeItem === "customers" ? "active" : ""}"
@@ -1426,6 +1539,7 @@
               ${customersNav}
               ${ticketsNav}
               ${followUpsNav}
+              ${knowledgeNav}
 
               <button class="nav-btn ${activeItem === "profile" ? "active" : ""}"
                       onclick="navigate('/profile')">
@@ -3681,6 +3795,379 @@
     // ------------------------------------------------------------
     // Profile
     // ------------------------------------------------------------
+
+    // ------------------------------------------------------------
+    // Knowledge Base  (per-company documents + agent assistant)
+    // ------------------------------------------------------------
+
+    // Documents and answers are scoped to the signed-in user's company by the
+    // backend; nothing here chooses a company. Admins manage documents, every
+    // role can query.
+    const KB_BASE = `${API_BASE_URL}/kb`;
+
+    // A super admin belongs to no company, so they pick one to act on. For
+    // everyone else the backend uses their own company and ignores this.
+    let kbSelectedCompany = null;
+
+    async function kbRequest(path, options = {}) {
+      const headers = new Headers(options.headers || {});
+      const authToken = token();
+      if (authToken) headers.set("Authorization", `Bearer ${authToken}`);
+      if (getRoleName() === "SUPER_ADMIN" && kbSelectedCompany) {
+        headers.set("X-Company-Id", String(kbSelectedCompany));
+      }
+
+      let body = options.body;
+      if (body && typeof body === "object" && !(body instanceof FormData)) {
+        headers.set("Content-Type", "application/json");
+        body = JSON.stringify(body);
+      }
+
+      const response = await fetch(`${KB_BASE}${path}`, { ...options, headers, body });
+      const data = response.status === 204 ? null : await response.json().catch(() => null);
+      if (!response.ok) throw new Error(data?.detail || `Request failed (${response.status})`);
+      return data;
+    }
+
+    const isRtl = (value) => /[\u0600-\u06FF]/.test(value || "");
+
+    async function renderKnowledgeBase() {
+      const role = getRoleName();
+      const canManage = ["SUPER_ADMIN", "ADMIN"].includes(role);
+      const isSuperAdmin = role === "SUPER_ADMIN";
+
+      let companies = [];
+      if (isSuperAdmin) {
+        try {
+          companies = await apiRequest("/companies/");
+        } catch (_) {
+          companies = [];
+        }
+        if (!kbSelectedCompany && companies.length) {
+          kbSelectedCompany = companies[0].id;
+        }
+      }
+
+      const companyPicker = isSuperAdmin ? `
+        <div class="card" style="margin-bottom:18px">
+          <div class="card-head">
+            <h3>Viewing company</h3>
+            <p class="muted">You are not a member of any company, so choose whose
+               knowledge base to work with.</p>
+          </div>
+          <div class="card-body">
+            ${companies.length ? `
+              <select id="kbCompany" class="input" style="max-width:340px">
+                ${companies.map((c) => `
+                  <option value="${c.id}" ${c.id === kbSelectedCompany ? "selected" : ""}>
+                    ${escapeHtml(c.name)}
+                  </option>`).join("")}
+              </select>`
+              : `<p class="muted">No companies exist yet. Create one first.</p>`}
+          </div>
+        </div>` : "";
+
+      const uploadCard = canManage ? `
+        <div class="card" style="margin-bottom:18px">
+          <div class="card-head">
+            <h3>Upload a document</h3>
+            <p class="muted">PDF, Word, text or Markdown. Indexed for your company only.</p>
+          </div>
+          <div class="card-body">
+            <div id="kbDrop" class="kb-drop">
+              <strong>Choose a file</strong> or drag it here
+            </div>
+            <input id="kbFile" type="file"
+                   accept=".pdf,.docx,.txt,.md,.markdown" hidden />
+            <div style="margin-top:14px">
+              <button class="btn btn-primary" id="kbUpload" disabled>Upload &amp; index</button>
+            </div>
+            <div id="kbUploadResult"></div>
+          </div>
+        </div>` : "";
+
+      renderShell(`
+        <section class="page">
+          <div class="page-header">
+            <div>
+              <h2>Knowledge Base</h2>
+              <p class="muted">Ask questions in Arabic or English. Answers come only
+                 from your company's documents, with citations.</p>
+            </div>
+          </div>
+
+          ${companyPicker}
+          ${uploadCard}
+
+          <div class="card kb-chat-card" style="margin-bottom:18px">
+            <div class="card-head kb-chat-head">
+              <div>
+                <h3>Assistant</h3>
+                <p class="muted">Answers come only from your documents. Ask follow-ups —
+                   it remembers the last few turns.</p>
+              </div>
+              <button class="btn btn-ghost btn-sm" id="kbNewChat" title="Start a new conversation">
+                New chat
+              </button>
+            </div>
+            <div class="kb-chat" id="kbChat"></div>
+            <div class="kb-composer">
+              <textarea id="kbQuery" rows="1"
+                placeholder="اسأل بالعربي أو بالإنجليزي…  (Enter to send)"></textarea>
+              <button class="btn btn-primary" id="kbAsk" title="Send">Send</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head"><h3>Indexed documents</h3></div>
+            <div class="card-body"><div id="kbDocs" class="muted">Loading…</div></div>
+          </div>
+        </section>
+      `, "knowledge", "Knowledge Base");
+
+      const picker = document.getElementById("kbCompany");
+      if (picker) {
+        picker.onchange = () => {
+          kbSelectedCompany = parseInt(picker.value, 10);
+          renderKnowledgeBase();
+        };
+      }
+
+      if (isSuperAdmin && !kbSelectedCompany) {
+        document.getElementById("kbDocs").innerHTML =
+          `<p class="muted">Choose a company above.</p>`;
+        return;
+      }
+
+      if (canManage) wireKbUpload();
+      wireKbAsk();
+      await loadKbDocuments(canManage);
+    }
+
+    function wireKbUpload() {
+      let picked = null;
+      const drop = document.getElementById("kbDrop");
+      const input = document.getElementById("kbFile");
+      const button = document.getElementById("kbUpload");
+
+      // The input lives outside the drop zone, so rewriting the zone's
+      // contents can never detach it.
+      function setFile(file) {
+        picked = file || null;
+        button.disabled = !picked;
+        drop.innerHTML = picked
+          ? `<strong>${escapeHtml(picked.name)}</strong>
+             <div class="muted">${(picked.size / 1024).toFixed(0)} KB — click to change</div>`
+          : "<strong>Choose a file</strong> or drag it here";
+        if (!picked) input.value = "";
+      }
+
+      drop.onclick = () => { input.value = ""; input.click(); };
+      input.onchange = (e) => { if (e.target.files.length) setFile(e.target.files[0]); };
+      ["dragover", "dragleave", "drop"].forEach((event) =>
+        drop.addEventListener(event, (e) => {
+          e.preventDefault();
+          drop.classList.toggle("kb-drop-over", event === "dragover");
+          if (event === "drop" && e.dataTransfer.files.length) setFile(e.dataTransfer.files[0]);
+        }));
+
+      button.onclick = async () => {
+        if (!picked) return;
+        button.disabled = true;
+        button.textContent = "Indexing…";
+        const target = document.getElementById("kbUploadResult");
+        target.innerHTML = "";
+        try {
+          const form = new FormData();
+          form.append("file", picked);
+          const result = await kbRequest("/documents", { method: "POST", body: form });
+          const good = result.status === "ingested";
+          const warnings = [];
+          if (result.quality?.needs_ocr) warnings.push("needs OCR");
+          if (result.quality?.reversed_arabic) warnings.push("reversed Arabic repaired");
+          target.innerHTML = `
+            <p class="${good ? "success-text" : "error-text"}" style="margin-top:14px">
+              ${good
+                ? `Indexed ${result.chunks} chunks from ${result.pages} page(s)
+                   using ${escapeHtml(result.strategy)}.`
+                : escapeHtml(result.reason || "Upload failed")}
+              ${warnings.length ? `<br><span class="muted">${warnings.join(" · ")}</span>` : ""}
+            </p>`;
+          if (good) { setFile(null); await loadKbDocuments(true); }
+        } catch (error) {
+          target.innerHTML =
+            `<p class="error-text" style="margin-top:14px">${escapeHtml(error.message)}</p>`;
+        } finally {
+          button.disabled = !picked;
+          button.textContent = "Upload & index";
+        }
+      };
+    }
+
+    // A conversation id groups messages so follow-ups resolve. It lives only
+    // for this browser session.
+    let kbConversationId = null;
+
+    function newConversationId() {
+      return (crypto.randomUUID?.() || String(Date.now() + Math.random())).slice(0, 36);
+    }
+
+    function kbAppendMessage(role, html, options = {}) {
+      const chat = document.getElementById("kbChat");
+      const empty = chat.querySelector(".kb-chat-empty");
+      if (empty) empty.remove();
+
+      const row = document.createElement("div");
+      row.className = `kb-msg kb-msg-${role}`;
+      if (options.id) row.id = options.id;
+      row.innerHTML = `<div class="kb-bubble"${
+        options.rtl ? ' dir="rtl"' : ""}>${html}</div>`;
+      chat.appendChild(row);
+      chat.scrollTop = chat.scrollHeight;
+      return row;
+    }
+
+    function kbResetChat() {
+      kbConversationId = newConversationId();
+      const chat = document.getElementById("kbChat");
+      if (chat) {
+        chat.innerHTML = `<p class="kb-chat-empty muted">
+          Ask about your company's documents. Every answer cites the page it came from.
+        </p>`;
+      }
+    }
+
+    function wireKbAsk() {
+      const button = document.getElementById("kbAsk");
+      const input = document.getElementById("kbQuery");
+      const newChat = document.getElementById("kbNewChat");
+
+      kbResetChat();
+
+      newChat.onclick = async () => {
+        const previous = kbConversationId;
+        kbResetChat();
+        // Drop the server-side history too, not just the visible transcript.
+        if (previous) {
+          try {
+            await kbRequest(`/conversations/${encodeURIComponent(previous)}`,
+                            { method: "DELETE" });
+          } catch (_) { /* nothing to forget */ }
+        }
+      };
+
+      // Grow the composer with its content, up to a limit.
+      input.addEventListener("input", () => {
+        input.style.height = "auto";
+        input.style.height = `${Math.min(input.scrollHeight, 140)}px`;
+      });
+
+      input.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" && !event.shiftKey) {
+          event.preventDefault();
+          send();
+        }
+      });
+
+      button.onclick = send;
+
+      async function send() {
+        const query = input.value.trim();
+        if (!query || button.disabled) return;
+
+        kbAppendMessage("user", escapeHtml(query), { rtl: isRtl(query) });
+        input.value = "";
+        input.style.height = "auto";
+        button.disabled = true;
+
+        const pending = kbAppendMessage(
+          "bot",
+          `<span class="kb-typing"><i></i><i></i><i></i></span>`,
+          { id: "kbPending" }
+        );
+
+        try {
+          const result = await kbRequest("/ask", {
+            method: "POST",
+            body: { query, top_k: 3, conversation_id: kbConversationId }
+          });
+
+          const citations = result.citations.length
+            ? `<ul class="kb-citations">${result.citations
+                .map((c) => `<li><strong>[${c.index}]</strong> ${escapeHtml(c.label)}</li>`)
+                .join("")}</ul>`
+            : "";
+          const grounded = result.has_sufficient_context
+            ? ""
+            : `<p class="kb-warn">Nothing in your documents answers this.</p>`;
+          const latency = Math.round((result.latency_ms?.total_ms || 0)
+                                   + (result.latency_ms?.generate_ms || 0));
+          // Shown when a follow-up was expanded, so the retrieval is not a
+          // black box.
+          const expanded = result.search_query
+            ? `<p class="kb-meta">searched: ${escapeHtml(result.search_query)}</p>`
+            : "";
+
+          pending.innerHTML = `
+            <div class="kb-bubble"${isRtl(result.answer) ? ' dir="rtl"' : ""}>
+              <div class="kb-text">${escapeHtml(result.answer)}</div>
+              ${grounded}
+              ${citations}
+              ${expanded}
+              <p class="kb-meta">${latency} ms${
+                result.usage ? ` · ${result.usage.total_tokens} tokens` : ""}</p>
+            </div>`;
+        } catch (error) {
+          pending.innerHTML =
+            `<div class="kb-bubble kb-bubble-error">${escapeHtml(error.message)}</div>`;
+        } finally {
+          pending.removeAttribute("id");
+          button.disabled = false;
+          document.getElementById("kbChat").scrollTop = 1e9;
+          input.focus();
+        }
+      }
+    }
+
+    async function loadKbDocuments(canManage) {
+      const target = document.getElementById("kbDocs");
+      try {
+        const result = await kbRequest("/documents");
+        if (!result.documents.length) {
+          target.innerHTML = `<p class="muted">No documents indexed yet.</p>`;
+          return;
+        }
+        target.innerHTML = `
+          <div class="table-wrap"><table class="table">
+            <thead><tr>
+              <th>Title</th><th>File</th><th>Chunks</th>${canManage ? "<th></th>" : ""}
+            </tr></thead>
+            <tbody>${result.documents.map((doc) => `
+              <tr>
+                <td>${escapeHtml(doc.document_title || "—")}</td>
+                <td>${escapeHtml(doc.source)}</td>
+                <td>${doc.chunks}</td>
+                ${canManage ? `<td><button class="btn btn-danger btn-sm"
+                     data-kb-delete="${escapeHtml(doc.document_id)}">Delete</button></td>` : ""}
+              </tr>`).join("")}</tbody>
+          </table></div>`;
+        target.querySelectorAll("[data-kb-delete]").forEach((button) => {
+          button.onclick = async () => {
+            if (!confirm("Delete this document and everything indexed from it?")) return;
+            button.disabled = true;
+            try {
+              await kbRequest(`/documents/${encodeURIComponent(button.dataset.kbDelete)}`,
+                              { method: "DELETE" });
+            } catch (error) {
+              alert(error.message);
+            }
+            await loadKbDocuments(canManage);
+          };
+        });
+      } catch (error) {
+        target.innerHTML = `<p class="error-text">${escapeHtml(error.message)}</p>`;
+      }
+    }
 
     function renderProfile() {
       const user = state.currentUser;

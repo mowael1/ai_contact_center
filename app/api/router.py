@@ -57,3 +57,12 @@ api_router.include_router(
     prefix="/vonage",
     tags=["Vonage"]
 )
+
+# Per-company knowledge base and agent assistant. Imported lazily so the API
+# still starts if the RAG extras are not installed.
+try:
+    from rag.api.kb_routes import router as kb_router
+
+    api_router.include_router(kb_router, prefix="/kb", tags=["Knowledge Base"])
+except ImportError:  # pragma: no cover - optional component
+    pass

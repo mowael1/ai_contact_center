@@ -1,13 +1,15 @@
 from datetime import datetime
 
 from sqlalchemy import (
-    DateTime,
     Integer,
     Boolean,
     ForeignKey,
     Unicode,
     text,
 )
+from sqlalchemy.sql import expression
+
+from app.db.types import UtcDateTime, utcnow
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
@@ -18,7 +20,7 @@ if TYPE_CHECKING:
     from app.models.company import Company
     from app.models.role import Role
     from app.models.ticket import Ticket
-    from app.models.call import Call
+
 class User(Base):
     __tablename__ = "users"
 
@@ -58,17 +60,17 @@ class User(Base):
     is_active: Mapped[bool] = mapped_column(
         Boolean,
         nullable=False,
-        server_default=text("true")
+        server_default=expression.true()
     )
 
     created_at: Mapped[datetime] = mapped_column(
-        DateTime,
+        UtcDateTime,
         nullable=False,
-        server_default=text("(now() at time zone 'utc')")
+        server_default=utcnow()
     )
 
     updated_at: Mapped[datetime | None] = mapped_column(
-        DateTime,
+        UtcDateTime,
         nullable=True
     )
     
@@ -83,8 +85,4 @@ class User(Base):
     assigned_tickets: Mapped[list["Ticket"]] = relationship(
     back_populates="assigned_agent",
     foreign_keys="Ticket.assigned_agent_id"
-)
-    calls: Mapped[list["Call"]] = relationship(
-    back_populates="agent",
-    foreign_keys="Call.agent_id"
 )

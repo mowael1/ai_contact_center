@@ -1,0 +1,113 @@
+{
+  "source": {
+    "files": [
+      "batch_0000.parquet",
+      "batch_0001.parquet",
+      "batch_0002.parquet",
+      "batch_0003.parquet",
+      "batch_0004.parquet",
+      "batch_0005.parquet",
+      "batch_0006.parquet",
+      "batch_0007.parquet",
+      "batch_0008.parquet",
+      "batch_0009.parquet",
+      "batch_0010.parquet",
+      "batch_0011.parquet",
+      "batch_0012.parquet",
+      "batch_0013.parquet",
+      "batch_0014.parquet",
+      "batch_0015.parquet",
+      "batch_0016.parquet",
+      "batch_0017.parquet",
+      "batch_0018.parquet",
+      "batch_0019.parquet",
+      "batch_0020.parquet",
+      "batch_0021.parquet",
+      "batch_0022.parquet",
+      "batch_0023.parquet",
+      "batch_0024.parquet",
+      "batch_0025.parquet",
+      "batch_0026.parquet",
+      "batch_0027.parquet",
+      "batch_0028.parquet"
+    ],
+    "file_count": 29,
+    "declared_total_rows": 2804
+  },
+  "rows": {
+    "read": 2804,
+    "usable_documents": 2591,
+    "unusable": 213
+  },
+  "scrape_status": {
+    "success": 2591,
+    "failed:timeout": 126,
+    "failed:nav:Error": 87
+  },
+  "missing_fields": {
+    "raw_html": 213,
+    "raw_text": 237,
+    "llm_enhanced_text": 580
+  },
+  "duplicates": {
+    "duplicate_url_count": 0,
+    "duplicate_urls_sample": [],
+    "duplicate_content_rows": 26
+  },
+  "lengths": {
+    "raw_html": {
+      "count": 2591,
+      "mean": 314268.5,
+      "median": 122330,
+      "min": 105,
+      "max": 2536825,
+      "p25": 95448.0,
+      "p75": 254547.0,
+      "p95": 1327445.0
+    },
+    "raw_text": {
+      "count": 2567,
+      "mean": 2875.8,
+      "median": 1053,
+      "min": 26,
+      "max": 88069,
+      "p25": 303.0,
+      "p75": 3201.0,
+      "p95": 8026.0
+    },
+    "llm_enhanced_text": {
+      "count": 2224,
+      "mean": 1227.8,
+      "median": 944.0,
+      "min": 4,
+      "max": 6487,
+      "p25": 408.0,
+      "p75": 1761.0,
+      "p95": 3302.0
+    }
+  },
+  "languages": {
+    "en": 1609,
+    "ar": 878,
+    "mixed": 80,
+    "unknown": 24
+  },
+  "retrieval_text_source": {
+    "llm_enhanced_text": 2224,
+    "raw_text": 367
+  },
+  "domains": {
+    "web.vodafone.com.eg": 1785,
+    "www.vodafone.com.eg": 530,
+    "advisory.vodafone.com.eg": 343,
+    "digitalstore.vodafone.com.eg": 88,
+    "eshop.vodafone.com.eg": 18,
+    "internet.vodafone.com.eg": 18,
+    "static.vodafone.com.eg": 10,
+    "vhub.vodafone.com.eg": 7,
+    "smart.vodafone.com.eg": 2,
+    "cloudportal.vodafone.com.eg": 2,
+    "fekretek.vodafone.com.eg": 1
+  },
+  "samples": []
+}

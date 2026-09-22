@@ -1,0 +1,38 @@
+{
+  "documents": {
+    "parsed_successfully": 712,
+    "parse_failures": 0,
+    "with_html_sections": 595,
+    "requiring_text_fallback": 3,
+    "no_reliable_section": 114,
+    "avg_sections_per_document": 5.31,
+    "median_sections_per_document": 2.0
+  },
+  "section_extraction_methods": {
+    "html_structure": 3398,
+    "html_component": 274,
+    "no_section": 105,
+    "text_fallback": 4
+  },
+  "component_types": {
+    "accordion": 274
+  },
+  "heading_level_distribution": {
+    "1": 306,
+    "2": 590,
+    "3": 1832,
+    "4": 946,
+    "5": 2,
+    "None": 105
+  },
+  "section_length": {
+    "count": 3781,
+    "mean": 474.3,
+    "median": 157,
+    "min": 26,
+    "max": 12887,
+    "p25": 93.0,
+    "p75": 430.0,
+    "p95": 2108.0
+  }
+}

@@ -1,6 +1,9 @@
 from datetime import datetime
 
-from sqlalchemy import DateTime, Integer, Boolean, Unicode, text
+from sqlalchemy import Integer, Boolean, Unicode, text
+from sqlalchemy.sql import expression
+
+from app.db.types import UtcDateTime, utcnow
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
@@ -11,7 +14,6 @@ if TYPE_CHECKING:
     from app.models.user import User
     from app.models.customer import Customer
     from app.models.ticket import Ticket
-    from app.models.call import Call
 
 class Company(Base):
     
@@ -41,17 +43,17 @@ class Company(Base):
     is_active: Mapped[bool] = mapped_column(
         Boolean,
         nullable=False,
-        server_default=text("true")
+        server_default=expression.true()
     )
 
     created_at: Mapped[datetime] = mapped_column(
-        DateTime,
+        UtcDateTime,
         nullable=False,
-        server_default=text("(now() at time zone 'utc')")
+        server_default=utcnow()
     )
 
     updated_at: Mapped[datetime | None] = mapped_column(
-        DateTime,
+        UtcDateTime,
         nullable=True
     )
     
@@ -66,7 +68,3 @@ class Company(Base):
     tickets: Mapped[list["Ticket"]] = relationship(
         back_populates="company"
     )
-    
-    calls: Mapped[list["Call"]] = relationship(
-    back_populates="company"
-)

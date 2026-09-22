@@ -1,0 +1,53 @@
+{
+  "stage": "chunking",
+  "documents": 595,
+  "sections": 3641,
+  "embedding_model": "local-lexical-512",
+  "embedding_dimension": 512,
+  "report": {
+    "config": {
+      "target_size": 700,
+      "min_size": 200,
+      "max_size": 1400,
+      "similarity_threshold": 0.55,
+      "overlap_sentences": 1
+    },
+    "total_chunks": 5884,
+    "documents": 595,
+    "sections": 3641,
+    "chunks_per_document": 9.889,
+    "chunks_per_section": 1.616,
+    "size": {
+      "mean": 379.3,
+      "median": 342.5,
+      "min": 26,
+      "max": 1400,
+      "p25": 136.0,
+      "p75": 538.0,
+      "p95": 913.0
+    },
+    "sentences_per_chunk": {
+      "mean": 3.45,
+      "median": 3.0
+    },
+    "pct_at_max_size": 0.02,
+    "pct_below_min_size": 33.04,
+    "pct_over_max_size": 0.0,
+    "section_boundary_violations": 0,
+    "empty_chunks": 0,
+    "duplicate_chunks": 2743,
+    "duplicate_pct": 46.62,
+    "chunking_methods": {
+      "whole_section": 3093,
+      "semantic": 2791
+    },
+    "section_extraction_methods": {
+      "html_structure": 4924,
+      "html_component": 792,
+      "no_section": 161,
+      "text_fallback": 7
+    },
+    "max_chunks_in_one_document": 128,
+    "max_chunks_in_one_section": 49
+  }
+}
