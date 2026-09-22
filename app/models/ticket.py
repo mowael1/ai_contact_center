@@ -2,13 +2,13 @@ from datetime import datetime
 from typing import TYPE_CHECKING
 
 from sqlalchemy import (
+    DateTime,
     Integer,
     ForeignKey,
     Unicode,
     UnicodeText,
     text,
 )
-from sqlalchemy.dialects.mssql import DATETIME2
 from sqlalchemy.orm import (
     Mapped,
     mapped_column,
@@ -73,13 +73,13 @@ class Ticket(Base):
     )
 
     created_at: Mapped[datetime] = mapped_column(
-        DATETIME2,
+        DateTime,
         nullable=False,
-        server_default=text("SYSUTCDATETIME()")
+        server_default=text("(now() at time zone 'utc')")
     )
 
     updated_at: Mapped[datetime | None] = mapped_column(
-        DATETIME2,
+        DateTime,
         nullable=True
     )
 

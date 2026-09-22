@@ -2,13 +2,13 @@ from datetime import datetime
 from typing import TYPE_CHECKING
 
 from sqlalchemy import (
+    DateTime,
     Integer,
     Boolean,
     ForeignKey,
     Unicode,
     text,
 )
-from sqlalchemy.dialects.mssql import DATETIME2
 from sqlalchemy.orm import (
     Mapped,
     mapped_column,
@@ -57,17 +57,17 @@ class Customer(Base):
     is_active: Mapped[bool] = mapped_column(
         Boolean,
         nullable=False,
-        server_default=text("1")
+        server_default=text("true")
     )
 
     created_at: Mapped[datetime] = mapped_column(
-        DATETIME2,
+        DateTime,
         nullable=False,
-        server_default=text("SYSUTCDATETIME()")
+        server_default=text("(now() at time zone 'utc')")
     )
 
     updated_at: Mapped[datetime | None] = mapped_column(
-        DATETIME2,
+        DateTime,
         nullable=True
     )
 
