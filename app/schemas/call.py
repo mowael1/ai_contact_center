@@ -16,6 +16,7 @@ class CallResponse(BaseModel):
 
     status: str
     outcome: str | None
+    reason: str | None
 
     transcript: str | None
 

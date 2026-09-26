@@ -74,6 +74,11 @@ class Call(Base):
         nullable=True
     )
 
+    reason: Mapped[str | None] = mapped_column(
+        UnicodeText,
+        nullable=True
+    )
+
     transcript: Mapped[str | None] = mapped_column(
         UnicodeText,
         nullable=True

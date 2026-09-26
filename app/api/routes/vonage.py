@@ -29,17 +29,17 @@ async def answer_call():
 async def voice_input(
     request: Request,
     attempt: int = Query(default=1),
+    stage: str = Query(default="resolution"),
     db: Session = Depends(get_db),
 ):
-
     data = await request.json()
 
     return process_speech_input(
         db=db,
         data=data,
         attempt=attempt,
+        stage=stage,
     )
-
 
 @router.post("/events")
 async def call_events(

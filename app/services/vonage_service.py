@@ -36,6 +36,8 @@ RESOLVED_AUDIO = "resolved_thanks.mp3"
 
 NOT_RESOLVED_AUDIO = "not_resolved_closing.mp3"
 
+ASK_REASON_AUDIO = "ask_reason.mp3"
+
 
 # =========================================
 # General helpers
@@ -65,12 +67,14 @@ def _audio_url(
 
 def _input_url(
     attempt: int,
+    stage: str = "resolution",
 ) -> str:
 
     return (
         f"{_base_url()}"
         f"/api/v1/vonage/input"
         f"?attempt={attempt}"
+        f"&stage={stage}"
     )
 
 
@@ -92,6 +96,7 @@ def _stream_action(
 
 def _speech_input_action(
     attempt: int,
+    stage: str = "resolution",
 ) -> dict[str, Any]:
 
     return {
@@ -102,7 +107,10 @@ def _speech_input_action(
         ],
 
         "eventUrl": [
-            _input_url(attempt)
+            _input_url(
+                attempt,
+                stage,
+            )
         ],
 
         "eventMethod": "POST",
@@ -143,7 +151,8 @@ def build_question_ncco(
         ),
 
         _speech_input_action(
-            attempt
+            attempt,
+            stage="resolution",
         ),
     ]
 
@@ -164,7 +173,8 @@ def build_repeat_unclear_ncco(
         ),
 
         _speech_input_action(
-            attempt
+            attempt,
+            stage="resolution",
         ),
     ]
 
@@ -185,7 +195,30 @@ def build_redirect_off_topic_ncco(
         ),
 
         _speech_input_action(
-            attempt
+            attempt,
+            stage="resolution",
+        ),
+    ]
+
+
+def build_reason_question_ncco(
+    attempt: int = 1,
+) -> list[dict[str, Any]]:
+
+    print("\n==============================")
+    print("BUILD REASON QUESTION NCCO")
+    print("ATTEMPT:", attempt)
+    print("AUDIO:", ASK_REASON_AUDIO)
+    print("==============================\n")
+
+    return [
+        _stream_action(
+            ASK_REASON_AUDIO
+        ),
+
+        _speech_input_action(
+            attempt,
+            stage="reason",
         ),
     ]
 
@@ -474,11 +507,13 @@ def process_speech_input(
     db: Session,
     data: dict[str, Any],
     attempt: int,
+    stage: str = "resolution",
 ) -> list[dict[str, Any]]:
 
     print("\n==============================")
     print("VONAGE SPEECH INPUT")
     print("ATTEMPT:", attempt)
+    print("STAGE:", stage)
 
     # Vonage Call UUID
     provider_call_id = data.get(
@@ -551,6 +586,12 @@ def process_speech_input(
                 "ACTION: ASK CUSTOMER TO REPEAT"
             )
 
+            if stage == "reason":
+
+                return build_reason_question_ncco(
+                    attempt=attempt + 1
+                )
+
             return build_repeat_unclear_ncco(
                 attempt=attempt + 1
             )
@@ -582,6 +623,12 @@ def process_speech_input(
                 "ACTION: ASK CUSTOMER TO REPEAT"
             )
 
+            if stage == "reason":
+
+                return build_reason_question_ncco(
+                    attempt=attempt + 1
+                )
+
             return build_repeat_unclear_ncco(
                 attempt=attempt + 1
             )
@@ -590,6 +637,36 @@ def process_speech_input(
             db,
             call
         )
+
+    # =====================================
+    # Reason stage
+    # =====================================
+
+    if stage == "reason":
+
+        print(
+            "REASON STAGE"
+        )
+
+        print(
+            "CUSTOMER REASON:",
+            text
+        )
+
+        if call is not None:
+
+            call.reason = text
+
+            db.commit()
+            db.refresh(call)
+
+            print("\n==============================")
+            print("CALL REASON SAVED")
+            print("CALL ID:", call.id)
+            print("REASON:", call.reason)
+            print("==============================\n")
+
+        return build_not_resolved_ncco()
 
     # =====================================
     # Send transcript to Groq LLM
@@ -645,7 +722,7 @@ def process_speech_input(
         )
 
         print(
-            "ACTION: SEND TO HUMAN AGENT"
+            "ACTION: ASK CUSTOMER FOR REASON"
         )
 
         if call is not None:
@@ -656,7 +733,9 @@ def process_speech_input(
                 outcome="not_resolved",
             )
 
-        return build_not_resolved_ncco()
+        return build_reason_question_ncco(
+            attempt=1
+        )
 
     # =====================================
     # Unclear
