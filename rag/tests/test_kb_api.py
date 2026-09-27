@@ -257,3 +257,34 @@ def test_a_question_without_a_conversation_id_is_not_remembered(client):
     body = client.post("/api/v1/kb/ask", headers=headers,
                        json={"query": "وكام مدته؟"}).json()
     assert body["search_query"] is None
+
+
+def test_chat_session_lists_and_restores_messages(client):
+    upload(client, 1, "returns.md", COMPANY_A_DOC)
+    headers = {"X-Company-Id": "1"}
+    created = client.post("/api/v1/kb/sessions", headers=headers, json={}).json()
+    session_id = created["id"]
+
+    client.post("/api/v1/kb/ask", headers=headers, json={
+        "query": "What is the refund policy?", "conversation_id": session_id,
+    })
+
+    listed = client.get("/api/v1/kb/sessions", headers=headers).json()
+    assert any(item["id"] == session_id for item in listed)
+    restored = client.get(
+        f"/api/v1/kb/sessions/{session_id}/messages", headers=headers
+    ).json()
+    assert [message["role"] for message in restored["messages"]] == ["user", "assistant"]
+    assert restored["messages"][0]["content"] == "What is the refund policy?"
+
+
+def test_chat_session_can_be_deleted(client):
+    headers = {"X-Company-Id": "1"}
+    created = client.post("/api/v1/kb/sessions", headers=headers, json={}).json()
+    session_id = created["id"]
+
+    response = client.delete(f"/api/v1/kb/sessions/{session_id}", headers=headers)
+    assert response.status_code == 200
+    assert client.get(
+        f"/api/v1/kb/sessions/{session_id}/messages", headers=headers
+    ).status_code == 404
