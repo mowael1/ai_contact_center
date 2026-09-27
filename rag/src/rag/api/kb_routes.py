@@ -25,6 +25,15 @@ from rag.services.conversation import (
 )
 from rag.services.chat_store import chat_store
 from rag.services.tenancy import Tenant
+from io import BytesIO
+from fastapi.responses import StreamingResponse
+
+from app.services.speech_service import (
+    SpeechInputError,
+    SpeechProviderError,
+    synthesize_speech,
+    transcribe_audio,
+)
 
 logger = get_logger(__name__)
 router = APIRouter()
@@ -57,6 +66,13 @@ class DocumentListResponse(BaseModel):
     collection: str
     vectors: int
     documents: list[DocumentModel]
+    
+class STTResponse(BaseModel):
+    text: str
+
+
+class TTSRequest(BaseModel):
+    text: str
 
 
 class ChatSessionCreate(BaseModel):
@@ -255,6 +271,91 @@ def get_chat_messages(
     return ChatMessagesResponse(
         session=ChatSessionModel(**item),
         messages=[ChatMessageModel(**message) for message in messages],
+    )
+
+@router.post(
+    "/stt",
+    response_model=STTResponse,
+    summary="Transcribe browser audio into text",
+)
+async def speech_to_text(
+    file: UploadFile = File(...),
+    tenant: Tenant = Depends(get_tenant),
+) -> STTResponse:
+    """Transcribe audio only.
+
+    The returned text may subsequently be sent to /ask by the frontend.
+    This endpoint never invokes the RAG pipeline itself.
+    """
+
+    try:
+        audio_bytes = await file.read()
+
+        text = transcribe_audio(
+            audio_bytes,
+            filename=file.filename or "recording.webm",
+            content_type=file.content_type,
+        )
+
+        return STTResponse(
+            text=text
+        )
+
+    except SpeechInputError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(exc),
+        ) from exc
+
+    except SpeechProviderError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail="Speech transcription is currently unavailable",
+        ) from exc
+
+    finally:
+        await file.close()
+
+@router.post(
+    "/tts",
+    summary="Generate Arabic WAV audio from text",
+)
+def text_to_speech(
+    payload: TTSRequest,
+    tenant: Tenant = Depends(get_tenant),
+) -> StreamingResponse:
+    """Generate audio only.
+
+    This is a separate request from /ask, so TTS failures cannot remove
+    or invalidate an existing text RAG answer.
+    """
+
+    try:
+        audio_bytes = synthesize_speech(
+            payload.text
+        )
+
+    except SpeechInputError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(exc),
+        ) from exc
+
+    except SpeechProviderError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail="Speech synthesis is currently unavailable",
+        ) from exc
+
+    return StreamingResponse(
+        BytesIO(audio_bytes),
+        media_type="audio/wav",
+        headers={
+            "Content-Disposition": (
+                'inline; filename="answer.wav"'
+            ),
+            "Cache-Control": "no-store",
+        },
     )
 
 

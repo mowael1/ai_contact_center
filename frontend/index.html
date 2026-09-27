@@ -972,6 +972,41 @@
     }
     .kb-composer textarea:focus { outline: 2px solid #bfdbfe; border-color: var(--primary); }
 
+    .kb-mic {
+      flex: 0 0 44px;
+      width: 44px;
+      height: 44px;
+      padding: 0;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--surface-2);
+      color: var(--text);
+      font-size: 19px;
+    }
+    .kb-mic:hover:not(:disabled) { border-color: var(--primary); color: var(--primary); }
+    .kb-mic.recording {
+      border-color: var(--danger);
+      background: var(--danger);
+      color: white;
+      animation: kbMicPulse 1.2s infinite;
+    }
+    @keyframes kbMicPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, .35); }
+      50% { box-shadow: 0 0 0 8px rgba(220, 38, 38, 0); }
+    }
+
+    .kb-answer-actions { display: flex; justify-content: flex-end; margin-top: 8px; }
+    .kb-speak {
+      border: 0;
+      border-radius: 8px;
+      padding: 5px 9px;
+      background: var(--surface-2);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .kb-speak:hover:not(:disabled), .kb-speak.playing { color: var(--primary); background: #eff6ff; }
+
     /* typing indicator */
     .kb-typing { display: inline-flex; gap: 4px; padding: 3px 0; }
     .kb-typing i {
@@ -3861,9 +3896,102 @@
       return data;
     }
 
+    async function kbAudioRequest(path, text) {
+      const headers = new Headers({ "Content-Type": "application/json" });
+      const authToken = token();
+      if (authToken) headers.set("Authorization", `Bearer ${authToken}`);
+      if (getRoleName() === "SUPER_ADMIN" && kbSelectedCompany) {
+        headers.set("X-Company-Id", String(kbSelectedCompany));
+      }
+
+      const response = await fetch(`${KB_BASE}${path}`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify({ text })
+      });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => null);
+        throw new Error(data?.detail || `Request failed (${response.status})`);
+      }
+
+      return response.blob();
+    }
+
     const isRtl = (value) => /[\u0600-\u06FF]/.test(value || "");
 
+    let kbCurrentAudio = null;
+    let kbCurrentAudioUrl = null;
+    let kbCurrentSpeakButton = null;
+    let kbSpeechRequestId = 0;
+
+    function kbStopSpeech() {
+      kbSpeechRequestId += 1;
+      if (kbCurrentAudio) {
+        kbCurrentAudio.pause();
+        kbCurrentAudio = null;
+      }
+      if (kbCurrentAudioUrl) {
+        URL.revokeObjectURL(kbCurrentAudioUrl);
+        kbCurrentAudioUrl = null;
+      }
+      if (kbCurrentSpeakButton) {
+        kbCurrentSpeakButton.textContent = "🔊 Listen";
+        kbCurrentSpeakButton.classList.remove("playing");
+        kbCurrentSpeakButton.disabled = false;
+        kbCurrentSpeakButton = null;
+      }
+    }
+
+    async function kbPlaySpeech(text, speakButton) {
+      if (kbCurrentAudio && kbCurrentSpeakButton === speakButton) {
+        kbStopSpeech();
+        return;
+      }
+
+      kbStopSpeech();
+      const requestId = kbSpeechRequestId;
+      speakButton.disabled = true;
+      speakButton.textContent = "Generating…";
+
+      try {
+        const blob = await kbAudioRequest("/tts", text);
+        if (requestId !== kbSpeechRequestId) return;
+        const audioUrl = URL.createObjectURL(blob);
+        const audio = new Audio(audioUrl);
+
+        kbCurrentAudio = audio;
+        kbCurrentAudioUrl = audioUrl;
+        kbCurrentSpeakButton = speakButton;
+
+        speakButton.disabled = false;
+        speakButton.textContent = "⏹ Stop";
+        speakButton.classList.add("playing");
+
+        audio.onended = kbStopSpeech;
+        audio.onerror = () => {
+          kbStopSpeech();
+          showToast("The generated audio could not be played.", "error");
+        };
+
+        await audio.play();
+      } catch (error) {
+        kbStopSpeech();
+        speakButton.textContent = "🔊 Listen";
+        speakButton.disabled = false;
+        showToast(error.message, "error");
+      }
+    }
+
+    function kbWireSpeaker(messageRow, text) {
+      const speakButton = messageRow.querySelector(".kb-speak");
+      if (speakButton) {
+        speakButton.onclick = () => kbPlaySpeech(text, speakButton);
+      }
+    }
+
     async function renderKnowledgeBase() {
+      kbStopSpeech();
       const role = getRoleName();
       const canManage = ["SUPER_ADMIN", "ADMIN"].includes(role);
       const isSuperAdmin = role === "SUPER_ADMIN";
@@ -3949,6 +4077,8 @@
             <div class="kb-composer">
               <textarea id="kbQuery" rows="1"
                 placeholder="اسأل بالعربي أو بالإنجليزي…  (Enter to send)"></textarea>
+              <button class="kb-mic" id="kbMic" type="button"
+                      title="Start voice recording" aria-label="Start voice recording">🎙️</button>
               <button class="btn btn-primary" id="kbAsk" title="Send">Send</button>
             </div>
           </div>
@@ -4074,11 +4204,22 @@
       if (!result.messages.length) {
         kbResetChat();
       } else {
-        result.messages.forEach((message) => kbAppendMessage(
-          message.role === "user" ? "user" : "bot",
-          `<div class="kb-text">${escapeHtml(message.content)}</div>`,
-          { rtl: isRtl(message.content) },
-        ));
+        result.messages.forEach((message) => {
+          const isAssistant = message.role !== "user";
+          const row = kbAppendMessage(
+            isAssistant ? "bot" : "user",
+            `<div class="kb-text">${escapeHtml(message.content)}</div>${
+              isAssistant
+                ? `<div class="kb-answer-actions">
+                     <button class="kb-speak" type="button"
+                             title="Read answer aloud" aria-label="Read answer aloud">🔊 Listen</button>
+                   </div>`
+                : ""
+            }`,
+            { rtl: isRtl(message.content) },
+          );
+          if (isAssistant) kbWireSpeaker(row, message.content);
+        });
       }
       document.querySelectorAll("[data-kb-session]").forEach((button) =>
         button.classList.toggle("active", button.dataset.kbSession === kbSessionId));
@@ -4125,6 +4266,7 @@
       const button = document.getElementById("kbAsk");
       const input = document.getElementById("kbQuery");
       const newChat = document.getElementById("kbNewChat");
+      const micButton = document.getElementById("kbMic");
 
       try {
         await kbLoadSessions();
@@ -4159,6 +4301,119 @@
 
       button.onclick = send;
 
+      let mediaRecorder = null;
+      let microphoneStream = null;
+      let audioChunks = [];
+
+      function preferredAudioType() {
+        if (!window.MediaRecorder) return "";
+        return [
+          "audio/webm;codecs=opus",
+          "audio/webm",
+          "audio/ogg;codecs=opus",
+          "audio/mp4"
+        ].find((type) => MediaRecorder.isTypeSupported(type)) || "";
+      }
+
+      function recordingExtension(mimeType) {
+        if (mimeType.includes("ogg")) return "ogg";
+        if (mimeType.includes("mp4")) return "m4a";
+        return "webm";
+      }
+
+      function resetMicrophoneUi() {
+        micButton.classList.remove("recording");
+        micButton.textContent = "🎙️";
+        micButton.title = "Start voice recording";
+        micButton.setAttribute("aria-label", "Start voice recording");
+        micButton.disabled = false;
+        input.disabled = false;
+        button.disabled = false;
+      }
+
+      micButton.onclick = async () => {
+        if (mediaRecorder?.state === "recording") {
+          mediaRecorder.stop();
+          microphoneStream?.getTracks().forEach((track) => track.stop());
+          micButton.disabled = true;
+          micButton.textContent = "…";
+          micButton.title = "Transcribing";
+          return;
+        }
+
+        if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
+          showToast("Voice recording is not supported in this browser.", "error");
+          return;
+        }
+
+        try {
+          microphoneStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          const mimeType = preferredAudioType();
+          mediaRecorder = mimeType
+            ? new MediaRecorder(microphoneStream, { mimeType })
+            : new MediaRecorder(microphoneStream);
+          audioChunks = [];
+
+          mediaRecorder.ondataavailable = (event) => {
+            if (event.data.size > 0) audioChunks.push(event.data);
+          };
+
+          mediaRecorder.onstop = async () => {
+            const actualType = mediaRecorder.mimeType || mimeType || "audio/webm";
+            const audioBlob = new Blob(audioChunks, { type: actualType });
+
+            mediaRecorder = null;
+            microphoneStream = null;
+            audioChunks = [];
+
+            try {
+              const form = new FormData();
+              form.append(
+                "file",
+                audioBlob,
+                `recording.${recordingExtension(actualType)}`
+              );
+              const result = await kbRequest("/stt", { method: "POST", body: form });
+              const transcript = (result.text || "").trim();
+
+              if (!transcript) {
+                throw new Error("No speech was detected. Please try again.");
+              }
+
+              input.value = transcript;
+              input.dispatchEvent(new Event("input"));
+              micButton.disabled = false;
+              button.disabled = false;
+              await send();
+            } catch (error) {
+              showToast(error.message, "error");
+            } finally {
+              resetMicrophoneUi();
+              input.focus();
+            }
+          };
+
+          mediaRecorder.start();
+          micButton.classList.add("recording");
+          micButton.textContent = "⏹";
+          micButton.title = "Stop recording";
+          micButton.setAttribute("aria-label", "Stop recording");
+          input.disabled = true;
+          button.disabled = true;
+        } catch (error) {
+          microphoneStream?.getTracks().forEach((track) => track.stop());
+          microphoneStream = null;
+          mediaRecorder = null;
+          resetMicrophoneUi();
+          showToast(
+            error.name === "NotAllowedError"
+              ? "Microphone permission was denied."
+              : `Could not start microphone: ${error.message}`,
+            "error"
+          );
+        }
+      };
+
       async function send() {
         const query = input.value.trim();
         if (!query || button.disabled) return;
@@ -4167,6 +4422,7 @@
         input.value = "";
         input.style.height = "auto";
         button.disabled = true;
+        micButton.disabled = true;
 
         const pending = kbAppendMessage(
           "bot",
@@ -4204,13 +4460,19 @@
               ${expanded}
               <p class="kb-meta">${latency} ms${
                 result.usage ? ` · ${result.usage.total_tokens} tokens` : ""}</p>
+              <div class="kb-answer-actions">
+                <button class="kb-speak" type="button"
+                        title="Read answer aloud" aria-label="Read answer aloud">🔊 Listen</button>
+              </div>
             </div>`;
+          kbWireSpeaker(pending, result.answer);
         } catch (error) {
           pending.innerHTML =
             `<div class="kb-bubble kb-bubble-error">${escapeHtml(error.message)}</div>`;
         } finally {
           pending.removeAttribute("id");
           button.disabled = false;
+          micButton.disabled = false;
           document.getElementById("kbChat").scrollTop = 1e9;
           input.focus();
         }

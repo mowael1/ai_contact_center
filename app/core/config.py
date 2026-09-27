@@ -35,6 +35,14 @@ class Settings(BaseSettings):
     # ---- LLM ---------------------------------------------------------------
     GROQ_API_KEY: str = ""
     GROQ_MODEL: str = "openai/gpt-oss-20b"
+    
+    # ---- Speech ------------------------------------------------------------
+    GROQ_STT_MODEL: str = "whisper-large-v3-turbo"
+    GROQ_TTS_MODEL: str = "canopylabs/orpheus-arabic-saudi"
+    GROQ_TTS_VOICE: str = "abdullah"
+
+    SPEECH_MAX_AUDIO_MB: int = 25
+    SPEECH_MAX_TEXT_CHARS: int = 4000
 
     model_config = SettingsConfigDict(
         env_file=".env",

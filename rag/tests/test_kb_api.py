@@ -18,6 +18,11 @@ from rag.services.retriever import RetrievalService
 from rag.services.tenancy import Tenant
 from rag.vectorstore.memory_store import InMemoryVectorStore
 
+from rag.api import kb_routes
+from app.services.speech_service import (
+    SpeechProviderError,
+)
+
 COMPANY_A_DOC = (
     "# Returns and refunds\n\n"
     "If you return an item bought via installments you receive a refund "
@@ -288,3 +293,190 @@ def test_chat_session_can_be_deleted(client):
     assert client.get(
         f"/api/v1/kb/sessions/{session_id}/messages", headers=headers
     ).status_code == 404
+
+
+# ---- speech endpoints -----------------------------------------------------
+
+
+def test_speech_stt_returns_transcript(
+    client,
+    monkeypatch,
+):
+    received = {}
+
+    def fake_transcribe(
+        audio_bytes,
+        *,
+        filename,
+        content_type,
+    ):
+        received["audio_bytes"] = audio_bytes
+        received["filename"] = filename
+        received["content_type"] = content_type
+
+        return "المشكلة اتحلت"
+
+    monkeypatch.setattr(
+        kb_routes,
+        "transcribe_audio",
+        fake_transcribe,
+    )
+
+    response = client.post(
+        "/api/v1/kb/stt",
+        headers={"X-Company-Id": "1"},
+        files={
+            "file": (
+                "recording.webm",
+                b"fake-webm-audio",
+                "audio/webm",
+            )
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "text": "المشكلة اتحلت"
+    }
+
+    assert (
+        received["audio_bytes"]
+        == b"fake-webm-audio"
+    )
+    assert received["filename"] == "recording.webm"
+    assert received["content_type"] == "audio/webm"
+
+
+def test_speech_stt_rejects_empty_audio(
+    client,
+):
+    response = client.post(
+        "/api/v1/kb/stt",
+        headers={"X-Company-Id": "1"},
+        files={
+            "file": (
+                "empty.webm",
+                b"",
+                "audio/webm",
+            )
+        },
+    )
+
+    assert response.status_code == 400
+    assert response.json()["detail"] == (
+        "Audio file is empty"
+    )
+
+
+def test_speech_stt_returns_502_for_provider_failure(
+    client,
+    monkeypatch,
+):
+    def fail_transcription(*args, **kwargs):
+        raise SpeechProviderError(
+            "Provider unavailable"
+        )
+
+    monkeypatch.setattr(
+        kb_routes,
+        "transcribe_audio",
+        fail_transcription,
+    )
+
+    response = client.post(
+        "/api/v1/kb/stt",
+        headers={"X-Company-Id": "1"},
+        files={
+            "file": (
+                "recording.webm",
+                b"fake-audio",
+                "audio/webm",
+            )
+        },
+    )
+
+    assert response.status_code == 502
+    assert response.json()["detail"] == (
+        "Speech transcription is currently unavailable"
+    )
+
+
+def test_speech_tts_returns_wav_audio(
+    client,
+    monkeypatch,
+):
+    wav_bytes = b"RIFF-generated-wav"
+
+    monkeypatch.setattr(
+        kb_routes,
+        "synthesize_speech",
+        lambda text: wav_bytes,
+    )
+
+    response = client.post(
+        "/api/v1/kb/tts",
+        headers={"X-Company-Id": "1"},
+        json={
+            "text": "أهلاً وسهلاً"
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.content == wav_bytes
+    assert response.headers[
+        "content-type"
+    ].startswith("audio/wav")
+
+    assert response.headers[
+        "cache-control"
+    ] == "no-store"
+
+    assert "inline" in response.headers[
+        "content-disposition"
+    ]
+
+
+def test_speech_tts_rejects_empty_text(
+    client,
+):
+    response = client.post(
+        "/api/v1/kb/tts",
+        headers={"X-Company-Id": "1"},
+        json={
+            "text": "   "
+        },
+    )
+
+    assert response.status_code == 400
+    assert response.json()["detail"] == (
+        "Text is empty"
+    )
+
+
+def test_speech_tts_returns_502_for_provider_failure(
+    client,
+    monkeypatch,
+):
+    def fail_synthesis(*args, **kwargs):
+        raise SpeechProviderError(
+            "Provider unavailable"
+        )
+
+    monkeypatch.setattr(
+        kb_routes,
+        "synthesize_speech",
+        fail_synthesis,
+    )
+
+    response = client.post(
+        "/api/v1/kb/tts",
+        headers={"X-Company-Id": "1"},
+        json={
+            "text": "اختبار"
+        },
+    )
+
+    assert response.status_code == 502
+    assert response.json()["detail"] == (
+        "Speech synthesis is currently unavailable"
+    )
