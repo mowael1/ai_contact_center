@@ -19,7 +19,7 @@ from app.services.llm_service import (
 
 MAX_ATTEMPTS = 2
 
-STT_CONFIDENCE_THRESHOLD = 0.60
+STT_CONFIDENCE_THRESHOLD = 0.50
 
 
 # =========================================
