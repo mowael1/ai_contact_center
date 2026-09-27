@@ -5,6 +5,7 @@ from __future__ import annotations
 import time
 from dataclasses import asdict
 from pathlib import Path
+from datetime import datetime
 from typing import Optional
 
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
@@ -16,10 +17,13 @@ from rag.config import settings
 from rag.documents.loader import SUPPORTED
 from rag.logging_utils import get_logger
 from rag.services.conversation import (
+    Conversation,
+    Turn,
     contextual_query,
     conversations,
     format_history,
 )
+from rag.services.chat_store import chat_store
 from rag.services.tenancy import Tenant
 
 logger = get_logger(__name__)
@@ -53,6 +57,33 @@ class DocumentListResponse(BaseModel):
     collection: str
     vectors: int
     documents: list[DocumentModel]
+
+
+class ChatSessionCreate(BaseModel):
+    title: str = Field("New chat", min_length=1, max_length=120)
+
+
+class ChatSessionModel(BaseModel):
+    id: str
+    company_id: int
+    title: str
+    summary: str = ""
+    document_ids: list[str] = Field(default_factory=list)
+    created_at: datetime
+    updated_at: datetime
+
+
+class ChatMessageModel(BaseModel):
+    id: int
+    session_id: str
+    role: str
+    content: str
+    created_at: datetime
+
+
+class ChatMessagesResponse(BaseModel):
+    session: ChatSessionModel
+    messages: list[ChatMessageModel]
 
 
 class AskRequest(BaseModel):
@@ -189,6 +220,44 @@ def delete_document(
             "company_id": tenant.company_id}
 
 
+@router.post("/sessions", response_model=ChatSessionModel, status_code=status.HTTP_201_CREATED)
+def create_chat_session(
+    payload: ChatSessionCreate = ChatSessionCreate(),
+    tenant: Tenant = Depends(get_tenant),
+) -> ChatSessionModel:
+    return ChatSessionModel(**chat_store.create(tenant.company_id, payload.title))
+
+
+@router.get("/sessions", response_model=list[ChatSessionModel])
+def list_chat_sessions(tenant: Tenant = Depends(get_tenant)) -> list[ChatSessionModel]:
+    return [ChatSessionModel(**item) for item in chat_store.list(tenant.company_id)]
+
+
+@router.delete("/sessions/{session_id}")
+def delete_chat_session(
+    session_id: str,
+    tenant: Tenant = Depends(get_tenant),
+) -> dict:
+    if not chat_store.delete(tenant.company_id, session_id):
+        raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Chat session not found")
+    return {"deleted": True, "session_id": session_id}
+
+
+@router.get("/sessions/{session_id}/messages", response_model=ChatMessagesResponse)
+def get_chat_messages(
+    session_id: str,
+    tenant: Tenant = Depends(get_tenant),
+) -> ChatMessagesResponse:
+    item = chat_store.get(tenant.company_id, session_id)
+    messages = chat_store.messages(tenant.company_id, session_id)
+    if not item or messages is None:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Chat session not found")
+    return ChatMessagesResponse(
+        session=ChatSessionModel(**item),
+        messages=[ChatMessageModel(**message) for message in messages],
+    )
+
+
 @router.post(
     "/ask",
     response_model=AskResponse,
@@ -205,17 +274,46 @@ def ask(
     follow-up into a self-contained retrieval query, and as conversational
     context for the model. Facts still come only from retrieved passages.
     """
-    conversation = conversations.get(tenant.company_id, payload.conversation_id)
-    search_query = contextual_query(payload.query, conversation)
-    history = format_history(conversation, settings.CHAT_HISTORY_IN_PROMPT)
+    session_memory = chat_store.memory(tenant.company_id, payload.conversation_id) if payload.conversation_id else None
+    if session_memory:
+        recent = "\n".join(
+            f"{message['role'].title()}: {message['content']}"
+            for message in session_memory.recent
+        )
+        history = "\n".join(
+            part for part in [
+                f"Conversation summary:\n{session_memory.summary}" if session_memory.summary else "",
+                f"Recent messages:\n{recent}" if recent else "",
+            ] if part
+        )
+        # The durable transcript is the source of generation memory. The old
+        # in-process store remains only for deterministic retrieval expansion.
+        previous_user = next(
+            (message["content"] for message in reversed(session_memory.recent)
+             if message["role"] == "user"),
+            None,
+        )
+        conversation = Conversation(
+            turns=[Turn(previous_user, "")] if previous_user else []
+        )
+        search_query = contextual_query(payload.query, conversation) if conversation.turns else payload.query
+    else:
+        conversation = conversations.get(tenant.company_id, payload.conversation_id)
+        search_query = contextual_query(payload.query, conversation)
+        history = format_history(conversation, settings.CHAT_HISTORY_IN_PROMPT)
 
     results = container.retriever.retrieve(search_query, top_k=payload.top_k)
     answer = container.generator().generate(payload.query, results, history=history)
     answer.latency_ms = {**container.retriever.last_latency, **answer.latency_ms}
 
-    conversations.append(
-        tenant.company_id, payload.conversation_id, payload.query, answer.answer
-    )
+    if payload.conversation_id:
+        chat_store.append(
+            tenant.company_id,
+            payload.conversation_id,
+            payload.query,
+            answer.answer,
+            [chunk.document_id for chunk in answer.retrieved],
+        )
 
     return AskResponse(
         query=answer.query,
@@ -244,7 +342,8 @@ def clear_conversation(
     tenant: Tenant = Depends(get_tenant),
 ) -> dict:
     """Start fresh. Scoped to the caller's company, so ids cannot collide."""
-    cleared = conversations.clear(tenant.company_id, conversation_id)
+    cleared = chat_store.delete(tenant.company_id, conversation_id)
+    conversations.clear(tenant.company_id, conversation_id)
     return {"cleared": cleared, "conversation_id": conversation_id}
 
 
