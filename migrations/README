@@ -1,1 +1,33 @@
-Generic single-database configuration.
+Database schema changes are managed with Alembic from the repository root.
+
+## Team workflow
+
+1. Pull the latest changes before creating a migration.
+2. Update the SQLAlchemy model, then generate a revision:
+
+   ```bash
+   PYTHONPATH=. .venv/bin/alembic revision --autogenerate -m "describe the schema change"
+   ```
+
+3. Review the generated `upgrade()` and `downgrade()` carefully. Autogenerate
+   does not detect every schema or data change, and data migrations should be
+   written explicitly.
+4. Commit the model change and its migration together. Do not edit a migration
+   that has already been shared or applied; add a new revision instead.
+5. Apply pending revisions with:
+
+   ```bash
+   PYTHONPATH=. .venv/bin/alembic upgrade head
+   ```
+
+Alembic assigns each revision a unique ID. If separate branches both add a
+migration from the same parent, merge the branches and create a merge revision
+after both changes are present:
+
+```bash
+PYTHONPATH=. .venv/bin/alembic heads
+PYTHONPATH=. .venv/bin/alembic merge -m "merge schema branches" <head-a> <head-b>
+```
+
+Keep the merge revision in the repository. Do not resolve multiple heads by
+changing `down_revision` in a migration that teammates may already have used.
