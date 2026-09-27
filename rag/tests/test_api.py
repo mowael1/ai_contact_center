@@ -183,6 +183,9 @@ def test_openapi_documents_all_endpoints(client):
         "/api/v1/kb/documents/{document_id}",
         "/api/v1/kb/ask",
         "/api/v1/kb/conversations/{conversation_id}",
+        "/api/v1/kb/sessions",
+        "/api/v1/kb/sessions/{session_id}",
+        "/api/v1/kb/sessions/{session_id}/messages",
         "/api/v1/kb/info",
     }
 
