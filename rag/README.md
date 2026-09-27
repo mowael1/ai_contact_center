@@ -1,8 +1,21 @@
 # Vodafone Egypt RAG Backend
 
 Arabic/English retrieval-augmented generation over a web-scraped Vodafone Egypt
-knowledge base. Backend only — Python services, a REST API and a CLI. There is
-no UI in this project by design.
+knowledge base. It includes Python services, a REST API, a CLI and a small
+Knowledge Base UI under `/ui/kb.html`.
+
+The Knowledge Base assistant supports durable chat sessions. Apply the
+application migrations before using them:
+
+```bash
+alembic upgrade head
+```
+
+The session endpoints are `POST /api/v1/kb/sessions`, `GET
+/api/v1/kb/sessions`, and `GET /api/v1/kb/sessions/{id}/messages`. Send the
+session id as `conversation_id` to `/api/v1/kb/ask`; the existing retrieval
+pipeline remains unchanged, while the generator receives the older extractive
+summary and the latest eight messages as conversational context.
 
 ---
 
