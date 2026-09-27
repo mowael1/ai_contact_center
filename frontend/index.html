@@ -365,6 +365,25 @@
       padding: 22px;
     }
 
+    .card-head {
+      padding: 20px 22px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .card-head h3 {
+      font-size: 18px;
+      margin-bottom: 4px;
+    }
+
+    .card-head p {
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
     /* FORMS */
     .form-group {
       margin-bottom: 18px;
@@ -871,11 +890,20 @@
     }
     .kb-drop-over { border-color: var(--primary); background: #eff6ff; color: var(--primary); }
     /* ---- chat ---- */
-    .kb-chat-card { display: flex; flex-direction: column; }
-    .kb-chat-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+    .kb-chat-card { display: flex; flex-direction: column; overflow: hidden; }
+    .kb-chat-head { align-items: flex-start; }
+    .kb-chat-layout { display: grid; grid-template-columns: minmax(0, 1fr) 220px; min-height: 360px; }
+    .kb-sessions { grid-column: 2; grid-row: 1; border-left: 1px solid var(--border); padding: 12px; background: var(--surface); }
+    .kb-sessions-title { color: var(--muted); font-size: 11px; font-weight: 750; letter-spacing: .04em; text-transform: uppercase; padding: 5px 8px 9px; }
+    .kb-session-row { display: flex; align-items: center; gap: 4px; margin-bottom: 3px; }
+    .kb-session { min-width: 0; flex: 1; border: 0; background: transparent; color: var(--text); border-radius: 9px; padding: 9px 8px; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
+    .kb-session:hover, .kb-session.active { background: #eff6ff; color: var(--primary); }
+    .kb-session-delete { flex: 0 0 30px; border: 0; border-radius: 7px; padding: 6px; background: transparent; color: var(--muted); cursor: pointer; font-size: 17px; line-height: 1; }
+    .kb-session-delete:hover { background: var(--danger-bg); color: var(--danger); }
+    .kb-session-empty { padding: 8px; color: var(--muted); font-size: 12px; }
 
     .kb-chat {
-      min-height: 220px;
+      min-height: 360px;
       max-height: 460px;
       overflow-y: auto;
       padding: 18px 20px;
@@ -959,6 +987,10 @@
       .kb-bubble { max-width: 94%; }
       .kb-chat { padding: 14px; }
       .kb-composer { padding: 12px 14px; }
+      .kb-chat-layout { grid-template-columns: 1fr; }
+      .kb-sessions { grid-column: 1; grid-row: 1; border-left: 0; border-bottom: 1px solid var(--border); display: flex; gap: 6px; overflow-x: auto; }
+      .kb-sessions-title { display: none; }
+      .kb-session-row { flex: 0 0 180px; }
     }
   </style>
 </head>
@@ -3910,7 +3942,10 @@
                 New chat
               </button>
             </div>
-            <div class="kb-chat" id="kbChat"></div>
+            <div class="kb-chat-layout">
+              <div class="kb-chat" id="kbChat"></div>
+              <aside class="kb-sessions" id="kbSessions" aria-label="Chat sessions"></aside>
+            </div>
             <div class="kb-composer">
               <textarea id="kbQuery" rows="1"
                 placeholder="اسأل بالعربي أو بالإنجليزي…  (Enter to send)"></textarea>
@@ -3940,7 +3975,7 @@
       }
 
       if (canManage) wireKbUpload();
-      wireKbAsk();
+      await wireKbAsk();
       await loadKbDocuments(canManage);
     }
 
@@ -4004,13 +4039,7 @@
       };
     }
 
-    // A conversation id groups messages so follow-ups resolve. It lives only
-    // for this browser session.
-    let kbConversationId = null;
-
-    function newConversationId() {
-      return (crypto.randomUUID?.() || String(Date.now() + Math.random())).slice(0, 36);
-    }
+    let kbSessionId = localStorage.getItem("kb_session_id") || null;
 
     function kbAppendMessage(role, html, options = {}) {
       const chat = document.getElementById("kbChat");
@@ -4028,7 +4057,6 @@
     }
 
     function kbResetChat() {
-      kbConversationId = newConversationId();
       const chat = document.getElementById("kbChat");
       if (chat) {
         chat.innerHTML = `<p class="kb-chat-empty muted">
@@ -4037,22 +4065,82 @@
       }
     }
 
-    function wireKbAsk() {
+    async function kbLoadSession(sessionId) {
+      const result = await kbRequest(`/sessions/${encodeURIComponent(sessionId)}/messages`);
+      kbSessionId = result.session.id;
+      localStorage.setItem("kb_session_id", kbSessionId);
+      const chat = document.getElementById("kbChat");
+      chat.innerHTML = "";
+      if (!result.messages.length) {
+        kbResetChat();
+      } else {
+        result.messages.forEach((message) => kbAppendMessage(
+          message.role === "user" ? "user" : "bot",
+          `<div class="kb-text">${escapeHtml(message.content)}</div>`,
+          { rtl: isRtl(message.content) },
+        ));
+      }
+      document.querySelectorAll("[data-kb-session]").forEach((button) =>
+        button.classList.toggle("active", button.dataset.kbSession === kbSessionId));
+    }
+
+    async function kbLoadSessions() {
+      const target = document.getElementById("kbSessions");
+      const result = await kbRequest("/sessions");
+      if (!result.length) {
+        result.push(await kbRequest("/sessions", { method: "POST", body: {} }));
+      }
+      const selected = result.some((session) => session.id === kbSessionId)
+        ? kbSessionId : result[0].id;
+      target.innerHTML = `<div class="kb-sessions-title">Chats</div>${result.map((session) =>
+        `<div class="kb-session-row">
+          <button class="kb-session" data-kb-session="${escapeHtml(session.id)}" title="${escapeHtml(session.title)}">${escapeHtml(session.title)}</button>
+          <button class="kb-session-delete" data-kb-delete="${escapeHtml(session.id)}" title="Delete chat" aria-label="Delete chat">&times;</button>
+        </div>`
+      ).join("")}`;
+      target.querySelectorAll("[data-kb-session]").forEach((button) => {
+        button.onclick = () => kbLoadSession(button.dataset.kbSession).catch((error) => showToast(error.message, "error"));
+      });
+      target.querySelectorAll("[data-kb-delete]").forEach((button) => {
+        button.onclick = async () => {
+          if (!confirm("Delete this chat and its messages?")) return;
+          button.disabled = true;
+          try {
+            await kbRequest(`/sessions/${encodeURIComponent(button.dataset.kbDelete)}`, { method: "DELETE" });
+            if (button.dataset.kbDelete === kbSessionId) {
+              kbSessionId = null;
+              localStorage.removeItem("kb_session_id");
+            }
+            await kbLoadSessions();
+          } catch (error) {
+            button.disabled = false;
+            showToast(error.message, "error");
+          }
+        };
+      });
+      await kbLoadSession(selected);
+    }
+
+    async function wireKbAsk() {
       const button = document.getElementById("kbAsk");
       const input = document.getElementById("kbQuery");
       const newChat = document.getElementById("kbNewChat");
 
-      kbResetChat();
+      try {
+        await kbLoadSessions();
+      } catch (error) {
+        kbResetChat();
+        showToast(error.message, "error");
+      }
 
       newChat.onclick = async () => {
-        const previous = kbConversationId;
-        kbResetChat();
-        // Drop the server-side history too, not just the visible transcript.
-        if (previous) {
-          try {
-            await kbRequest(`/conversations/${encodeURIComponent(previous)}`,
-                            { method: "DELETE" });
-          } catch (_) { /* nothing to forget */ }
+        try {
+          const created = await kbRequest("/sessions", { method: "POST", body: {} });
+          kbSessionId = created.id;
+          localStorage.setItem("kb_session_id", kbSessionId);
+          await kbLoadSessions();
+        } catch (error) {
+          showToast(error.message, "error");
         }
       };
 
@@ -4089,7 +4177,7 @@
         try {
           const result = await kbRequest("/ask", {
             method: "POST",
-            body: { query, top_k: 3, conversation_id: kbConversationId }
+            body: { query, top_k: 3, conversation_id: kbSessionId }
           });
 
           const citations = result.citations.length
