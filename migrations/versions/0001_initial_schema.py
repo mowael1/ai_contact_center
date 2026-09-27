@@ -95,6 +95,28 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint("id"),
     )
 
+    op.create_table(
+        "calls",
+        sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
+        sa.Column("company_id", sa.Integer(), nullable=False),
+        sa.Column("ticket_id", sa.Integer(), nullable=False),
+        sa.Column("customer_id", sa.Integer(), nullable=False),
+        sa.Column("agent_id", sa.Integer(), nullable=False),
+        sa.Column("provider_call_id", sa.Unicode(100), nullable=True),
+        sa.Column("status", sa.Unicode(50), server_default=sa.text("'initiating'"), nullable=False),
+        sa.Column("outcome", sa.Unicode(50), nullable=True),
+        sa.Column("transcript", sa.UnicodeText(), nullable=True),
+        sa.Column("started_at", UtcDateTime(), nullable=True),
+        sa.Column("ended_at", UtcDateTime(), nullable=True),
+        sa.Column("duration_seconds", sa.Integer(), nullable=True),
+        sa.Column("created_at", UtcDateTime(), server_default=utcnow(), nullable=False),
+        sa.ForeignKeyConstraint(["company_id"], ["companies.id"]),
+        sa.ForeignKeyConstraint(["ticket_id"], ["tickets.id"]),
+        sa.ForeignKeyConstraint(["customer_id"], ["customers.id"]),
+        sa.ForeignKeyConstraint(["agent_id"], ["users.id"]),
+        sa.PrimaryKeyConstraint("id"),
+    )
+
     # The application assumes these roles exist; create_super_admin.py fails
     # without them.
     op.bulk_insert(
@@ -104,6 +126,7 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
+    op.drop_table("calls")
     op.drop_table("tickets")
     op.drop_table("customers")
     op.drop_table("users")
