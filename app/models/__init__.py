@@ -4,6 +4,7 @@ from app.models.user import User
 from app.models.customer import Customer
 from app.models.ticket import Ticket
 from app.models.call import Call
+from app.models.chat import ChatSession, ChatMessage
 
 __all__ = [
     "Company",
@@ -11,5 +12,7 @@ __all__ = [
     "User",
     "Customer",
     "Ticket",
-    "Call"
+    "Call",
+    "ChatSession",
+    "ChatMessage",
 ]
