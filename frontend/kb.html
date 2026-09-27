@@ -58,6 +58,8 @@
     border-top-color:transparent;border-radius:50%;animation:s .7s linear infinite;vertical-align:-2px}
   @keyframes s{to{transform:rotate(360deg)}}
   .empty{color:var(--muted);font-size:13px;padding:14px 0}
+  .sessionbar{display:flex;gap:10px;align-items:flex-end;margin-bottom:14px}
+  .sessionbar select{flex:1}
   code{background:var(--surface-2);border:1px solid var(--border);border-radius:6px;padding:1px 6px;font-size:12px}
   @media (prefers-color-scheme:dark){
     :root:not([data-theme=light]){
@@ -103,6 +105,11 @@
   <div class="card">
     <h2>Test the agent</h2>
     <div class="hint">Ask in Arabic or English. Answers come only from this company's documents, with citations.</div>
+    <div class="sessionbar">
+      <div style="flex:1"><label for="session">Chat session</label><select id="session"></select></div>
+      <button id="newSession" type="button">New chat</button>
+    </div>
+    <div id="chatHistory"></div>
     <label for="q">Question</label>
     <textarea id="q" placeholder="لو رجّعت حاجة اشتريتها بالتقسيط، الفلوس ترجع إزاي؟"></textarea>
     <div class="row" style="margin-top:12px;align-items:flex-end">
@@ -128,6 +135,42 @@ function esc(s) {
     ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 }
 const isRTL = (s) => /[؀-ۿ]/.test(s || "");
+let sessionId = localStorage.getItem("kb_session_id");
+
+function renderHistory(messages) {
+  $("chatHistory").innerHTML = messages.map((m) => `
+    <div class="answer" dir="${isRTL(m.content) ? "rtl" : "ltr"}" style="margin-top:10px">
+      <strong>${m.role === "user" ? "You" : "Assistant"}</strong><br>${esc(m.content)}
+    </div>`).join("");
+}
+
+async function loadSessions() {
+  let sessions = (await call("/sessions"));
+  if (!sessions.length) sessions = [await call("/sessions", {
+    method: "POST", headers: { "Content-Type": "application/json" }, body: "{}"
+  })];
+  if (!sessions.some((s) => s.id === sessionId)) sessionId = sessions[0].id;
+  $("session").innerHTML = sessions.map((s) =>
+    `<option value="${esc(s.id)}">${esc(s.title)}</option>`).join("");
+  $("session").value = sessionId;
+  await loadSessionMessages();
+}
+
+async function loadSessionMessages() {
+  const result = await call(`/sessions/${encodeURIComponent(sessionId)}/messages`);
+  localStorage.setItem("kb_session_id", sessionId);
+  renderHistory(result.messages);
+}
+
+$("session").onchange = async () => { sessionId = $("session").value; await loadSessionMessages(); };
+$("newSession").onclick = async () => {
+  const created = await call("/sessions", {
+    method: "POST", headers: { "Content-Type": "application/json" }, body: "{}"
+  });
+  sessionId = created.id;
+  await loadSessions();
+  $("q").focus();
+};
 
 async function call(path, options = {}) {
   const res = await fetch(API + path, { ...options, headers: { ...headers(), ...(options.headers || {}) } });
@@ -244,7 +287,7 @@ $("ask").onclick = async () => {
     const r = await call("/ask", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query, top_k: parseInt($("topk").value, 10) || 5 }),
+      body: JSON.stringify({ query, top_k: parseInt($("topk").value, 10) || 5, conversation_id: sessionId }),
     });
     const dir = isRTL(r.answer) ? "rtl" : "ltr";
     const cites = r.citations.length
@@ -258,7 +301,6 @@ $("ask").onclick = async () => {
       <div class="meta">
         ${r.has_sufficient_context ? '<span class="pill ok">grounded</span>' : '<span class="pill warn">insufficient context</span>'}
         &nbsp; retrieval ${Math.round(t.total_ms || 0)}ms · generation ${Math.round(t.generate_ms || 0)}ms
-        ${r.usage ? ` · ${r.usage.total_tokens} tokens · $${(r.usage.estimated_cost_usd || 0).toFixed(6)}` : ""}
       </div>`;
   } catch (err) {
     $("askResult").innerHTML =
@@ -269,8 +311,11 @@ $("ask").onclick = async () => {
   }
 };
 
-$("company").onchange = loadDocs;
+$("company").onchange = () => { loadDocs(); loadSessions().catch((err) => {
+  $("chatHistory").innerHTML = `<div class="empty">${esc(err.message)}</div>`;
+}); };
 loadDocs();
+loadSessions().catch((err) => { $("chatHistory").innerHTML = `<div class="empty">${esc(err.message)}</div>`; });
 </script>
 </body>
 </html>
