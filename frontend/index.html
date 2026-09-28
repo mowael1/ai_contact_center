@@ -4382,9 +4382,10 @@
 
               input.value = transcript;
               input.dispatchEvent(new Event("input"));
-              micButton.disabled = false;
-              button.disabled = false;
-              await send();
+              showToast(
+                "Transcript ready. Review it, then press Send.",
+                "success"
+              );
             } catch (error) {
               showToast(error.message, "error");
             } finally {

@@ -37,7 +37,7 @@ class Settings(BaseSettings):
     GROQ_MODEL: str = "openai/gpt-oss-20b"
     
     # ---- Speech ------------------------------------------------------------
-    GROQ_STT_MODEL: str = "whisper-large-v3-turbo"
+    GROQ_STT_MODEL: str = "whisper-large-v3"
     GROQ_TTS_MODEL: str = "canopylabs/orpheus-arabic-saudi"
     GROQ_TTS_VOICE: str = "abdullah"
 
