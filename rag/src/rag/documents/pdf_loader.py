@@ -17,8 +17,10 @@ from rag.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
-# "1. ", "1.2 ", "1.2.3 " and the Arabic equivalents.
-NUMBERED = re.compile(r"^\s*(?:\d+(?:\.\d+)*[.)]?|[IVXivx]+[.)]|[أ-ي][-.)])\s+\S")
+# "1. ", "1.2 ", "1.2.3 " and the Arabic equivalents. Limit numeric
+# heading components so phone numbers such as "19888 - Banque Misr" do not
+# become headings and cause the contact details to disappear from their section.
+NUMBERED = re.compile(r"^\s*(?:\d{1,3}(?:\.\d{1,3}){0,2}[.)]?|[IVXivx]+[.)]|[أ-ي][-.)])\s+\S")
 ARABIC_HEADING_WORD = re.compile(r"^\s*(?:الفصل|القسم|الباب|المقدمة|الخاتمة|ملحق)\b")
 
 MAX_HEADING_CHARS = 140
