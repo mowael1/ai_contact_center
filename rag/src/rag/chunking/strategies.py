@@ -20,10 +20,11 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Optional, Sequence
 
-from rag.chunking.tokenizer import get_token_counter
+from rag.chunking.tokenizer import TiktokenCounter, get_token_counter
 from rag.config import settings
 from rag.logging_utils import get_logger
 from rag.models import Section
+from rag.text_utils import arabic_ratio
 
 logger = get_logger(__name__)
 
@@ -84,12 +85,23 @@ def fixed_size_parts(
 ) -> list[TextPart]:
     """Sliding window over ``text``. Overlap is applied between windows."""
     counter = get_token_counter(config.unit, config.encoding)
+    size, overlap = _effective_window(config, text, counter)
+    if isinstance(counter, TiktokenCounter):
+        windows = counter.windows(text, size, overlap)
+        return [
+            TextPart(
+                text=body,
+                part=start_part + index,
+                strategy="fixed_size",
+                unit_count=count,
+                **carry,
+            )
+            for index, (body, count) in enumerate(windows)
+        ]
+
     units = counter.split(text)
     if not units:
         return []
-
-    size = max(1, config.size)
-    overlap = max(0, min(config.overlap, size - 1))
     step = size - overlap
 
     parts: list[TextPart] = []
@@ -113,6 +125,23 @@ def fixed_size_parts(
     return parts
 
 
+def _effective_window(config: ChunkingSettings, text: str, counter=None) -> tuple[int, int]:
+    """Equalise approximate character coverage across English and Arabic.
+
+    cl100k averages about 5.36 English characters but 1.44 Arabic characters
+    per token in this corpus. Scale the configured token target by script mix
+    so Arabic chunks cover a comparable amount of source text.
+    """
+    size = max(1, config.size)
+    if config.unit == "tokens" and isinstance(counter, TiktokenCounter):
+        ar = arabic_ratio(text)
+        chars_per_token = 5.36 * (1.0 - ar) + 1.44 * ar
+        factor = 5.36 / chars_per_token
+        size = max(1, round(size * factor))
+    overlap = max(0, min(round(config.overlap * (size / max(1, config.size)),), size - 1))
+    return size, overlap
+
+
 def section_based_parts(
     sections: Sequence[Section],
     config: ChunkingSettings,
@@ -133,8 +162,9 @@ def section_based_parts(
             "page_number": getattr(section, "page_number", None),
             "page_range": getattr(section, "page_range", None),
         }
+        size, _ = _effective_window(config, body, counter)
         total = counter.count(body)
-        if total <= config.size:
+        if total <= size:
             parts.append(
                 TextPart(
                     text=body, part=len(parts) + 1, strategy="section_based",
