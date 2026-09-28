@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import time
+import re
+import unicodedata
 from typing import Any, Optional
 
 from rag.config import settings
@@ -58,19 +60,28 @@ class RetrievalService:
         clean_filters["company_id"] = tenant.company_id
         dedupe = settings.DEDUPLICATE_RESULTS if deduplicate is None else deduplicate
 
-        # This corpus publishes the same copy under several URLs (e.g. the
-        # "/en/vodafone-cash" and "/en/Vodafone-cash" variants), so ask for
-        # extra candidates and collapse them after scoring.
-        fetch_k = min(top_k * 3, 100) if dedupe else top_k
+        # Keep semantic and lexical retrieval independent until fusion. A wider
+        # pool lets exact numbers surface even when the Arabic paraphrase has a
+        # weak embedding match.
+        fetch_k = min(max(top_k * 10, 30), 100)
 
         t0 = time.perf_counter()
         vector = self.embeddings.embed_query(query)
         t1 = time.perf_counter()
-        results = self.store.similarity_search(vector, top_k=fetch_k, filters=clean_filters)
+        semantic = self.store.similarity_search(vector, top_k=fetch_k, filters=clean_filters)
+        lexical_terms = _lexical_terms(query)
+        keyword = self.store.keyword_search(
+            sorted(lexical_terms), top_k=fetch_k, filters=clean_filters
+        )
         t2 = time.perf_counter()
 
+        keyword_weight = 2.0 if any(term.isdigit() for term in lexical_terms) else 1.25
+        results = reciprocal_rank_fusion(
+            semantic, keyword, keyword_weight=keyword_weight
+        )
         if dedupe:
             results = deduplicate_by_content(results)
+        results = diversify_sections(results, top_k)
         results = results[:top_k]
 
         self.last_latency = {
@@ -83,6 +94,81 @@ class RetrievalService:
             len(results), len(query), self.last_latency["total_ms"],
         )
         return results
+
+
+_ARABIC_DIACRITICS = re.compile(r"[\u064b-\u065f\u0670\u0640]")
+_WORD_RE = re.compile(r"[\w]+", re.UNICODE)
+_ARABIC_SYNONYMS = {
+    "اقل": {"أقل", "الحد", "الأدنى", "ادنى", "اكثر", "أكثر", "minimum", "min"},
+    "ليمت": {"حد", "الحد", "limit", "minimum"},
+    "اوردر": {"طلب", "طلبية", "الطلبية", "الطلبات", "order", "orders"},
+    "order": {"طلب", "طلبية", "الطلبية", "الطلبات", "اوردر"},
+    "طلبية": {"الطلبيات", "طلبيات", "طلبات", "order", "orders"},
+    "الطلبية": {"الطلبيات", "طلبيات", "طلبات", "order", "orders"},
+}
+_ARABIC_STOPWORDS = {
+    "هل", "ينفع", "ممكن", "في", "على", "من", "ايه", "هو", "هي", "ب", "ال",
+}
+
+
+def _normalize_term(term: str) -> str:
+    term = unicodedata.normalize("NFKC", term).lower()
+    term = _ARABIC_DIACRITICS.sub("", term)
+    return term.translate(str.maketrans({"أ": "ا", "إ": "ا", "آ": "ا", "ى": "ي", "ة": "ه"}))
+
+
+def _lexical_terms(text: str) -> set[str]:
+    terms = {_normalize_term(token) for token in _WORD_RE.findall(text)}
+    # Arabic clitics and definite articles commonly differ between colloquial
+    # questions and formal PDF text ("الطلبات" vs "طلبات").
+    expanded = set(terms)
+    for term in terms:
+        if term.startswith("ال") and len(term) > 3:
+            expanded.add(term[2:])
+        if term in _ARABIC_SYNONYMS:
+            expanded.update(_normalize_term(alias) for alias in _ARABIC_SYNONYMS[term])
+    return expanded - {_normalize_term(word) for word in _ARABIC_STOPWORDS}
+
+
+def reciprocal_rank_fusion(
+    semantic: list[RetrievedChunk],
+    keyword: list[RetrievedChunk],
+    k: int = 60,
+    keyword_weight: float = 1.25,
+) -> list[RetrievedChunk]:
+    """Merge independent ranked lists without comparing incompatible scores."""
+    by_id: dict[str, RetrievedChunk] = {}
+    fused: dict[str, float] = {}
+    for list_index, ranked_list in enumerate((semantic, keyword)):
+        weight = 1.0 if list_index == 0 else keyword_weight
+        for rank, chunk in enumerate(ranked_list, start=1):
+            # Keep the semantic result's cosine score when a chunk appears in
+            # both lists; keyword scores are on a different scale.
+            by_id.setdefault(chunk.chunk_id, chunk)
+            fused[chunk.chunk_id] = fused.get(chunk.chunk_id, 0.0) + weight / (k + rank)
+    for chunk_id, chunk in by_id.items():
+        chunk.metadata = {**chunk.metadata, "hybrid_score": fused[chunk_id]}
+    return sorted(by_id.values(), key=lambda chunk: fused[chunk.chunk_id], reverse=True)
+
+
+def diversify_sections(results: list[RetrievedChunk], top_k: int) -> list[RetrievedChunk]:
+    """Choose distinct sections first so overlapping chunks do not crowd out facts."""
+    selected: list[RetrievedChunk] = []
+    deferred: list[RetrievedChunk] = []
+    seen: set[tuple[str, str]] = set()
+    for chunk in results:
+        section = chunk.metadata.get("section_index")
+        if section is None or str(section) in {"", "-1"}:
+            deferred.append(chunk)
+            continue
+        key = (chunk.document_id, str(section))
+        if key in seen:
+            deferred.append(chunk)
+        else:
+            seen.add(key)
+            selected.append(chunk)
+    selected.extend(deferred)
+    return selected[:top_k]
 
 
 def deduplicate_by_content(results: list[RetrievedChunk]) -> list[RetrievedChunk]:
