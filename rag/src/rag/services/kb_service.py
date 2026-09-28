@@ -22,6 +22,7 @@ from rag.chunking.strategies import ChunkingSettings, chunk_text
 from rag.config import settings
 from rag.documents.base import LoadedDocument
 from rag.documents.loader import iter_supported_files, load_document
+from rag.documents.arabic_repair import detect_reversed_word_order, repair_pdf_word_order
 from rag.documents.quality import QualityReport, assess, repair_extracted
 from rag.documents.sections import build_sections
 from rag.embeddings.base import EmbeddingService
@@ -119,18 +120,32 @@ class KnowledgeBaseService:
 
         # Normalise presentation forms and undo reversed-Arabic extraction
         # before anything downstream sees the text.
+        character_order_reversed = False
         for page in document.pages:
             page.text, info = repair_extracted(page.text)
             if info["reversal"]["is_reversed"]:
+                character_order_reversed = True
                 document.warnings.append(
                     f"page {page.page_number}: repaired reversed Arabic"
                 )
-        if document.warnings:
+        if character_order_reversed:
             # Headings and the title were derived from the raw layout, so they
             # need the same correction as the page text.
             for heading in document.headings:
                 heading.text = heading.text[::-1]
             document.title = document.title[::-1]
+
+        if document.source_type == "pdf" and detect_reversed_word_order(
+            "\n".join(page.text for page in document.pages)
+        ):
+            for page in document.pages:
+                page.text = repair_pdf_word_order(page.text)
+            for heading in document.headings:
+                heading.text = repair_pdf_word_order(heading.text)
+            document.title = repair_pdf_word_order(document.title)
+            document.warnings.append(
+                "restored Arabic word and table order detected in PDF extraction"
+            )
 
         report = assess(document)
         if not report.ok:
