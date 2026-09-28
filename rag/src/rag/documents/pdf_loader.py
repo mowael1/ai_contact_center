@@ -37,18 +37,88 @@ def _table_regions(page) -> list[tuple]:
         finder = page.find_tables()
     except Exception:
         return regions
+    # Lines outside a table's detected bbox can still be table columns. This
+    # happens with RTL PDFs where PyMuPDF detects only the two right-hand
+    # columns and leaves a third, left-aligned value column in the prose stream.
+    layout_lines: list[tuple[tuple, str]] = []
+    for block in page.get_text("dict").get("blocks", []):
+        if block.get("type") != 0:
+            continue
+        for line in block.get("lines", []):
+            text = "".join(span.get("text", "") for span in line.get("spans", [])).strip()
+            if text:
+                layout_lines.append((tuple(line.get("bbox", (0, 0, 0, 0))), text))
+
     for table in getattr(finder, "tables", []) or []:
         try:
             rows = table.extract()
         except Exception:
             continue
         rendered = []
-        for row in rows:
+        expanded = list(table.bbox)
+        row_layout = getattr(table, "rows", [])
+        from rag.documents.arabic_repair import _repair_table_cell
+        from rag.text_utils import arabic_ratio
+
+        candidates_by_row: list[list[tuple[str, tuple, str]]] = []
+        for index in range(len(rows)):
+            matches: list[tuple[str, tuple, str]] = []
+            if index < len(row_layout):
+                _, y0, _, y1 = row_layout[index].bbox
+                for line_bbox, line_text in layout_lines:
+                    x0, ly0, x1, ly1 = line_bbox
+                    cy = (ly0 + ly1) / 2
+                    if len(line_text) > 100 or not y0 <= cy <= y1:
+                        continue
+                    if x1 <= table.bbox[0] + 2:
+                        matches.append(("left", line_bbox, line_text))
+                    elif x0 >= table.bbox[2] - 2:
+                        matches.append(("right", line_bbox, line_text))
+            candidates_by_row.append(matches)
+        minimum_rows = max(2, (len(rows) + 1) // 2)
+        supported_sides = {
+            side for side in ("left", "right")
+            if sum(any(candidate[0] == side for candidate in row) for row in candidates_by_row)
+            >= minimum_rows
+        }
+
+        for index, row in enumerate(rows):
             cells = [(c or "").strip().replace("\n", " ") for c in row]
+            if index < len(row_layout):
+                side_cells = [
+                    candidate for candidate in candidates_by_row[index]
+                    if candidate[0] in supported_sides
+                ]
+                # A third column outside the detected table is common in RTL
+                # comparison tables. Include it in the same row and suppress
+                # it from the prose stream below.
+                left = [text for side, _, text in side_cells if side == "left"]
+                right = [text for side, _, text in side_cells if side == "right"]
+                is_rtl = arabic_ratio(" ".join(left + cells + right)) >= 0.45
+                if is_rtl:
+                    # PyMuPDF's table-cell extraction can reverse Arabic
+                    # characters inside each cell. Nearby third-column values
+                    # come from the regular text layer, so they need word-order
+                    # repair instead.
+                    cells = [
+                        cell[::-1] if arabic_ratio(cell) >= 0.65 else _repair_table_cell(cell)
+                        for cell in cells
+                    ]
+                    left = [_repair_table_cell(text) for text in left]
+                    right = [_repair_table_cell(text) for text in right]
+                    # Put an RTL row in reader order (rightmost cell first).
+                    cells = list(reversed(left + cells + right))
+                else:
+                    cells = left + cells + right
+                for _, box, _ in side_cells:
+                    expanded[0] = min(expanded[0], box[0])
+                    expanded[1] = min(expanded[1], box[1])
+                    expanded[2] = max(expanded[2], box[2])
+                    expanded[3] = max(expanded[3], box[3])
             if any(cells):
                 rendered.append(" | ".join(cells))
         if rendered:
-            regions.append((tuple(table.bbox), "\n".join(rendered)))
+            regions.append((tuple(expanded), "\n".join(rendered)))
     return regions
 
 
@@ -124,6 +194,8 @@ def load_pdf(path: str | Path) -> LoadedDocument:
         for line in _relines(page, all_lines)
     ]
     headings = detect_headings(all_lines)
+    for page in pages:
+        page.text = _normalize_pdf_formatting(page.text)
     first = pages[0].text if pages else ""
     return LoadedDocument(
         title=infer_title(path, first),
@@ -134,6 +206,29 @@ def load_pdf(path: str | Path) -> LoadedDocument:
         headings=headings,
         byte_size=path.stat().st_size if path.exists() else 0,
     )
+
+
+_LIST_MARKER = re.compile(r"^\s*(\d{1,3})[.)]\s*$")
+
+
+def _normalize_pdf_formatting(text: str) -> str:
+    """Repair simple layout artifacts while retaining source wording."""
+    lines = text.splitlines()
+    normalized: list[str] = []
+    index = 0
+    while index < len(lines):
+        line = lines[index].rstrip()
+        marker = _LIST_MARKER.match(line)
+        if marker and index + 1 < len(lines) and lines[index + 1].strip():
+            line = f"{marker.group(1)}. {lines[index + 1].strip()}"
+            index += 1
+        # PDF text extraction sometimes loses spaces around an inline dash or
+        # keeps a dangling dash before a table's pipe separator.
+        line = re.sub(r"\)([-–])\s*(?=\w)", r") \1 ", line)
+        line = re.sub(r"\s*[-–]\s*\|", " |", line)
+        normalized.append(line)
+        index += 1
+    return "\n".join(normalized)
 
 
 def _relines(page: PageText, all_lines: list[tuple[int, dict]]) -> list[dict]:
