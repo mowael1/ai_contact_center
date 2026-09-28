@@ -18,13 +18,13 @@ treats both scripts equally.
 from __future__ import annotations
 
 from functools import lru_cache
-from typing import Protocol
+from typing import Any, Protocol
 
 
 class TokenCounter(Protocol):
     def count(self, text: str) -> int: ...
 
-    def split(self, text: str) -> list[str]:
+    def split(self, text: str) -> list[Any]:
         """Split into counting units, so a window can be built from them."""
         ...
 
@@ -71,13 +71,45 @@ class TiktokenCounter:
     def count(self, text: str) -> int:
         return len(self._enc.encode(text))
 
-    def split(self, text: str) -> list[str]:
-        # Decode each token back to its own string so a window of N tokens can
-        # be reassembled losslessly.
-        return [self._enc.decode([t]) for t in self._enc.encode(text)]
+    def split(self, text: str) -> list[int]:
+        # Keep token IDs intact. Decoding a BPE token in isolation can split a
+        # UTF-8 sequence (common for Arabic) and emit U+FFFD replacement chars.
+        return self._enc.encode(text)
 
-    def join(self, units: list[str]) -> str:
-        return "".join(units)
+    def join(self, units: list[int]) -> str:
+        return self._enc.decode(units)
+
+    def windows(self, text: str, size: int, overlap: int) -> list[tuple[str, int]]:
+        """Return token-sized windows snapped outward to whole words."""
+        token_ids = self._enc.encode(text)
+        if not token_ids:
+            return []
+        decoded, offsets = self._enc.decode_with_offsets(token_ids)
+        if decoded != text:
+            decoded = text
+
+        step = max(1, size - overlap)
+        results: list[tuple[str, int]] = []
+        token_start = 0
+        while token_start < len(token_ids):
+            token_end = min(token_start + size, len(token_ids))
+            char_start = offsets[token_start]
+            char_end = offsets[token_end] if token_end < len(token_ids) else len(decoded)
+
+            # Move boundaries outward to whitespace so neither Unicode
+            # characters nor Arabic words are cut at BPE token boundaries.
+            while char_start > 0 and not decoded[char_start - 1].isspace():
+                char_start -= 1
+            while char_end < len(decoded) and not decoded[char_end].isspace():
+                char_end += 1
+
+            body = decoded[char_start:char_end].strip()
+            if body and (not results or body != results[-1][0]):
+                results.append((body, self.count(body)))
+            if token_end == len(token_ids):
+                break
+            token_start += step
+        return results
 
 
 @lru_cache
