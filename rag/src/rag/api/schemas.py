@@ -20,8 +20,12 @@ class RetrievalFilters(BaseModel):
 
 
 class RetrieveRequest(BaseModel):
-    query: str = Field(..., min_length=1, max_length=2000,
-                       examples=["ازاي أجدد باقة الإنترنت؟"])
+    query: str = Field(
+        ...,
+        min_length=1,
+        max_length=2000,
+        examples=["ازاي أجدد باقة الإنترنت؟"],
+    )
     top_k: int = Field(5, ge=1, le=50)
     filters: Optional[RetrievalFilters] = None
 
@@ -48,11 +52,22 @@ class RetrieveResponse(BaseModel):
 
 class QueryRequest(BaseModel):
     query: str = Field(..., min_length=1, max_length=2000)
+
+    persona: str = Field(
+        "professional",
+        min_length=1,
+        max_length=100,
+        description="Response style/persona requested by the frontend.",
+    )
+
     top_k: int = Field(5, ge=1, le=50)
     filters: Optional[RetrievalFilters] = None
+
     include_chunks: bool = Field(
-        False, description="Return the full retrieved passages alongside the answer."
+        False,
+        description="Return the full retrieved passages alongside the answer.",
     )
+
     agentic: Optional[bool] = Field(
         None,
         description=(
@@ -60,8 +75,11 @@ class QueryRequest(BaseModel):
             "AGENTIC_ENABLED. Set false to force the linear pipeline."
         ),
     )
+
     max_attempts: Optional[int] = Field(
-        None, ge=1, le=5,
+        None,
+        ge=1,
+        le=5,
         description="Retrieval attempts including the first (agentic mode only).",
     )
 
@@ -109,12 +127,15 @@ class QueryResponse(BaseModel):
     chunks: Optional[list[RetrievedChunkModel]] = None
     usage: Optional[UsageModel] = None
     latency_ms: dict[str, float] = Field(default_factory=dict)
+
     attempts: list[AttemptModel] = Field(
         default_factory=list,
         description="Agentic mode only: the loop's per-attempt audit trail.",
     )
+
     trace: list[str] = Field(
-        default_factory=list, description="Agentic mode only: nodes executed, in order."
+        default_factory=list,
+        description="Agentic mode only: nodes executed, in order.",
     )
 
 
