@@ -65,6 +65,7 @@ class Container:
         from rag.services.evaluator import LLMContextEvaluator, LLMQueryRewriter
 
         judge = self.judge_llm
+
         return AgenticRagWorkflow(
             retriever=self.retriever,
             generator=self.generator(),
@@ -73,9 +74,14 @@ class Container:
             max_attempts=max_attempts,
         )
 
-    def answerer(self, agentic: Optional[bool] = None, max_attempts: Optional[int] = None):
+    def answerer(
+        self,
+        agentic: Optional[bool] = None,
+        max_attempts: Optional[int] = None,
+    ):
         """Whichever orchestrator is configured - both expose ``query()``."""
         use_graph = settings.AGENTIC_ENABLED if agentic is None else agentic
+
         if use_graph:
             workflow = self.agentic(max_attempts)
 
@@ -89,12 +95,23 @@ class Container:
                     self.evaluator = wf.evaluator
                     self.rewriter = wf.rewriter
 
-                def query(self, question, top_k=None, filters=None):
-                    return self._workflow.run(question, top_k=top_k, filters=filters)
+                def query(
+                    self,
+                    question,
+                    top_k=None,
+                    filters=None,
+                    persona="professional",
+                ):
+                    return self._workflow.run(
+                        question,
+                        top_k=top_k,
+                        filters=filters,
+                        persona=persona,
+                    )
 
             return _GraphAdapter(workflow)
-        return self.rag()
 
+        return self.rag()
 
     def kb(self, chunking=None):
         """Knowledge-base service for this container's tenant."""
@@ -102,7 +119,10 @@ class Container:
         from rag.services.tenancy import require_tenant
 
         return KnowledgeBaseService(
-            require_tenant(self.tenant), self.store, self.embeddings, chunking
+            require_tenant(self.tenant),
+            self.store,
+            self.embeddings,
+            chunking,
         )
 
 
@@ -117,17 +137,27 @@ def build_tenant_container(
     from rag.services.tenancy import Tenant
 
     tenant = Tenant(company_id=company_id)
+
     embeddings = build_embedding_service(
-        provider=embedding_provider, model=embedding_model
+        provider=embedding_provider,
+        model=embedding_model,
     )
+
     store = build_vector_store(
-        embeddings, offline=offline, offline_path=offline_path,
+        embeddings,
+        offline=offline,
+        offline_path=offline_path,
         collection=tenant.collection_name,
     )
+
     return Container(
         embeddings=embeddings,
         store=store,
-        retriever=RetrievalService(store, embeddings, tenant=tenant),
+        retriever=RetrievalService(
+            store,
+            embeddings,
+            tenant=tenant,
+        ),
         tenant=tenant,
     )
 
@@ -143,20 +173,34 @@ def build_vector_store(
         from rag.vectorstore.memory_store import InMemoryVectorStore
 
         name = collection or settings.CHROMA_COLLECTION_NAME
+
         if offline_path:
             logger.warning(
                 "Using OFFLINE in-memory vector store at %s - not Chroma Cloud.",
                 offline_path,
             )
+
             return InMemoryVectorStore.load(
-                Path(offline_path), collection_name=name, embedding_model=embeddings.model
+                Path(offline_path),
+                collection_name=name,
+                embedding_model=embeddings.model,
             )
-        logger.warning("Using OFFLINE in-memory vector store - not Chroma Cloud.")
-        return InMemoryVectorStore(collection_name=name, embedding_model=embeddings.model)
+
+        logger.warning(
+            "Using OFFLINE in-memory vector store - not Chroma Cloud."
+        )
+
+        return InMemoryVectorStore(
+            collection_name=name,
+            embedding_model=embeddings.model,
+        )
 
     from rag.vectorstore.chroma_cloud import ChromaCloudStore
 
-    return ChromaCloudStore(collection_name=collection, embedding_model=embeddings.model)
+    return ChromaCloudStore(
+        collection_name=collection,
+        embedding_model=embeddings.model,
+    )
 
 
 def build_container(
@@ -167,15 +211,24 @@ def build_container(
     collection: Optional[str] = None,
 ) -> Container:
     embeddings = build_embedding_service(
-        provider=embedding_provider, model=embedding_model
+        provider=embedding_provider,
+        model=embedding_model,
     )
+
     store = build_vector_store(
-        embeddings, offline=offline, offline_path=offline_path, collection=collection
+        embeddings,
+        offline=offline,
+        offline_path=offline_path,
+        collection=collection,
     )
+
     return Container(
         embeddings=embeddings,
         store=store,
-        retriever=RetrievalService(store, embeddings),
+        retriever=RetrievalService(
+            store,
+            embeddings,
+        ),
     )
 
 

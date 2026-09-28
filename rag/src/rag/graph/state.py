@@ -33,6 +33,7 @@ class RagState(TypedDict, total=False):
     top_k: int
     filters: Optional[dict[str, Any]]
     max_attempts: int
+    persona: str
 
     # -- loop state --------------------------------------------------------
     query: str                 # the (possibly rewritten) query in play
