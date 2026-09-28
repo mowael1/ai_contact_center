@@ -16,6 +16,7 @@ from typing import Any, Optional, Sequence
 from rag.models import Chunk, RetrievedChunk
 from rag.vectorstore.base import VectorStore
 from rag.vectorstore.chroma_cloud import build_where
+from rag.vectorstore.keyword import lexical_score
 
 
 def _cosine_distance(a: Sequence[float], b: Sequence[float]) -> float:
@@ -124,6 +125,33 @@ class InMemoryVectorStore(VectorStore):
                     metadata=dict(meta),
                 )
             )
+        return out
+
+    def keyword_search(self, query_terms, top_k=5, filters=None):
+        where = build_where(filters)
+        scored = []
+        for chunk_id, rec in self._docs.items():
+            if not _matches(rec["metadata"], where):
+                continue
+            score = lexical_score(query_terms, rec["text"])
+            if score > 0:
+                scored.append((score, chunk_id, rec))
+        scored.sort(key=lambda item: item[0], reverse=True)
+        out: list[RetrievedChunk] = []
+        for score, chunk_id, rec in scored[:top_k]:
+            meta = rec["metadata"]
+            path_raw = meta.get("section_path") or ""
+            out.append(RetrievedChunk(
+                chunk_id=chunk_id,
+                text=rec["text"],
+                score=score,
+                distance=1.0 - score,
+                source_url=meta.get("source_url", ""),
+                section_title=meta.get("section_title") or None,
+                section_path=[p for p in path_raw.split(" > ") if p] or None,
+                document_id=meta.get("document_id", ""),
+                metadata=dict(meta),
+            ))
         return out
 
     def count(self) -> int:
