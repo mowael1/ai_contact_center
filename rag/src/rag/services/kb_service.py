@@ -206,7 +206,19 @@ class KnowledgeBaseService:
 
         document_id = chunks[0].document_id
         if replace:
-            removed = self.store.delete_document(document_id)
+            # document_id includes a content hash, so it changes when extraction
+            # or normalization changes. Remove every prior version of this
+            # filename before writing the new chunks, otherwise stale vectors
+            # can keep winning retrieval after a re-ingest.
+            old_documents = [
+                item for item in self.store.list_documents()
+                if item.get("source") == document.source
+            ]
+            removed = sum(
+                self.store.delete_document(item["document_id"])
+                for item in old_documents
+                if item.get("document_id")
+            )
             if removed:
                 logger.info("Replaced %d existing chunks for %s", removed, document.source)
 
