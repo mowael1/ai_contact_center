@@ -26,6 +26,7 @@ import re
 from dataclasses import dataclass
 
 ARABIC_WORD = re.compile(r"[؀-ۿ]+")
+_ARABIC_QUESTION_STARTERS = {"هل", "ازاي", "إزاي", "ايه", "إيه", "ليه", "كيف", "ماذا", "ما", "كل"}
 
 #: Frequent Arabic function words and their character reversals.
 _MARKERS = (
@@ -88,3 +89,102 @@ def repair(text: str) -> tuple[str, ReversalVerdict]:
     """Return (possibly repaired text, verdict)."""
     verdict = detect_reversed(text)
     return (reverse_lines(text) if verdict.is_reversed else text), verdict
+
+
+def detect_reversed_word_order(text: str) -> bool:
+    """Detect PDFs whose Arabic words are emitted in visual (right-to-left) order.
+
+    Character order can be correct while the *word sequence* on a line is
+    reversed. FAQ-style question starters provide a conservative signal: in a
+    correctly ordered document they begin lines; in a visually ordered PDF
+    they tend to appear at line ends. Require several examples and a strong
+    directional imbalance before changing any text.
+    """
+    from rag.text_utils import arabic_ratio
+
+    starts = ends = eligible = 0
+    for line in text.splitlines():
+        words = line.split()
+        if len(words) < 4 or arabic_ratio(line) < 0.65 or "|" in line:
+            continue
+        eligible += 1
+        first = re.sub(r"^[^؀-ۿ]+|[^؀-ۿ]+$", "", words[0])
+        last = re.sub(r"^[^؀-ۿ]+|[^؀-ۿ]+$", "", words[-1])
+        starts += first in _ARABIC_QUESTION_STARTERS
+        ends += last in _ARABIC_QUESTION_STARTERS
+    return eligible >= 8 and ends >= 3 and ends >= max(3, starts * 3) and ends / eligible >= 0.15
+
+
+def repair_pdf_word_order(text: str) -> str:
+    """Restore Arabic line and table reading order after PDF extraction."""
+    from rag.text_utils import arabic_ratio
+
+    repaired: list[str] = []
+    for line in text.splitlines():
+        if "|" in line and arabic_ratio(line) >= 0.45:
+            # PDF table rows are normalized cell-by-cell in pdf_loader, where
+            # we still know which cells came from the table API and which came
+            # from adjacent page text.
+            repaired.append(line)
+        elif len(line.split()) >= 2 and arabic_ratio(line) >= 0.65:
+            numeric_prefix = re.match(r"^(\d[\d,./+%]*)\s+(?:[-–]\s*)?(.*)$", line)
+            if numeric_prefix and "%" in numeric_prefix.group(1):
+                repaired.append(line)
+                continue
+            if numeric_prefix and arabic_ratio(numeric_prefix.group(2)) >= 0.65:
+                phone_or_number, body = numeric_prefix.groups()
+                tokens = [_move_rtl_punctuation(token) for token in body.split()]
+                restored = f"{' '.join(reversed(tokens))} - {phone_or_number}"
+            else:
+                tokens = [_move_rtl_punctuation(token) for token in line.split()]
+                restored = " ".join(reversed(tokens))
+            restored = re.sub(r"(?<!\w)-(\d+)\b", r"\1-", restored)
+            repaired.append(restored)
+        else:
+            repaired.append(line)
+    return "\n".join(repaired)
+
+
+def _repair_table_cell(cell: str) -> str:
+    """Repair one extracted RTL table cell without reversing numeric digits."""
+    from rag.text_utils import arabic_ratio
+
+    percent = re.match(r"^(\d[\d,./]*)%(.*)$", cell)
+    if percent:
+        number, suffix = percent.groups()
+        inside = re.search(r"\((.*?)\)", suffix)
+        if inside:
+            words = " ".join(reversed(inside.group(1).split()))
+            return f"{number}% ({words})"
+        return f"{number}%{suffix}"
+
+    trailing_percent = re.match(r"^(\d[\d,./]*)\s+(.+?)%$", cell)
+    if trailing_percent:
+        number, qualifier = trailing_percent.groups()
+        qualifier = " ".join(reversed(qualifier.split()))
+        return f"{qualifier} {number}%"
+
+    if detect_reversed(cell, min_words=2).is_reversed:
+        return reverse_lines(cell)
+    if arabic_ratio(cell) >= 0.65:
+        return " ".join(reversed([_move_rtl_punctuation(w) for w in cell.split()]))
+    # Numeric lists in these RTL tables are emitted backwards as a sequence;
+    # keep each number intact and restore only the item order.
+    return " ".join(reversed([_move_rtl_punctuation(w) for w in cell.split()]))
+
+
+def _move_rtl_punctuation(token: str) -> str:
+    """Move punctuation that extraction placed on the visual-left side."""
+    if token.startswith(")") and token.endswith("("):
+        return "(" + token[1:-1] + ")"
+    leading = ""
+    while token and token[0] in ":،؛!?؟.!" :
+        leading += token[0]
+        token = token[1:]
+    if leading:
+        token += leading
+    if token.startswith(")"):
+        token = token[1:] + ")"
+    if token.endswith("("):
+        token = "(" + token[:-1]
+    return token
