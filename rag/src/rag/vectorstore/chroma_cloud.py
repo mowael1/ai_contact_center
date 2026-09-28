@@ -14,6 +14,7 @@ from rag.config import settings
 from rag.logging_utils import get_logger
 from rag.models import Chunk, RetrievedChunk
 from rag.vectorstore.base import VectorStore
+from rag.vectorstore.keyword import lexical_score
 
 logger = get_logger(__name__)
 
@@ -164,6 +165,58 @@ class ChromaCloudStore(VectorStore):
             include=["documents", "metadatas", "distances"],
         )
         return parse_query_result(result)
+
+    def keyword_search(
+        self,
+        query_terms: Sequence[str],
+        top_k: int = 5,
+        filters: Optional[dict[str, Any]] = None,
+    ) -> list[RetrievedChunk]:
+        # Chroma's document filter supplies an independent lexical candidate
+        # set; ranking below uses normalized token overlap so Arabic hamza and
+        # diacritic variants compare consistently.
+        terms = list(dict.fromkeys(
+            term for term in query_terms if len(term) >= 3 or term.isdigit()
+        ))[:20]
+        if not terms:
+            return []
+        search_terms = list(terms)
+        for term in terms:
+            if term.startswith("ا") and len(term) > 2:
+                search_terms.extend(("أ" + term[1:], "إ" + term[1:], "آ" + term[1:]))
+        search_terms = list(dict.fromkeys(search_terms))
+        clauses = [{"$contains": term} for term in search_terms]
+        where_document = clauses[0] if len(clauses) == 1 else {"$or": clauses}
+        result = self._retry(
+            self._collection.get,
+            where=build_where(filters) or None,
+            where_document=where_document,
+            limit=min(max(top_k * 50, 200), 2000),
+            include=["documents", "metadatas"],
+        )
+        ids = result.get("ids") or []
+        documents = result.get("documents") or []
+        metadatas = result.get("metadatas") or []
+        ranked = []
+        for chunk_id, text, metadata in zip(ids, documents, metadatas):
+            metadata = metadata or {}
+            score = lexical_score(terms, text or "")
+            if score <= 0:
+                continue
+            section_path = metadata.get("section_path") or ""
+            ranked.append((score, RetrievedChunk(
+                chunk_id=chunk_id,
+                text=text or "",
+                score=score,
+                distance=1.0 - score,
+                source_url=metadata.get("source_url", ""),
+                section_title=metadata.get("section_title") or None,
+                section_path=[part for part in section_path.split(" > ") if part] or None,
+                document_id=metadata.get("document_id", ""),
+                metadata=dict(metadata),
+            )))
+        ranked.sort(key=lambda item: item[0], reverse=True)
+        return [chunk for _, chunk in ranked[:top_k]]
 
     def count(self) -> int:
         return int(self._retry(self._collection.count))
