@@ -34,6 +34,15 @@ class VectorStore(ABC):
     ) -> list[RetrievedChunk]:
         """Nearest-neighbour search with optional metadata filtering."""
 
+    def keyword_search(
+        self,
+        query_terms: Sequence[str],
+        top_k: int = 5,
+        filters: Optional[dict[str, Any]] = None,
+    ) -> list[RetrievedChunk]:
+        """Rank documents by lexical term matches, independently of embeddings."""
+        raise NotImplementedError
+
     @abstractmethod
     def count(self) -> int:
         """Number of vectors currently stored."""
