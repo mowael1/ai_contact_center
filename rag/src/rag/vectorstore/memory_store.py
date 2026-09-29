@@ -157,6 +157,12 @@ class InMemoryVectorStore(VectorStore):
     def count(self) -> int:
         return len(self._docs)
 
+    def embedding_dimension(self) -> Optional[int]:
+        if not self._docs:
+            return None
+        first = next(iter(self._docs.values()))
+        return len(first["embedding"])
+
     def info(self) -> dict[str, Any]:
         return {
             "backend": "in_memory",

@@ -22,6 +22,9 @@ logger = get_logger(__name__)
 # enough while still amortising network cost across many chunks.
 DEFAULT_BATCH = 100
 MAX_ATTEMPTS = 4
+# Chroma Cloud's default Get quota rejects a request above 300 records.
+MAX_LEXICAL_CANDIDATES = 300
+MAX_DOCUMENT_PREDICATES = 8
 
 
 class ChromaCloudStore(VectorStore):
@@ -184,14 +187,14 @@ class ChromaCloudStore(VectorStore):
         for term in terms:
             if term.startswith("ا") and len(term) > 2:
                 search_terms.extend(("أ" + term[1:], "إ" + term[1:], "آ" + term[1:]))
-        search_terms = list(dict.fromkeys(search_terms))
+        search_terms = list(dict.fromkeys(search_terms))[:MAX_DOCUMENT_PREDICATES]
         clauses = [{"$contains": term} for term in search_terms]
         where_document = clauses[0] if len(clauses) == 1 else {"$or": clauses}
         result = self._retry(
             self._collection.get,
             where=build_where(filters) or None,
             where_document=where_document,
-            limit=min(max(top_k * 50, 200), 2000),
+            limit=min(max(top_k * 10, 100), MAX_LEXICAL_CANDIDATES),
             include=["documents", "metadatas"],
         )
         ids = result.get("ids") or []
@@ -220,6 +223,22 @@ class ChromaCloudStore(VectorStore):
 
     def count(self) -> int:
         return int(self._retry(self._collection.count))
+
+    def embedding_dimension(self) -> Optional[int]:
+        """Return the collection's immutable vector width without downloading it.
+
+        Chroma fixes a collection's dimension on its first insert.  Looking at
+        one vector lets the composition root select the matching embedding
+        backend for collections created before the configured model changed.
+        """
+        if self.count() == 0:
+            return None
+        result = self._retry(self._collection.peek, limit=1)
+        vectors = result.get("embeddings")
+        if vectors is None or len(vectors) == 0:
+            return None
+        vector = vectors[0]
+        return len(vector) if vector is not None else None
 
     def info(self) -> dict[str, Any]:
         """Diagnostics with the API key deliberately excluded."""

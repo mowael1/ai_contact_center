@@ -16,6 +16,8 @@ class FakeCollection:
     def __init__(self):
         self.store: dict[str, dict] = {}
         self.calls: list[str] = []
+        self.last_get_limit = None
+        self.last_where_document = None
 
     def add(self, ids, documents, metadatas, embeddings):
         self.calls.append("add")
@@ -38,11 +40,28 @@ class FakeCollection:
         for cid in ids:
             self.store.pop(cid, None)
 
-    def get(self, where=None, include=None):
+    def get(self, where=None, include=None, where_document=None, limit=None):
         self.calls.append("get")
+        self.last_get_limit = limit
+        self.last_where_document = where_document
+        if where is None:
+            items = list(self.store.items())[:limit]
+            return {
+                "ids": [cid for cid, _ in items],
+                "documents": [row["document"] for _, row in items],
+                "metadatas": [row["metadata"] for _, row in items],
+            }
         key, cond = next(iter(where.items()))
         wanted = cond["$eq"] if isinstance(cond, dict) else cond
-        return {"ids": [c for c, r in self.store.items() if r["metadata"].get(key) == wanted]}
+        items = [
+            (c, r) for c, r in self.store.items()
+            if r["metadata"].get(key) == wanted
+        ][:limit]
+        return {
+            "ids": [c for c, _ in items],
+            "documents": [r["document"] for _, r in items],
+            "metadatas": [r["metadata"] for _, r in items],
+        }
 
     def query(self, query_embeddings, n_results, where=None, include=None):
         self.calls.append("query")
@@ -56,6 +75,10 @@ class FakeCollection:
 
     def count(self):
         return len(self.store)
+
+    def peek(self, limit=1):
+        items = list(self.store.items())[:limit]
+        return {"embeddings": [row["embedding"] for _, row in items]}
 
 
 class FakeClient:
@@ -78,6 +101,12 @@ def store():
 def test_add_and_count(store):
     store.add_chunks([make_chunk(0), make_chunk(1)], [[0.1, 0.2], [0.3, 0.4]])
     assert store.count() == 2
+
+
+def test_embedding_dimension_is_read_from_one_stored_vector(store):
+    assert store.embedding_dimension() is None
+    store.add_chunks([make_chunk(0)], [[0.1, 0.2, 0.3]])
+    assert store.embedding_dimension() == 3
 
 
 def test_upsert_prevents_duplicates(store):
@@ -127,6 +156,22 @@ def test_similarity_search_maps_distance_to_score(store):
     assert result.distance == pytest.approx(0.1)
     assert result.score == pytest.approx(0.9)
     assert result.section_path == ["Internet", "Renewal"]
+
+
+def test_keyword_search_stays_within_chroma_get_quota(store):
+    store.upsert_chunks(
+        [make_chunk(0, text="internet package")],
+        [[0.1, 0.2]],
+    )
+    store.keyword_search(["internet"], top_k=100)
+    assert store._collection.last_get_limit == 300
+
+
+def test_keyword_search_stays_within_document_predicate_quota(store):
+    terms = [f"term{i}" for i in range(20)]
+    store.keyword_search(terms, top_k=1)
+    where_document = store._collection.last_where_document
+    assert len(where_document["$or"]) == 8
 
 
 def test_info_never_exposes_the_api_key(store):

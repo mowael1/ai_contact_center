@@ -29,6 +29,14 @@ logger = get_logger(__name__)
 #: so that no vector database is ever written into the dataset directory.
 OFFLINE_STORE_ENV = "RAG_OFFLINE_STORE"
 
+# Collections created before the switch to BGE-M3 contain 768-wide
+# EmbeddingGemma vectors. Chroma collection dimensions are immutable, so both
+# backends remain available while those collections are still in service.
+_EMBEDDING_BACKEND_BY_DIMENSION = {
+    768: ("embeddinggemma_hf", "google/embeddinggemma-300m"),
+    1024: ("hf_inference", "BAAI/bge-m3"),
+}
+
 
 @dataclass
 class Container:
@@ -149,6 +157,7 @@ def build_tenant_container(
         offline_path=offline_path,
         collection=tenant.collection_name,
     )
+    embeddings = _resolve_collection_embeddings(embeddings, store)
 
     return Container(
         embeddings=embeddings,
@@ -203,6 +212,50 @@ def build_vector_store(
     )
 
 
+def _resolve_collection_embeddings(
+    configured: EmbeddingService,
+    store: VectorStore,
+) -> EmbeddingService:
+    """Use the embedding model that matches an existing collection.
+
+    Chroma rejects a query whose vector width differs from the collection.
+    Empty collections use the configured model; populated legacy collections
+    are opened with the known compatible backend instead of failing at query
+    time with ``expected 768, got 1024`` (or the inverse).
+    """
+    stored_dimension = store.embedding_dimension()
+    if stored_dimension is None or configured.dimension == stored_dimension:
+        return configured
+
+    backend = _EMBEDDING_BACKEND_BY_DIMENSION.get(stored_dimension)
+    if backend is None:
+        raise RuntimeError(
+            "No compatible embedding backend is configured for collection "
+            f"dimension {stored_dimension}; configured model "
+            f"{configured.model!r} produces dimension {configured.dimension}."
+        )
+
+    provider, model = backend
+    compatible = build_embedding_service(provider=provider, model=model)
+    if compatible.dimension != stored_dimension:
+        raise RuntimeError(
+            f"Embedding backend {model!r} reports dimension "
+            f"{compatible.dimension}, expected {stored_dimension}."
+        )
+
+    logger.warning(
+        "Collection %s uses %d-dimensional vectors; using compatible model %s "
+        "instead of configured model %s.",
+        getattr(store, "collection_name", "<unknown>"),
+        stored_dimension,
+        compatible.model,
+        configured.model,
+    )
+    if hasattr(store, "embedding_model"):
+        store.embedding_model = compatible.model
+    return compatible
+
+
 def build_container(
     offline: bool = False,
     offline_path: Optional[Path] = None,
@@ -221,6 +274,7 @@ def build_container(
         offline_path=offline_path,
         collection=collection,
     )
+    embeddings = _resolve_collection_embeddings(embeddings, store)
 
     return Container(
         embeddings=embeddings,

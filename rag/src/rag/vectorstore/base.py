@@ -13,6 +13,10 @@ from rag.models import Chunk, RetrievedChunk
 
 
 class VectorStore(ABC):
+    def embedding_dimension(self) -> Optional[int]:
+        """Dimension already stored by this collection, if it has vectors."""
+        return None
+
     @abstractmethod
     def add_chunks(self, chunks: Sequence[Chunk], embeddings: Sequence[Sequence[float]]) -> int:
         """Insert chunks. Existing ids are overwritten."""

@@ -191,9 +191,20 @@ class HFInferenceEmbedding(HFInferenceEmbeddingGemma):
         "mpnet": ("", ""),
     }
 
+    # Known widths avoid an otherwise unnecessary API call while wiring the
+    # container. Unknown models still discover their width from first use.
+    KNOWN_DIMENSIONS: dict[str, int] = {
+        "bge-m3": 1024,
+        "multilingual-e5-large": 1024,
+        "embeddinggemma": 768,
+    }
+
     def __init__(self, model: str, api_key: str | None = None, batch_size: int | None = None):
         super().__init__(model=model, api_key=api_key, batch_size=batch_size)
-        self._dim = 0  # discovered from the first response
+        self._dim = next(
+            (width for key, width in self.KNOWN_DIMENSIONS.items() if key in model.lower()),
+            0,
+        )
         lowered = model.lower()
         self._query_prefix, self._doc_prefix = "", ""
         for key, (q, d) in self.PREFIXES.items():
