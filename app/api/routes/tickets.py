@@ -13,6 +13,8 @@ from app.schemas.ticket import (
     TicketCreate,
     TicketResponse,
 )
+from app.schemas.analytics import AnalyticsQueryRequest, AnalyticsQueryResponse
+from app.services.analytics_service import answer_analytics_question
 from app.services.ticket_service import (
     create_ticket,
     get_company_tickets,
@@ -24,6 +26,48 @@ from app.schemas.call import CallResponse
 from app.services.call_service import start_ticket_call
 
 router = APIRouter()
+
+
+@router.post("/analytics/query", response_model=AnalyticsQueryResponse)
+def query_ticket_analytics(
+    payload: AnalyticsQueryRequest,
+    db: Session = Depends(get_db),
+    current_admin: User = Depends(require_admin),
+):
+    """Answer natural-language questions using this admin's company data."""
+    history = ""
+    if payload.conversation_id and current_admin.company_id is not None:
+        from rag.services.chat_store import chat_store
+
+        memory = chat_store.memory(current_admin.company_id, payload.conversation_id)
+        recent = "\n".join(
+            f"{message['role'].title()}: {message['content']}"
+            for message in memory.recent
+        )
+        history = "\n".join(part for part in (
+            f"Conversation summary:\n{memory.summary}" if memory.summary else "",
+            f"Recent messages:\n{recent}" if recent else "",
+        ) if part)
+
+    result = answer_analytics_question(
+        db,
+        current_admin,
+        payload.query,
+        previous_metric=payload.previous_metric,
+        previous_time_period=payload.previous_time_period,
+        history=history,
+    )
+    if payload.conversation_id and current_admin.company_id is not None:
+        from rag.services.chat_store import chat_store
+
+        chat_store.append(
+            current_admin.company_id,
+            payload.conversation_id,
+            payload.query,
+            result["answer"],
+            [],
+        )
+    return result
 
 @router.post(
     "",

@@ -4091,8 +4091,8 @@
             <div class="card-head kb-chat-head">
               <div>
                 <h3>Assistant</h3>
-                <p class="muted">Answers come only from your documents. Ask follow-ups —
-                   it remembers the last few turns.</p>
+                <p class="muted">Choose documents or ticket analytics as the search source.
+                   Document chats remember the last few turns.</p>
               </div>
               <button class="btn btn-ghost btn-sm" id="kbNewChat" title="Start a new conversation">
                 New chat
@@ -4102,6 +4102,17 @@
               <div class="kb-chat" id="kbChat"></div>
               <aside class="kb-sessions" id="kbSessions" aria-label="Chat sessions"></aside>
             </div>
+            ${role === "ADMIN" ? `
+              <div style="padding:10px 18px 0">
+                <label for="kbQueryMode" class="muted" style="margin-right:8px">Search source</label>
+                <select id="kbQueryMode" class="input" style="width:auto;min-width:220px">
+                  <option value="documents">Company documents</option>
+                  <option value="analytics">Ticket analytics (SQL)</option>
+                </select>
+                <span id="kbQueryModeHint" class="muted" style="margin-left:8px">
+                  Search indexed files and return cited answers.
+                </span>
+              </div>` : ""}
             <div class="kb-composer">
               <div class="kb-persona-control">
                 <label for="kbPersona">Persona</label>
@@ -4207,6 +4218,8 @@
     }
 
     let kbSessionId = localStorage.getItem("kb_session_id") || null;
+    let kbLastAnalyticsMetric = null;
+    let kbLastAnalyticsPeriod = null;
 
     function kbAppendMessage(role, html, options = {}) {
       const chat = document.getElementById("kbChat");
@@ -4233,6 +4246,9 @@
     }
 
     async function kbLoadSession(sessionId) {
+      // Let the server-side chat memory restore the selected conversation's context.
+      kbLastAnalyticsMetric = null;
+      kbLastAnalyticsPeriod = null;
       const result = await kbRequest(`/sessions/${encodeURIComponent(sessionId)}/messages`);
       kbSessionId = result.session.id;
       localStorage.setItem("kb_session_id", kbSessionId);
@@ -4305,6 +4321,24 @@
       const newChat = document.getElementById("kbNewChat");
       const micButton = document.getElementById("kbMic");
       const persona = document.getElementById("kbPersona");
+      const modeSelect = document.getElementById("kbQueryMode");
+      const modeHint = document.getElementById("kbQueryModeHint");
+
+      if (modeSelect) {
+        modeSelect.onchange = () => {
+          const analyticsMode = modeSelect.value === "analytics";
+          if (!analyticsMode) {
+            kbLastAnalyticsMetric = null;
+            kbLastAnalyticsPeriod = null;
+          }
+          modeHint.textContent = analyticsMode
+            ? "Ask about ticket and call counts, outcomes, reasons, and durations."
+            : "Search indexed files and return cited answers.";
+          input.placeholder = analyticsMode
+            ? "مثال: كام تذكرة اتحلت الشهر ده؟"
+            : "اسأل بالعربي أو بالإنجليزي…  (Enter to send)";
+        };
+      }
 
       try {
         await kbLoadSessions();
@@ -4315,6 +4349,8 @@
 
       newChat.onclick = async () => {
         try {
+          kbLastAnalyticsMetric = null;
+          kbLastAnalyticsPeriod = null;
           const created = await kbRequest("/sessions", { method: "POST", body: {} });
           kbSessionId = created.id;
           localStorage.setItem("kb_session_id", kbSessionId);
@@ -4470,26 +4506,47 @@
         );
 
         try {
-          const result = await kbRequest("/ask", {
-            method: "POST",
-            body: {
-  query,
-  persona: persona.value,
-  top_k: 3,
-  conversation_id: kbSessionId
-}
-          });
+          const analyticsMode = modeSelect?.value === "analytics";
+          const result = analyticsMode
+            ? await apiRequest("/tickets/analytics/query", {
+                method: "POST",
+                body: {
+                  query,
+                  conversation_id: kbSessionId,
+                  previous_metric: kbLastAnalyticsMetric,
+                  previous_time_period: kbLastAnalyticsPeriod,
+                }
+              })
+            : await kbRequest("/ask", {
+                method: "POST",
+                body: {
+                  query,
+                  persona: persona.value,
+                  top_k: 3,
+                  conversation_id: kbSessionId,
+                }
+              });
 
-          const citations = result.citations.length
+          if (analyticsMode) {
+            kbLastAnalyticsMetric = result.metric;
+            kbLastAnalyticsPeriod = result.time_period;
+          }
+
+          const citations = !analyticsMode && result.citations.length
             ? `<ul class="kb-citations">${result.citations
                 .map((c) => `<li><strong>[${c.index}]</strong> ${escapeHtml(c.label)}</li>`)
                 .join("")}</ul>`
             : "";
-          const grounded = result.has_sufficient_context
+          const grounded = analyticsMode || result.has_sufficient_context
             ? ""
             : `<p class="kb-warn">Nothing in your documents answers this.</p>`;
-          const latency = Math.round((result.latency_ms?.total_ms || 0)
-                                   + (result.latency_ms?.generate_ms || 0));
+          const latency = analyticsMode
+            ? null
+            : Math.round((result.latency_ms?.total_ms || 0)
+                         + (result.latency_ms?.generate_ms || 0));
+          const analyticsData = analyticsMode
+            ? `<details class="kb-meta"><summary>SQL result data</summary><pre>${escapeHtml(JSON.stringify(result.data, null, 2))}</pre></details>`
+            : "";
           // Shown when a follow-up was expanded, so the retrieval is not a
           // black box.
           const expanded = result.search_query
@@ -4501,9 +4558,11 @@
               <div class="kb-text">${escapeHtml(result.answer)}</div>
               ${grounded}
               ${citations}
+              ${analyticsData}
               ${expanded}
-              <p class="kb-meta">${latency} ms${
+              ${latency === null ? `<p class="kb-meta">Ticket analytics · ${escapeHtml(result.metric)}</p>` : `<p class="kb-meta">${latency} ms${
                 result.usage ? ` · ${result.usage.total_tokens} tokens` : ""}</p>
+              `}
               <div class="kb-answer-actions">
                 <button class="kb-speak" type="button"
                         title="Read answer aloud" aria-label="Read answer aloud">🔊 Listen</button>
