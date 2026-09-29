@@ -17,6 +17,7 @@ class FakeCollection:
         self.store: dict[str, dict] = {}
         self.calls: list[str] = []
         self.last_get_limit = None
+        self.last_get_include = None
         self.last_where_document = None
 
     def add(self, ids, documents, metadatas, embeddings):
@@ -43,14 +44,18 @@ class FakeCollection:
     def get(self, where=None, include=None, where_document=None, limit=None):
         self.calls.append("get")
         self.last_get_limit = limit
+        self.last_get_include = include
         self.last_where_document = where_document
         if where is None:
             items = list(self.store.items())[:limit]
-            return {
+            result = {
                 "ids": [cid for cid, _ in items],
                 "documents": [row["document"] for _, row in items],
                 "metadatas": [row["metadata"] for _, row in items],
             }
+            if include and "embeddings" in include:
+                result["embeddings"] = [row["embedding"] for _, row in items]
+            return result
         key, cond = next(iter(where.items()))
         wanted = cond["$eq"] if isinstance(cond, dict) else cond
         items = [
@@ -107,6 +112,20 @@ def test_embedding_dimension_is_read_from_one_stored_vector(store):
     assert store.embedding_dimension() is None
     store.add_chunks([make_chunk(0)], [[0.1, 0.2, 0.3]])
     assert store.embedding_dimension() == 3
+    assert store._collection.last_get_include == ["embeddings"]
+
+
+def test_embedding_dimension_falls_back_to_peek_for_older_client(store):
+    store.add_chunks([make_chunk(0)], [[0.1, 0.2, 0.3]])
+    store._collection.get = lambda **_: {"ids": ["legacy-row"]}
+    assert store.embedding_dimension() == 3
+
+
+def test_populated_collection_without_readable_embeddings_fails_clearly(store):
+    store._collection.get = lambda **_: {"ids": ["legacy-row"]}
+    store._collection.peek = lambda **_: {"ids": ["legacy-row"]}
+    with pytest.raises(RuntimeError, match="embedding dimension could not be read"):
+        store.embedding_dimension()
 
 
 def test_upsert_prevents_duplicates(store):
