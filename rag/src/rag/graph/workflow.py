@@ -77,9 +77,13 @@ class AgenticRagWorkflow:
         builder.add_conditional_edges(
             "evaluate_context",
             self._route,
-            {"generate": "generate", "rewrite": "rewrite_query", "give_up": "give_up"},
+            {
+                "generate": "generate",
+                "rewrite": "rewrite_query",
+                "give_up": "give_up",
+            },
         )
-        builder.add_edge("rewrite_query", "retrieve")  # the loop
+        builder.add_edge("rewrite_query", "retrieve")
         builder.add_edge("generate", END)
         builder.add_edge("give_up", END)
         return builder.compile()
@@ -89,13 +93,22 @@ class AgenticRagWorkflow:
         query = state.get("query") or state["question"]
         attempt = state.get("attempt", 0) + 1
         started = time.perf_counter()
+
         chunks = self.retriever.retrieve(
-            query, top_k=state.get("top_k") or settings.TOP_K,
+            query,
+            top_k=state.get("top_k") or settings.TOP_K,
             filters=state.get("filters"),
         )
+
         elapsed = (time.perf_counter() - started) * 1000
-        logger.info("[graph] attempt %d retrieved %d chunks for %r",
-                    attempt, len(chunks), query[:60])
+
+        logger.info(
+            "[graph] attempt %d retrieved %d chunks for %r",
+            attempt,
+            len(chunks),
+            query[:60],
+        )
+
         return {
             "query": query,
             "attempt": attempt,
@@ -110,27 +123,38 @@ class AgenticRagWorkflow:
     def _evaluate(self, state: RagState) -> dict[str, Any]:
         chunks = state.get("chunks") or []
         started = time.perf_counter()
+
         verdict = self.evaluator.evaluate(state["question"], chunks)
+
         elapsed = (time.perf_counter() - started) * 1000
         attempt = state.get("attempt", 1)
-        logger.info("[graph] attempt %d verdict relevant=%s confidence=%.2f (%s)",
-                    attempt, verdict.is_relevant, verdict.confidence, verdict.reason[:80])
+
+        logger.info(
+            "[graph] attempt %d verdict relevant=%s confidence=%.2f (%s)",
+            attempt,
+            verdict.is_relevant,
+            verdict.confidence,
+            verdict.reason[:80],
+        )
+
         return {
             "is_relevant": verdict.is_relevant,
             "reason": verdict.reason,
             "missing": verdict.missing,
             "confidence": verdict.confidence,
-            "attempts": [{
-                "attempt": attempt,
-                "query": state.get("query", ""),
-                "retrieved": len(chunks),
-                "top_score": round(chunks[0].score, 4) if chunks else 0.0,
-                "is_relevant": verdict.is_relevant,
-                "confidence": verdict.confidence,
-                "reason": verdict.reason,
-                "missing": verdict.missing,
-                "latency_ms": round(elapsed, 3),
-            }],
+            "attempts": [
+                {
+                    "attempt": attempt,
+                    "query": state.get("query", ""),
+                    "retrieved": len(chunks),
+                    "top_score": round(chunks[0].score, 4) if chunks else 0.0,
+                    "is_relevant": verdict.is_relevant,
+                    "confidence": verdict.confidence,
+                    "reason": verdict.reason,
+                    "missing": verdict.missing,
+                    "latency_ms": round(elapsed, 3),
+                }
+            ],
             "trace": [
                 f"evaluate#{attempt}: relevant={verdict.is_relevant} "
                 f"confidence={verdict.confidence:.2f}"
@@ -143,6 +167,7 @@ class AgenticRagWorkflow:
 
     def _rewrite(self, state: RagState) -> dict[str, Any]:
         attempt = state.get("attempt", 1)
+
         new_query = self.rewriter.rewrite(
             query=state.get("query", state["question"]),
             chunks=state.get("chunks") or [],
@@ -150,13 +175,19 @@ class AgenticRagWorkflow:
             original_question=state["question"],
             missing=state.get("missing", ""),
         )
+
         return {
             "query": new_query,
             "trace": [f"rewrite#{attempt}: -> {new_query!r}"],
         }
 
     def _generate(self, state: RagState) -> dict[str, Any]:
-        answer = self.generator.generate(state["question"], state.get("chunks") or [])
+        answer = self.generator.generate(
+            state["question"],
+            state.get("chunks") or [],
+            persona=state.get("persona", "professional"),
+        )
+
         return {
             "answer": answer.answer,
             "citations": answer.citations,
@@ -172,21 +203,34 @@ class AgenticRagWorkflow:
     def _give_up(self, state: RagState) -> dict[str, Any]:
         """Every attempt failed the relevance check - refuse rather than guess."""
         language = detect_language(state["question"])
-        logger.info("[graph] giving up after %d attempts", state.get("attempt", 0))
+
+        logger.info(
+            "[graph] giving up after %d attempts",
+            state.get("attempt", 0),
+        )
+
         return {
-            "answer": NO_CONTEXT_ANSWERS.get(language, NO_CONTEXT_ANSWERS["en"]),
+            "answer": NO_CONTEXT_ANSWERS.get(
+                language,
+                NO_CONTEXT_ANSWERS["en"],
+            ),
             "citations": [],
             "has_sufficient_context": False,
-            "trace": [f"give_up after {state.get('attempt', 0)} attempts"],
+            "trace": [
+                f"give_up after {state.get('attempt', 0)} attempts"
+            ],
         }
 
     # -- routing ------------------------------------------------------------
     def _route(self, state: RagState) -> str:
         if state.get("is_relevant"):
             return "generate"
+
         max_attempts = state.get("max_attempts") or self.max_attempts
+
         if state.get("attempt", 1) >= max_attempts:
             return "give_up"
+
         return "rewrite"
 
     # -- entry point --------------------------------------------------------
@@ -196,8 +240,10 @@ class AgenticRagWorkflow:
         top_k: Optional[int] = None,
         filters: Optional[dict[str, Any]] = None,
         max_attempts: Optional[int] = None,
+        persona: str = "professional",
     ) -> RagAnswer:
         started = time.perf_counter()
+
         initial: RagState = {
             "question": question,
             "query": question,
@@ -205,24 +251,32 @@ class AgenticRagWorkflow:
             "filters": filters,
             "attempt": 0,
             "max_attempts": max_attempts or self.max_attempts,
+            "persona": persona,
             "attempts": [],
             "trace": [],
             "latency_ms": {},
         }
+
         final = self.graph.invoke(initial)
 
         latency = dict(final.get("latency_ms") or {})
-        latency["total_ms"] = round((time.perf_counter() - started) * 1000, 3)
+        latency["total_ms"] = round(
+            (time.perf_counter() - started) * 1000,
+            3,
+        )
 
         answer = RagAnswer(
             query=question,
             answer=final.get("answer", ""),
             citations=final.get("citations") or [],
             retrieved=final.get("chunks") or [],
-            has_sufficient_context=bool(final.get("has_sufficient_context")),
+            has_sufficient_context=bool(
+                final.get("has_sufficient_context")
+            ),
             usage=final.get("usage"),
             latency_ms=latency,
             attempts=final.get("attempts") or [],
             trace=final.get("trace") or [],
         )
+
         return answer

@@ -27,13 +27,29 @@ class RagService:
         question: str,
         top_k: Optional[int] = None,
         filters: Optional[dict[str, Any]] = None,
+        persona: str = "professional",
     ) -> RagAnswer:
-        chunks = self.retriever.retrieve(question, top_k=top_k or settings.TOP_K, filters=filters)
-        answer = self.generator.generate(question, chunks)
-        answer.latency_ms = {**self.retriever.last_latency, **answer.latency_ms}
+        chunks = self.retriever.retrieve(
+            question,
+            top_k=top_k or settings.TOP_K,
+            filters=filters,
+        )
+
+        answer = self.generator.generate(
+            question,
+            chunks,
+            persona=persona,
+        )
+
+        answer.latency_ms = {
+            **self.retriever.last_latency,
+            **answer.latency_ms,
+        }
+
         answer.latency_ms["total_ms"] = round(
             self.retriever.last_latency.get("total_ms", 0.0)
             + answer.latency_ms.get("generate_ms", 0.0),
             3,
         )
+
         return answer

@@ -1,4 +1,6 @@
+
 """Admin document-upload and agent-query endpoints for the per-company KB."""
+
 
 from __future__ import annotations
 
@@ -104,6 +106,12 @@ class ChatMessagesResponse(BaseModel):
 
 class AskRequest(BaseModel):
     query: str = Field(..., min_length=1, max_length=2000)
+    persona: str = Field(
+        "professional",
+        min_length=1,
+        max_length=100,
+        description="Response style/persona requested by the frontend.",
+    )
     top_k: int = Field(5, ge=1, le=20)
     include_chunks: bool = False
     conversation_id: Optional[str] = Field(
@@ -182,15 +190,24 @@ def upload_document(
     if result.status != "ingested":
         # Keep the file so an admin can inspect why it failed.
         return UploadResponse(
-            status=result.status, company_id=tenant.company_id,
-            collection=tenant.collection_name, source=result.source,
-            pages=result.pages, quality=result.quality, reason=result.reason,
+            status=result.status,
+            company_id=tenant.company_id,
+            collection=tenant.collection_name,
+            source=result.source,
+            pages=result.pages,
+            quality=result.quality,
+            reason=result.reason,
         )
     return UploadResponse(
-        status="ingested", company_id=tenant.company_id,
-        collection=tenant.collection_name, source=result.source,
-        document_id=result.document_id, chunks=result.chunks,
-        pages=result.pages, strategy=result.strategy, quality=result.quality,
+        status="ingested",
+        company_id=tenant.company_id,
+        collection=tenant.collection_name,
+        source=result.source,
+        document_id=result.document_id,
+        chunks=result.chunks,
+        pages=result.pages,
+        strategy=result.strategy,
+        quality=result.quality,
     )
 
 
@@ -232,11 +249,18 @@ def delete_document(
             status.HTTP_404_NOT_FOUND,
             detail="No such document in this company's knowledge base",
         )
-    return {"deleted_chunks": removed, "document_id": document_id,
-            "company_id": tenant.company_id}
+    return {
+        "deleted_chunks": removed,
+        "document_id": document_id,
+        "company_id": tenant.company_id,
+    }
 
 
-@router.post("/sessions", response_model=ChatSessionModel, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/sessions",
+    response_model=ChatSessionModel,
+    status_code=status.HTTP_201_CREATED,
+)
 def create_chat_session(
     payload: ChatSessionCreate = ChatSessionCreate(),
     tenant: Tenant = Depends(get_tenant),
@@ -255,11 +279,17 @@ def delete_chat_session(
     tenant: Tenant = Depends(get_tenant),
 ) -> dict:
     if not chat_store.delete(tenant.company_id, session_id):
-        raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Chat session not found")
+        raise HTTPException(
+            status.HTTP_404_NOT_FOUND,
+            detail="Chat session not found",
+        )
     return {"deleted": True, "session_id": session_id}
 
 
-@router.get("/sessions/{session_id}/messages", response_model=ChatMessagesResponse)
+@router.get(
+    "/sessions/{session_id}/messages",
+    response_model=ChatMessagesResponse,
+)
 def get_chat_messages(
     session_id: str,
     tenant: Tenant = Depends(get_tenant),
@@ -267,7 +297,10 @@ def get_chat_messages(
     item = chat_store.get(tenant.company_id, session_id)
     messages = chat_store.messages(tenant.company_id, session_id)
     if not item or messages is None:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Chat session not found")
+        raise HTTPException(
+            status.HTTP_404_NOT_FOUND,
+            detail="Chat session not found",
+        )
     return ChatMessagesResponse(
         session=ChatSessionModel(**item),
         messages=[ChatMessageModel(**message) for message in messages],
@@ -375,37 +408,77 @@ def ask(
     follow-up into a self-contained retrieval query, and as conversational
     context for the model. Facts still come only from retrieved passages.
     """
-    session_memory = chat_store.memory(tenant.company_id, payload.conversation_id) if payload.conversation_id else None
+    session_memory = (
+        chat_store.memory(tenant.company_id, payload.conversation_id)
+        if payload.conversation_id
+        else None
+    )
+
     if session_memory:
         recent = "\n".join(
             f"{message['role'].title()}: {message['content']}"
             for message in session_memory.recent
         )
         history = "\n".join(
-            part for part in [
-                f"Conversation summary:\n{session_memory.summary}" if session_memory.summary else "",
+            part
+            for part in [
+                (
+                    f"Conversation summary:\n{session_memory.summary}"
+                    if session_memory.summary
+                    else ""
+                ),
                 f"Recent messages:\n{recent}" if recent else "",
-            ] if part
+            ]
+            if part
         )
+
         # The durable transcript is the source of generation memory. The old
         # in-process store remains only for deterministic retrieval expansion.
         previous_user = next(
-            (message["content"] for message in reversed(session_memory.recent)
-             if message["role"] == "user"),
+            (
+                message["content"]
+                for message in reversed(session_memory.recent)
+                if message["role"] == "user"
+            ),
             None,
         )
+
         conversation = Conversation(
             turns=[Turn(previous_user, "")] if previous_user else []
         )
-        search_query = contextual_query(payload.query, conversation) if conversation.turns else payload.query
-    else:
-        conversation = conversations.get(tenant.company_id, payload.conversation_id)
-        search_query = contextual_query(payload.query, conversation)
-        history = format_history(conversation, settings.CHAT_HISTORY_IN_PROMPT)
 
-    results = container.retriever.retrieve(search_query, top_k=payload.top_k)
-    answer = container.generator().generate(payload.query, results, history=history)
-    answer.latency_ms = {**container.retriever.last_latency, **answer.latency_ms}
+        search_query = (
+            contextual_query(payload.query, conversation)
+            if conversation.turns
+            else payload.query
+        )
+    else:
+        conversation = conversations.get(
+            tenant.company_id,
+            payload.conversation_id,
+        )
+        search_query = contextual_query(payload.query, conversation)
+        history = format_history(
+            conversation,
+            settings.CHAT_HISTORY_IN_PROMPT,
+        )
+
+    results = container.retriever.retrieve(
+        search_query,
+        top_k=payload.top_k,
+    )
+
+    answer = container.generator().generate(
+        payload.query,
+        results,
+        history=history,
+        persona=payload.persona,
+    )
+
+    answer.latency_ms = {
+        **container.retriever.last_latency,
+        **answer.latency_ms,
+    }
 
     if payload.conversation_id:
         chat_store.append(
@@ -423,11 +496,13 @@ def ask(
         answer=answer.answer,
         has_sufficient_context=answer.has_sufficient_context,
         citations=[
-            CitationModel(**asdict(c), label=c.label()) for c in answer.citations
+            CitationModel(**asdict(c), label=c.label())
+            for c in answer.citations
         ],
         chunks=(
             [RetrievedChunkModel(**r.to_dict()) for r in answer.retrieved]
-            if payload.include_chunks else None
+            if payload.include_chunks
+            else None
         ),
         usage=UsageModel(**answer.usage.to_dict()) if answer.usage else None,
         latency_ms=answer.latency_ms,
@@ -443,12 +518,24 @@ def clear_conversation(
     tenant: Tenant = Depends(get_tenant),
 ) -> dict:
     """Start fresh. Scoped to the caller's company, so ids cannot collide."""
-    cleared = chat_store.delete(tenant.company_id, conversation_id)
-    conversations.clear(tenant.company_id, conversation_id)
-    return {"cleared": cleared, "conversation_id": conversation_id}
+    cleared = chat_store.delete(
+        tenant.company_id,
+        conversation_id,
+    )
+    conversations.clear(
+        tenant.company_id,
+        conversation_id,
+    )
+    return {
+        "cleared": cleared,
+        "conversation_id": conversation_id,
+    }
 
 
-@router.get("/info", summary="Collection and model diagnostics")
+@router.get(
+    "/info",
+    summary="Collection and model diagnostics",
+)
 def info(
     tenant: Tenant = Depends(get_tenant),
     container=Depends(get_kb_container),

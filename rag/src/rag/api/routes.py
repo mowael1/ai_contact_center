@@ -39,10 +39,12 @@ def health(container: Container = Depends(get_container)) -> HealthResponse:
     except Exception as exc:
         store_info = {"connected": False, "error": type(exc).__name__}
         healthy = False
+
     try:
         embedding_info = container.embeddings.model_info()
     except Exception as exc:
         embedding_info = {"error": type(exc).__name__}
+
     return HealthResponse(
         status="ok" if healthy else "degraded",
         vector_store=store_info,
@@ -50,15 +52,23 @@ def health(container: Container = Depends(get_container)) -> HealthResponse:
     )
 
 
-@router.post("/retrieve", response_model=RetrieveResponse, summary="Retrieve chunks only")
+@router.post(
+    "/retrieve",
+    response_model=RetrieveResponse,
+    summary="Retrieve chunks only",
+)
 def retrieve(
-    payload: RetrieveRequest, container: Container = Depends(get_container)
+    payload: RetrieveRequest,
+    container: Container = Depends(get_container),
 ) -> RetrieveResponse:
     """Vector search with no generation. Use this to inspect grounding."""
     filters = payload.filters.as_dict() if payload.filters else None
+
     try:
         results = container.retriever.retrieve(
-            payload.query, top_k=payload.top_k, filters=filters
+            payload.query,
+            top_k=payload.top_k,
+            filters=filters,
         )
     except Exception as exc:
         logger.exception("Retrieval failed")
@@ -66,6 +76,7 @@ def retrieve(
             status.HTTP_503_SERVICE_UNAVAILABLE,
             detail=f"Retrieval failed: {type(exc).__name__}",
         ) from exc
+
     return RetrieveResponse(
         query=payload.query,
         top_k=payload.top_k,
@@ -74,17 +85,32 @@ def retrieve(
         latency_ms=container.retriever.last_latency,
     )
 
-@router.post("/query", response_model=QueryResponse, summary="Full grounded RAG answer")
+
+@router.post(
+    "/query",
+    response_model=QueryResponse,
+    summary="Full grounded RAG answer",
+)
 def query(
-    payload: QueryRequest, container: Container = Depends(get_container)
+    payload: QueryRequest,
+    container: Container = Depends(get_container),
 ) -> QueryResponse:
     """Retrieve, build context, generate a grounded answer, attach citations."""
     filters = payload.filters.as_dict() if payload.filters else None
+
     try:
         answerer = container.answerer(
-            agentic=payload.agentic, max_attempts=payload.max_attempts
+            agentic=payload.agentic,
+            max_attempts=payload.max_attempts,
         )
-        answer = answerer.query(payload.query, top_k=payload.top_k, filters=filters)
+
+        answer = answerer.query(
+            payload.query,
+            top_k=payload.top_k,
+            filters=filters,
+            persona=payload.persona,
+        )
+
     except Exception as exc:
         logger.exception("RAG query failed")
         raise HTTPException(
@@ -92,18 +118,33 @@ def query(
             detail=f"RAG query failed: {type(exc).__name__}",
         ) from exc
 
-    return _to_query_response(answer, include_chunks=payload.include_chunks)
+    return _to_query_response(
+        answer,
+        include_chunks=payload.include_chunks,
+    )
 
 
-def _to_query_response(answer, include_chunks: bool) -> QueryResponse:
+def _to_query_response(
+    answer,
+    include_chunks: bool,
+) -> QueryResponse:
     return QueryResponse(
         query=answer.query,
         answer=answer.answer,
         has_sufficient_context=answer.has_sufficient_context,
-        citations=[CitationModel(**asdict(c), label=c.label()) for c in answer.citations],
+        citations=[
+            CitationModel(
+                **asdict(c),
+                label=c.label(),
+            )
+            for c in answer.citations
+        ],
         chunks=_to_chunk_models(answer.retrieved) if include_chunks else None,
         usage=UsageModel(**answer.usage.to_dict()) if answer.usage else None,
         latency_ms=answer.latency_ms,
-        attempts=[AttemptModel(**a) for a in (answer.attempts or [])],
+        attempts=[
+            AttemptModel(**a)
+            for a in (answer.attempts or [])
+        ],
         trace=list(answer.trace or []),
     )

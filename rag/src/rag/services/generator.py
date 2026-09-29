@@ -30,22 +30,25 @@ class GenerationService:
         self.max_context_chars = max_context_chars or settings.MAX_CONTEXT_CHARS
 
     @staticmethod
-    def _user_prompt(query: str, context_text: str, history: str = "") -> str:
-        """Resolve the answer language deterministically from the question.
+    def _user_prompt(
+        query: str,
+        context_text: str,
+        history: str = "",
+        persona: str = "professional",
+    ) -> str:
+        """Build the grounded user prompt with the requested response persona."""
 
-        Smaller models tend to answer in the language of the *context* rather
-        than the question - measured on gemini-2.5-flash-lite, an English
-        question over Arabic passages came back in Arabic. Naming the target
-        language explicitly fixes it without relying on the model to infer it.
-        """
         language = detect_language(query)
+
         return USER_PROMPT.format(
             history_block=HISTORY_BLOCK.format(history=history) if history else "",
             context=context_text,
             question=query,
             language_instruction=LANGUAGE_INSTRUCTIONS.get(
-                language, LANGUAGE_INSTRUCTIONS["unknown"]
+                language,
+                LANGUAGE_INSTRUCTIONS["unknown"],
             ),
+            persona=persona,
         )
 
     def _finalize(
@@ -58,17 +61,30 @@ class GenerationService:
         elapsed_ms: float,
     ) -> RagAnswer:
         """Shared post-processing for both the blocking and streaming paths."""
+
         sufficient = INSUFFICIENT_MARKER not in raw
         answer = raw.replace(INSUFFICIENT_MARKER, "").strip()
+
         valid = {c.index for c in context_citations}
         answer = strip_invalid_markers(answer, valid)
+
         citations = (
-            resolve_citations(raw, context_citations, keep_all=True) if sufficient else []
+            resolve_citations(
+                raw,
+                context_citations,
+                keep_all=True,
+            )
+            if sufficient
+            else []
         )
+
         logger.info(
             "Generated answer (%d chars, sufficient=%s, %d citations)",
-            len(answer), sufficient, len(citations),
+            len(answer),
+            sufficient,
+            len(citations),
         )
+
         return RagAnswer(
             query=query,
             answer=answer,
@@ -79,11 +95,19 @@ class GenerationService:
             latency_ms={"generate_ms": round(elapsed_ms, 3)},
         )
 
-    def _no_context_answer(self, query: str, chunks: Sequence[RetrievedChunk]) -> RagAnswer:
+    def _no_context_answer(
+        self,
+        query: str,
+        chunks: Sequence[RetrievedChunk],
+    ) -> RagAnswer:
         language = detect_language(query)
+
         return RagAnswer(
             query=query,
-            answer=NO_CONTEXT_ANSWERS.get(language, NO_CONTEXT_ANSWERS["en"]),
+            answer=NO_CONTEXT_ANSWERS.get(
+                language,
+                NO_CONTEXT_ANSWERS["en"],
+            ),
             citations=[],
             retrieved=list(chunks),
             has_sufficient_context=False,
@@ -95,20 +119,38 @@ class GenerationService:
         query: str,
         chunks: Sequence[RetrievedChunk],
         history: str = "",
+        persona: str = "professional",
     ) -> RagAnswer:
         t0 = time.perf_counter()
-        context = build_context(chunks, self.max_context_chars)
+
+        context = build_context(
+            chunks,
+            self.max_context_chars,
+        )
 
         if context.is_empty:
-            return self._no_context_answer(query, chunks)
+            return self._no_context_answer(
+                query,
+                chunks,
+            )
 
         response = self.llm.generate(
             system=SYSTEM_PROMPT,
-            prompt=self._user_prompt(query, context.text, history),
+            prompt=self._user_prompt(
+                query,
+                context.text,
+                history,
+                persona,
+            ),
             max_tokens=settings.LLM_MAX_TOKENS,
             temperature=settings.LLM_TEMPERATURE,
         )
+
         return self._finalize(
-            query, response.text or "", chunks, context.citations, response.usage,
+            query,
+            response.text or "",
+            chunks,
+            context.citations,
+            response.usage,
             (time.perf_counter() - t0) * 1000,
         )
