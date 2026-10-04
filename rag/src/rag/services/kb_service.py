@@ -139,6 +139,29 @@ class KnowledgeBaseService:
         sections = build_sections(document, min_chars=self.chunking.min_section_units)
         parts, strategy = chunk_text(document.full_text, sections, self.chunking)
 
+        # Remove exact duplicate chunk content within the same document.
+        #
+        # Whitespace differences are normalized so chunks containing the same
+        # actual content are treated as duplicates.
+        unique_parts = []
+        seen_content = set()
+
+        for part in parts:
+            normalized_text = " ".join(part.text.split())
+
+            if normalized_text in seen_content:
+                continue
+
+            seen_content.add(normalized_text)
+            unique_parts.append(part)
+
+        # Re-number parts after deduplication so chunk IDs and indexes
+        # remain contiguous: 1, 2, 3, ...
+        for index, part in enumerate(unique_parts, start=1):
+            part.part = index
+
+        parts = unique_parts
+
         file_hash = content_hash(document.full_text)
         document_id = document_id_for(self.tenant, path, file_hash)
         now = datetime.now(timezone.utc).isoformat()

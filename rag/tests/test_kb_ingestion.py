@@ -332,3 +332,58 @@ def test_unsupported_file_type_fails_cleanly(kb, tmp_path):
     result = service.ingest_file(bad)
     assert result.status == "failed"
     assert "Unsupported" in result.reason
+
+def test_identical_chunks_within_document_are_deduplicated(
+    kb,
+    tmp_path,
+    monkeypatch,
+):
+    service, _, _ = kb
+
+    duplicate_text = (
+        "This is duplicated content. "
+        "The same information appears again "
+        "in another section. "
+        "This content should only be stored once."
+    )
+
+    sections = [
+        _section(
+            0,
+            "Section 1",
+            duplicate_text,
+        ),
+        _section(
+            1,
+            "Section 2",
+            duplicate_text,
+        ),
+    ]
+
+    def fake_build_sections(
+        document,
+        min_chars=1,
+    ):
+        return sections
+
+    monkeypatch.setattr(
+        "rag.services.kb_service.build_sections",
+        fake_build_sections,
+    )
+
+    path = tmp_path / "duplicate.md"
+
+    path.write_text(
+        duplicate_text,
+        encoding="utf-8",
+    )
+
+    chunks, document, quality, strategy = (
+        service.chunk_file(path)
+    )
+
+    assert quality.ok
+    assert strategy == "section_based"
+
+    assert len(chunks) == 1
+    assert chunks[0].text.strip() == duplicate_text.strip()
