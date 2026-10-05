@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import math
+import threading
 import time
 import re
 import unicodedata
@@ -53,6 +55,9 @@ class RetrievalService:
         deduplicate: Optional[bool] = None,
     ) -> list[RetrievedChunk]:
         top_k = top_k or settings.TOP_K
+        # Candidates kept after hybrid retrieval; the re-ranker narrows them
+        # back down to top_k. Equals top_k when re-ranking is disabled.
+        pool_k = _candidate_pool(top_k)
         tenant = require_tenant(self.tenant)
         clean_filters = sanitize_filters(filters)
         # Second, independent guard: even inside the company's own collection
@@ -81,19 +86,114 @@ class RetrievalService:
         )
         if dedupe:
             results = deduplicate_by_content(results)
-        results = diversify_sections(results, top_k)
-        results = results[:top_k]
+        results = diversify_sections(results, pool_k)
+        results = results[:pool_k]
+
+        # Retriever -> Re-Ranker -> (caller's) context builder. ``None``
+        # means nothing was re-ranked, so the original order is kept.
+        reranked = rerank_chunks(query, results, top_k)
+        t3 = time.perf_counter()
+        results = (reranked if reranked is not None else results)[:top_k]
 
         self.last_latency = {
             "embed_ms": round((t1 - t0) * 1000, 3),
             "search_ms": round((t2 - t1) * 1000, 3),
-            "total_ms": round((t2 - t0) * 1000, 3),
+            "total_ms": round((t3 - t0) * 1000, 3),
         }
+        if reranked is not None:
+            self.last_latency["rerank_ms"] = round((t3 - t2) * 1000, 3)
         logger.info(
             "Retrieved %d chunks for query (%d chars) in %.1f ms",
             len(results), len(query), self.last_latency["total_ms"],
         )
         return results
+
+
+# ---- Re-ranker ------------------------------------------------------------
+_CROSS_ENCODERS: dict[str, Any] = {}
+_CROSS_ENCODER_LOCK = threading.Lock()
+
+
+def _candidate_pool(top_k: int) -> int:
+    """How many chunks the retriever keeps for the re-ranker to choose from."""
+    if not settings.RERANK_ENABLED:
+        return top_k
+    return max(top_k, settings.TOP_K_RETRIEVAL)
+
+
+def _get_cross_encoder(model_name: str) -> Any:
+    """Load the cross-encoder once per process.
+
+    A failed load (package missing, model unreachable) is remembered as
+    ``None`` so it costs one warning, not a retry on every query.
+    """
+    with _CROSS_ENCODER_LOCK:
+        if model_name in _CROSS_ENCODERS:
+            return _CROSS_ENCODERS[model_name]
+        try:
+            from sentence_transformers import CrossEncoder
+
+            model = CrossEncoder(model_name, max_length=512)
+        except Exception as exc:
+            logger.warning(
+                "Re-ranker %s unavailable (%s: %s); keeping the retriever's "
+                "original ranking.",
+                model_name, type(exc).__name__, exc,
+            )
+            model = None
+        _CROSS_ENCODERS[model_name] = model
+        return model
+
+
+def rerank_chunks(
+    query: str, chunks: list[RetrievedChunk], top_n: int
+) -> Optional[list[RetrievedChunk]]:
+    """Order the retriever's candidates by cross-encoder relevance to ``query``.
+
+    Returns the SAME ``RetrievedChunk`` objects (nothing is rebuilt or dropped
+    apart from the cut to ``top_n``), best first, with the cross-encoder score
+    added under ``metadata["rerank_score"]``. ``score`` is left untouched.
+
+    Returns ``None`` when nothing was re-ranked - disabled, fewer than two
+    candidates, bad configuration, model unavailable or inference failure - so
+    the caller simply keeps the retriever's own order.
+    """
+    if not settings.RERANK_ENABLED or len(chunks) < 2 or top_n < 1:
+        return None
+    cap = settings.TOP_N_RERANK
+    keep = min(top_n, cap) if cap > 0 else top_n
+
+    model = _get_cross_encoder(settings.RERANK_MODEL)
+    if model is None:
+        return None
+    try:
+        scores = [
+            float(s)
+            for s in model.predict(
+                [(query, chunk.text or "") for chunk in chunks],
+                show_progress_bar=False,
+            )
+        ]
+        if len(scores) != len(chunks) or not all(math.isfinite(s) for s in scores):
+            raise ValueError("re-ranker returned an unusable score list")
+    except Exception as exc:
+        logger.warning(
+            "Re-ranking failed (%s: %s); keeping the retriever's original ranking.",
+            type(exc).__name__, exc,
+        )
+        return None
+
+    # Blank passages go last; ties keep the retriever's order (stable).
+    order = sorted(
+        range(len(chunks)),
+        key=lambda i: (not (chunks[i].text or "").strip(), -scores[i], i),
+    )[:keep]
+    out: list[RetrievedChunk] = []
+    for i in order:
+        chunks[i].metadata = {**chunks[i].metadata, "rerank_score": scores[i]}
+        out.append(chunks[i])
+    logger.info("Re-ranked %d candidates -> kept %d", len(chunks), len(out))
+    return out
 
 
 _ARABIC_DIACRITICS = re.compile(r"[\u064b-\u065f\u0670\u0640]")
