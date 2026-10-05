@@ -22,7 +22,6 @@ from rag.chunking.strategies import ChunkingSettings, chunk_text
 from rag.config import settings
 from rag.documents.base import LoadedDocument
 from rag.documents.loader import iter_supported_files, load_document
-from rag.documents.arabic_repair import detect_reversed_word_order, repair_pdf_word_order
 from rag.documents.quality import QualityReport, assess, repair_extracted
 from rag.documents.sections import build_sections
 from rag.embeddings.base import EmbeddingService
@@ -120,32 +119,18 @@ class KnowledgeBaseService:
 
         # Normalise presentation forms and undo reversed-Arabic extraction
         # before anything downstream sees the text.
-        character_order_reversed = False
         for page in document.pages:
             page.text, info = repair_extracted(page.text)
             if info["reversal"]["is_reversed"]:
-                character_order_reversed = True
                 document.warnings.append(
                     f"page {page.page_number}: repaired reversed Arabic"
                 )
-        if character_order_reversed:
+        if document.warnings:
             # Headings and the title were derived from the raw layout, so they
             # need the same correction as the page text.
             for heading in document.headings:
                 heading.text = heading.text[::-1]
             document.title = document.title[::-1]
-
-        if document.source_type == "pdf" and detect_reversed_word_order(
-            "\n".join(page.text for page in document.pages)
-        ):
-            for page in document.pages:
-                page.text = repair_pdf_word_order(page.text)
-            for heading in document.headings:
-                heading.text = repair_pdf_word_order(heading.text)
-            document.title = repair_pdf_word_order(document.title)
-            document.warnings.append(
-                "restored Arabic word and table order detected in PDF extraction"
-            )
 
         report = assess(document)
         if not report.ok:
@@ -153,6 +138,29 @@ class KnowledgeBaseService:
 
         sections = build_sections(document, min_chars=self.chunking.min_section_units)
         parts, strategy = chunk_text(document.full_text, sections, self.chunking)
+
+        # Remove exact duplicate chunk content within the same document.
+        #
+        # Whitespace differences are normalized so chunks containing the same
+        # actual content are treated as duplicates.
+        unique_parts = []
+        seen_content = set()
+
+        for part in parts:
+            normalized_text = " ".join(part.text.split())
+
+            if normalized_text in seen_content:
+                continue
+
+            seen_content.add(normalized_text)
+            unique_parts.append(part)
+
+        # Re-number parts after deduplication so chunk IDs and indexes
+        # remain contiguous: 1, 2, 3, ...
+        for index, part in enumerate(unique_parts, start=1):
+            part.part = index
+
+        parts = unique_parts
 
         file_hash = content_hash(document.full_text)
         document_id = document_id_for(self.tenant, path, file_hash)
@@ -206,19 +214,7 @@ class KnowledgeBaseService:
 
         document_id = chunks[0].document_id
         if replace:
-            # document_id includes a content hash, so it changes when extraction
-            # or normalization changes. Remove every prior version of this
-            # filename before writing the new chunks, otherwise stale vectors
-            # can keep winning retrieval after a re-ingest.
-            old_documents = [
-                item for item in self.store.list_documents()
-                if item.get("source") == document.source
-            ]
-            removed = sum(
-                self.store.delete_document(item["document_id"])
-                for item in old_documents
-                if item.get("document_id")
-            )
+            removed = self.store.delete_document(document_id)
             if removed:
                 logger.info("Replaced %d existing chunks for %s", removed, document.source)
 
