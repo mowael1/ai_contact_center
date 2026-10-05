@@ -138,6 +138,19 @@ class Settings(BaseSettings):
     CHAT_MEMORY_TTL_SECONDS: int = 3600
 
     TOP_K: int = 3
+    # ---- Re-ranker (cross-encoder, runs right after the retriever) --------
+    #: Retriever -> Re-Ranker -> context. When false the retriever behaves
+    #: exactly as before (top ``TOP_K`` straight from hybrid retrieval).
+    RERANK_ENABLED: bool = True
+    #: Local multilingual cross-encoder (Arabic + English). Needs
+    #: ``sentence-transformers``; if it is missing or the model cannot be
+    #: loaded the retriever silently falls back to its original ordering.
+    RERANK_MODEL: str = "BAAI/bge-reranker-v2-m3"
+    #: Candidates the existing retriever hands to the re-ranker.
+    TOP_K_RETRIEVAL: int = 10
+    #: Cap on chunks kept after re-ranking. 0 = keep the number the caller
+    #: asked for (``TOP_K``, default 3). Never returns more than requested.
+    TOP_N_RERANK: int = 0
     #: Collapse retrieved passages with identical text (same content published
     #: under several URLs). Keeps the best-scoring copy.
     DEDUPLICATE_RESULTS: bool = True
