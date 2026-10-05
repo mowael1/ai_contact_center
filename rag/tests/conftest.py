@@ -11,6 +11,15 @@ from rag.embeddings.local_providers import HashEmbedding, LocalLexicalEmbedding
 from rag.models import Document
 
 
+@pytest.fixture(autouse=True)
+def _reranker_off_by_default(monkeypatch):
+    """The suite asserts the retriever's own ordering and must never load a real
+    cross-encoder. tests/test_reranker.py switches the re-ranker back on."""
+    from rag.config import settings
+
+    monkeypatch.setattr(settings, "RERANK_ENABLED", False)
+
+
 @pytest.fixture
 def hash_embeddings():
     return HashEmbedding()
