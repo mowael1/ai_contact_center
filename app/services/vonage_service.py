@@ -110,9 +110,9 @@ def _speech_input_action(
         "speech": {
             "endOnSilence": 0.5,
 
-            "startTimeout": 6,
+            "startTimeout": 3,
 
-            "maxDuration": 8,
+            "maxDuration": 3,
 
             "provider": "google",
 
