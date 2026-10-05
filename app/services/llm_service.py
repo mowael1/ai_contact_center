@@ -496,6 +496,8 @@ def classify_follow_up_response(
             model=settings.GROQ_MODEL,
 
             temperature=0,
+            reasoning_effort="low",
+            max_completion_tokens=64,
 
             messages=[
                 {
