@@ -1,7 +1,10 @@
+from datetime import datetime, timezone
+
 from sqlalchemy import select
 from sqlalchemy.orm import Session, selectinload
 
 from app.models import Ticket
+from app.schemas.ticket import TicketUpdate
 
 def create(
     db: Session,
@@ -64,6 +67,33 @@ def get_by_id_and_company(
     )
 
     return db.scalars(statement).first()
+
+
+def update(
+    db: Session,
+    ticket: Ticket,
+    data: TicketUpdate,
+) -> Ticket:
+
+    update_data = data.model_dump(
+        exclude_unset=True
+    )
+
+    for field, value in update_data.items():
+        setattr(
+            ticket,
+            field,
+            value
+        )
+
+    ticket.updated_at = datetime.now(
+        timezone.utc
+    )
+
+    db.commit()
+    db.refresh(ticket)
+
+    return ticket
 
 def get_agent_follow_ups(
     db: Session,

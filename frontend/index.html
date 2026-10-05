@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <title>AI Contact Center</title>
 
   <style>
@@ -1081,6 +1084,14 @@
   <script>
     "use strict";
 
+    if (window.location.pathname === "/static/index.html") {
+      window.history.replaceState(
+        null,
+        "",
+        `/${window.location.hash || ""}`
+      );
+    }
+
     /*
       ============================================================
       AI CONTACT CENTER - SINGLE FILE FRONTEND
@@ -1391,7 +1402,11 @@
         return role === "ADMIN";
       }
 
-      if (route === "/tickets" || route === "/tickets/new") {
+      if (
+        route === "/tickets" ||
+        route === "/tickets/new" ||
+        /^\/tickets\/\d+\/edit$/.test(route)
+      ) {
         return role === "ADMIN";
       }
 
@@ -1509,6 +1524,9 @@
           await renderTickets();
         } else if (route === "/tickets/new") {
           await renderTicketCreate();
+        } else if (/^\/tickets\/\d+\/edit$/.test(route)) {
+          const id = route.split("/")[2];
+          await renderTicketEdit(id);
         } else if (/^\/tickets\/\d+$/.test(route)) {
           const id = route.split("/")[2];
           await renderTicketDetails(id);
@@ -3522,7 +3540,12 @@
             <td>${escapeHtml(ticket.subject || "—")}</td>
             <td>${ticketStatusBadge(ticket.status)}</td>
             <td>${formatDate(ticket.created_at)}</td>
-            <td><button class="btn btn-secondary btn-sm" onclick="navigate('/tickets/${Number(ticket.id)}')">View</button></td>
+            <td>
+              <div class="actions">
+                <button class="btn btn-secondary btn-sm" onclick="navigate('/tickets/${Number(ticket.id)}')">View</button>
+                <button class="btn btn-secondary btn-sm" onclick="navigate('/tickets/${Number(ticket.id)}/edit')">Edit</button>
+              </div>
+            </td>
           </tr>
         `;
       }).join("") : `<tr><td colspan="7"><div class="state-box"><h3>${state.tickets.length ? "No matching tickets" : "No tickets yet"}</h3><p>${state.tickets.length ? "Try another search term." : "Create the first follow-up ticket."}</p></div></td></tr>`;
@@ -3632,6 +3655,166 @@
       });
     }
 
+    async function renderTicketEdit(id) {
+      if (getRoleName() !== "ADMIN") { navigate("/403"); return; }
+
+      const [ticket, customers, agents] = await Promise.all([
+        apiRequest(`/tickets/${encodeURIComponent(id)}`),
+        loadCustomers(),
+        loadAgents()
+      ]);
+
+      const selectableCustomers = customers.filter(customer =>
+        customer.is_active === true ||
+        String(customer.id) === String(ticket.customer_id)
+      );
+
+      const customerOptions = selectableCustomers.map(customer => `
+        <option
+          value="${Number(customer.id)}"
+          ${String(customer.id) === String(ticket.customer_id) ? "selected" : ""}>
+          ${escapeHtml(customer.full_name || `Customer #${customer.id}`)} — ${escapeHtml(customer.phone || "No phone")}${customer.is_active === true ? "" : " (Inactive)"}
+        </option>
+      `).join("");
+
+      const selectableAgents = agents.filter(agent =>
+        agent.is_active === true ||
+        String(agent.id) === String(ticket.assigned_agent_id)
+      );
+
+      const agentOptions = selectableAgents.map(agent => `
+        <option
+          value="${Number(agent.id)}"
+          ${String(agent.id) === String(ticket.assigned_agent_id) ? "selected" : ""}>
+          ${escapeHtml(agent.full_name || agent.email || `Agent #${agent.id}`)}${agent.is_active === true ? "" : " (Inactive)"}
+        </option>
+      `).join("");
+
+      renderShell(`
+        <section class="page">
+          <div class="page-header">
+            <div>
+              <button class="btn-link" onclick="navigate('/tickets/${Number(ticket.id)}')">← Back to Ticket</button>
+              <h1 style="margin-top:10px;">Edit Ticket #${escapeHtml(ticket.id)}</h1>
+              <p>Update the Customer, Agent, status and follow-up information.</p>
+            </div>
+          </div>
+
+          <div class="card"><div class="card-body">
+            <form id="ticketEditForm">
+              <div class="error-box" id="ticketEditError"></div>
+
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="ticketEditCustomer">Customer *</label>
+                  <select id="ticketEditCustomer" required>
+                    ${customerOptions}
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="ticketEditAgent">Assigned Agent *</label>
+                  <select id="ticketEditAgent" required>
+                    ${agentOptions}
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="ticketEditStatus">Status *</label>
+                <select id="ticketEditStatus" required>
+                  <option value="pending_follow_up" ${ticket.status === "pending_follow_up" ? "selected" : ""}>Pending Follow-up</option>
+                  <option value="needs_agent" ${ticket.status === "needs_agent" ? "selected" : ""}>Needs Agent</option>
+                  <option value="resolved" ${ticket.status === "resolved" ? "selected" : ""}>Resolved</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="ticketEditSubject">Subject *</label>
+                <input
+                  id="ticketEditSubject"
+                  type="text"
+                  maxlength="200"
+                  required
+                  value="${escapeHtml(ticket.subject || "")}" />
+              </div>
+
+              <div class="form-group">
+                <label for="ticketEditDescription">Description</label>
+                <textarea id="ticketEditDescription" rows="4" style="width:100%;border:1px solid #d7dde7;border-radius:10px;padding:12px 13px;font:inherit;resize:vertical;">${escapeHtml(ticket.description || "")}</textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="ticketEditProcedureSteps">Procedure Steps</label>
+                <textarea id="ticketEditProcedureSteps" rows="4" style="width:100%;border:1px solid #d7dde7;border-radius:10px;padding:12px 13px;font:inherit;resize:vertical;">${escapeHtml(ticket.procedure_steps || "")}</textarea>
+              </div>
+
+              <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="navigate('/tickets/${Number(ticket.id)}')">Cancel</button>
+                <button type="submit" class="btn btn-primary" id="ticketEditBtn">Save Changes</button>
+              </div>
+            </form>
+          </div></div>
+        </section>
+      `, "tickets", "Edit Ticket");
+
+      document.getElementById("ticketEditForm")?.addEventListener("submit", async event => {
+        event.preventDefault();
+        hideInlineError("ticketEditError");
+
+        const button = document.getElementById("ticketEditBtn");
+        button.disabled = true;
+        button.textContent = "Saving...";
+
+        const customerId = Number(document.getElementById("ticketEditCustomer").value);
+        const assignedAgentId = Number(document.getElementById("ticketEditAgent").value);
+        const status = document.getElementById("ticketEditStatus").value;
+        const subject = document.getElementById("ticketEditSubject").value.trim();
+        const description = document.getElementById("ticketEditDescription").value.trim() || null;
+        const procedureSteps = document.getElementById("ticketEditProcedureSteps").value.trim() || null;
+        const changes = {};
+
+        if (customerId !== Number(ticket.customer_id)) {
+          changes.customer_id = customerId;
+        }
+        if (assignedAgentId !== Number(ticket.assigned_agent_id)) {
+          changes.assigned_agent_id = assignedAgentId;
+        }
+        if (status !== String(ticket.status || "")) {
+          changes.status = status;
+        }
+        if (subject !== String(ticket.subject || "")) {
+          changes.subject = subject;
+        }
+        if (description !== (ticket.description || null)) {
+          changes.description = description;
+        }
+        if (procedureSteps !== (ticket.procedure_steps || null)) {
+          changes.procedure_steps = procedureSteps;
+        }
+
+        if (!Object.keys(changes).length) {
+          showToast("No changes to save.");
+          navigate(`/tickets/${Number(ticket.id)}`);
+          return;
+        }
+
+        try {
+          await apiRequest(`/tickets/${encodeURIComponent(ticket.id)}`, {
+            method: "PATCH",
+            body: changes
+          });
+
+          showToast("Ticket updated successfully.", "success");
+          navigate(`/tickets/${Number(ticket.id)}`);
+        } catch (error) {
+          showInlineError("ticketEditError", error.message);
+          button.disabled = false;
+          button.textContent = "Save Changes";
+        }
+      });
+    }
+
     async function renderTicketDetails(id) {
       const role = getRoleName();
       if (!["ADMIN", "AGENT"].includes(role)) { navigate("/403"); return; }
@@ -3654,6 +3837,7 @@
               <p>${escapeHtml(ticket.subject || "Follow-up ticket")}</p>
             </div>
             <div class="actions">
+              ${role === "ADMIN" ? `<button class="btn btn-secondary" onclick="navigate('/tickets/${Number(ticket.id)}/edit')">Edit Ticket</button>` : ""}
               ${canCall ? `<button class="btn btn-success" onclick="confirmStartCall(${Number(ticket.id)}, '${escapeJs(customer?.full_name || ticket.subject || `Ticket #${ticket.id}`)}')">☎ Start AI Call</button>` : ""}
             </div>
           </div>

@@ -12,6 +12,7 @@ from app.schemas.ticket import (
     FollowUpTicketResponse,
     TicketCreate,
     TicketResponse,
+    TicketUpdate,
 )
 from app.schemas.analytics import AnalyticsQueryRequest, AnalyticsQueryResponse
 from app.services.analytics_service import answer_analytics_question
@@ -20,6 +21,7 @@ from app.services.ticket_service import (
     get_company_tickets,
     get_my_follow_ups,
     get_ticket_by_id,
+    update_ticket,
 )
 
 from app.schemas.call import CallResponse
@@ -125,6 +127,24 @@ def get_ticket(
         db,
         current_user,
         ticket_id
+    )
+
+
+@router.patch(
+    "/{ticket_id}",
+    response_model=TicketResponse
+)
+def update_existing_ticket(
+    ticket_id: int,
+    data: TicketUpdate,
+    db: Session = Depends(get_db),
+    current_admin: User = Depends(require_admin)
+):
+    return update_ticket(
+        db,
+        current_admin,
+        ticket_id,
+        data
     )
     
 @router.post(

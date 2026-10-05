@@ -7,7 +7,7 @@ from app.repositories import (
     ticket_repository,
     user_repository,
 )
-from app.schemas.ticket import TicketCreate
+from app.schemas.ticket import TicketCreate, TicketUpdate
 
 
 def create_ticket(
@@ -137,4 +137,114 @@ def get_ticket_by_id(
     raise HTTPException(
         status_code=404,
         detail="Ticket not found"
+    )
+
+
+def update_ticket(
+    db: Session,
+    current_admin: User,
+    ticket_id: int,
+    data: TicketUpdate,
+) -> Ticket:
+
+    if current_admin.company_id is None:
+        raise HTTPException(
+            status_code=400,
+            detail="Admin is not assigned to a company"
+        )
+
+    ticket = ticket_repository.get_by_id_and_company(
+        db,
+        ticket_id,
+        current_admin.company_id
+    )
+
+    if ticket is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Ticket not found"
+        )
+
+    update_data = data.model_dump(
+        exclude_unset=True
+    )
+
+    if not update_data:
+        return ticket
+
+    if "subject" in update_data:
+        subject = update_data["subject"]
+
+        if subject is None or not subject.strip():
+            raise HTTPException(
+                status_code=422,
+                detail="Ticket subject cannot be empty"
+            )
+
+        data.subject = subject.strip()
+
+    if "customer_id" in update_data:
+        customer_id = update_data["customer_id"]
+
+        if customer_id is None:
+            raise HTTPException(
+                status_code=422,
+                detail="Customer is required"
+            )
+
+        customer = customer_repository.get_by_id_and_company(
+            db,
+            customer_id,
+            current_admin.company_id
+        )
+
+        if customer is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Customer not found"
+            )
+
+        if not customer.is_active:
+            raise HTTPException(
+                status_code=400,
+                detail="Customer is inactive"
+            )
+
+    if "assigned_agent_id" in update_data:
+        assigned_agent_id = update_data["assigned_agent_id"]
+
+        if assigned_agent_id is None:
+            raise HTTPException(
+                status_code=422,
+                detail="Assigned agent is required"
+            )
+
+        agent = user_repository.get_agent_by_id_and_company(
+            db,
+            assigned_agent_id,
+            current_admin.company_id
+        )
+
+        if agent is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Agent not found"
+            )
+
+        if not agent.is_active:
+            raise HTTPException(
+                status_code=400,
+                detail="Agent is inactive"
+            )
+
+    if "status" in update_data and update_data["status"] is None:
+        raise HTTPException(
+            status_code=422,
+            detail="Ticket status is required"
+        )
+
+    return ticket_repository.update(
+        db,
+        ticket,
+        data
     )

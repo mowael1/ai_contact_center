@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from fastapi import FastAPI
-from fastapi.responses import FileResponse
+from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.api.router import api_router
@@ -11,6 +11,7 @@ from fastapi.staticfiles import StaticFiles
 
 BASE_DIR = Path(__file__).resolve().parent
 AUDIO_DIR = BASE_DIR / "audio"
+FRONTEND_PATH = BASE_DIR.parent / "frontend" / "index.html"
 
 app = FastAPI(
     title="AI Contact Center API",
@@ -41,13 +42,18 @@ app.mount(
 
 @app.get("/")
 def frontend():
-    frontend_path = (
-        Path(__file__).resolve().parent.parent
-        / "frontend"
-        / "index.html"
-    )
+    version = FRONTEND_PATH.stat().st_mtime_ns
 
-    return FileResponse(frontend_path)
+    return RedirectResponse(
+        url=f"/static/index.html?v={version}",
+        status_code=307,
+        headers={
+            "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+            "Clear-Site-Data": '"cache"',
+            "Pragma": "no-cache",
+            "Expires": "0",
+        },
+    )
 
 
 @app.get("/health")
