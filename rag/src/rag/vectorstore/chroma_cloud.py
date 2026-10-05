@@ -228,15 +228,32 @@ class ChromaCloudStore(VectorStore):
         """Return the collection's immutable vector width without downloading it.
 
         Chroma fixes a collection's dimension on its first insert.  Looking at
-        one vector lets the composition root select the matching embedding
-        backend for collections created before the configured model changed.
+        one stored vector lets the composition root select the matching
+        embedding backend before the first query. Use ``get`` with an explicit
+        include because Cloud/client versions can omit embeddings from ``peek``.
         """
-        if self.count() == 0:
+        try:
+            result = self._retry(
+                self._collection.get, limit=1, include=["embeddings"]
+            )
+        except TypeError:
+            # Compatibility fallback for older Chroma clients whose ``get``
+            # implementation does not accept an explicit embeddings include.
+            result = self._retry(self._collection.peek, limit=1)
+
+        ids = result.get("ids") or []
+        if not ids:
             return None
-        result = self._retry(self._collection.peek, limit=1)
         vectors = result.get("embeddings")
         if vectors is None or len(vectors) == 0:
-            return None
+            result = self._retry(self._collection.peek, limit=1)
+            vectors = result.get("embeddings")
+        if vectors is None or len(vectors) == 0:
+            raise RuntimeError(
+                f"Chroma collection {self.collection_name!r} contains records, "
+                "but its embedding dimension could not be read. Cannot safely "
+                "select a matching embedding model."
+            )
         vector = vectors[0]
         return len(vector) if vector is not None else None
 
