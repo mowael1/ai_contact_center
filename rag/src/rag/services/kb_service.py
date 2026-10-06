@@ -12,6 +12,7 @@ Pipeline per file:
 
 from __future__ import annotations
 
+import math
 import time
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
@@ -219,6 +220,12 @@ class KnowledgeBaseService:
                 logger.info("Replaced %d existing chunks for %s", removed, document.source)
 
         vectors = self.embeddings.embed_documents([c.text for c in chunks])
+        if settings.DEDUPLICATE_SEMANTIC_CHUNKS:
+            chunks, vectors = _deduplicate_semantic_chunks(
+                chunks,
+                vectors,
+                threshold=settings.SEMANTIC_CHUNK_DEDUP_THRESHOLD,
+            )
         self.store.upsert_chunks(chunks, vectors)
         logger.info(
             "Ingested %s: %d chunks (%s) into %s",
@@ -274,3 +281,47 @@ def _method_for(sections: Sequence, section_index: Optional[int]) -> str:
         if section.section_index == section_index:
             return section.extraction_method
     return "no_section"
+
+
+def _cosine_similarity(left: Sequence[float], right: Sequence[float]) -> float:
+    if len(left) != len(right):
+        raise ValueError("Cannot compare embeddings with different dimensions")
+    left_norm = math.sqrt(sum(value * value for value in left))
+    right_norm = math.sqrt(sum(value * value for value in right))
+    if not left_norm or not right_norm:
+        return 0.0
+    return sum(a * b for a, b in zip(left, right)) / (left_norm * right_norm)
+
+
+def _deduplicate_semantic_chunks(
+    chunks: Sequence[Chunk],
+    vectors: Sequence[Sequence[float]],
+    threshold: float,
+) -> tuple[list[Chunk], list[list[float]]]:
+    """Keep the first chunk when it is semantically covered by an earlier one."""
+    if len(chunks) != len(vectors):
+        raise ValueError("chunk/embedding count mismatch")
+    if not 0.0 <= threshold <= 1.0:
+        raise ValueError("semantic chunk deduplication threshold must be between 0 and 1")
+
+    unique_chunks: list[Chunk] = []
+    unique_vectors: list[list[float]] = []
+    for chunk, vector in zip(chunks, vectors):
+        if any(
+            _cosine_similarity(vector, previous) >= threshold
+            for previous in unique_vectors
+        ):
+            continue
+        unique_chunks.append(chunk)
+        unique_vectors.append(list(vector))
+
+    for index, chunk in enumerate(unique_chunks, start=1):
+        chunk.part = index
+        chunk.chunk_index = index - 1
+        chunk.chunk_id = build_chunk_id(
+            Tenant(company_id=chunk.company_id),
+            chunk.document_id,
+            index,
+            chunk.text,
+        )
+    return unique_chunks, unique_vectors
