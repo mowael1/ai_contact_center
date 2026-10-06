@@ -12,6 +12,8 @@ pyarrow>=17.0
 pandas>=2.2
 chromadb>=1.5
 python-dotenv>=1.0
+google-api-python-client>=2.150
+google-auth-oauthlib>=1.2
 
 # Agentic retrieval graph. Only langgraph itself is used; langchain-core
 # arrives as its transitive dependency and none of its abstractions are used.

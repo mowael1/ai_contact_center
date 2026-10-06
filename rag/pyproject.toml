@@ -22,6 +22,8 @@ dependencies = [
     "chromadb>=1.5",
     "langgraph>=1.0",
     "python-dotenv>=1.0",
+    "google-api-python-client>=2.150",
+    "google-auth-oauthlib>=1.2",
 ]
 
 [project.optional-dependencies]

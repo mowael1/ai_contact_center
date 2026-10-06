@@ -27,6 +27,7 @@ from rag.services.conversation import (
 )
 from rag.services.chat_store import chat_store
 from rag.services.tenancy import Tenant
+from rag.integrations.google_drive import upload_kb_file
 from io import BytesIO
 from fastapi.responses import StreamingResponse
 
@@ -53,6 +54,9 @@ class UploadResponse(BaseModel):
     strategy: str = ""
     quality: Optional[dict] = None
     reason: str = ""
+    drive_status: str = "disabled"
+    drive_link: str = ""
+    drive_error: str = ""
 
 
 class DocumentModel(BaseModel):
@@ -187,6 +191,19 @@ def upload_document(
     """
     stored = _store_upload(tenant, file)
     result = container.kb().ingest_file(stored, replace=True)
+    drive_status = "disabled"
+    drive_link = ""
+    drive_error = ""
+    try:
+        drive_result = upload_kb_file(stored)
+        if drive_result is not None:
+            drive_status = "uploaded"
+            drive_link = drive_result.get("web_view_link", "")
+    except Exception:
+        # Indexing remains useful if the optional Drive mirror is unavailable.
+        logger.exception("Google Drive mirror upload failed")
+        drive_status = "failed"
+        drive_error = "Google Drive upload failed. Check OAuth/API setup and server logs."
     if result.status != "ingested":
         # Keep the file so an admin can inspect why it failed.
         return UploadResponse(
@@ -197,6 +214,9 @@ def upload_document(
             pages=result.pages,
             quality=result.quality,
             reason=result.reason,
+            drive_status=drive_status,
+            drive_link=drive_link,
+            drive_error=drive_error,
         )
     return UploadResponse(
         status="ingested",
@@ -208,6 +228,9 @@ def upload_document(
         pages=result.pages,
         strategy=result.strategy,
         quality=result.quality,
+        drive_status=drive_status,
+        drive_link=drive_link,
+        drive_error=drive_error,
     )
 
 

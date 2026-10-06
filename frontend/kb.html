@@ -226,6 +226,8 @@ $("upload").onclick = async () => {
         <tr><th>Chunks</th><td>${r.chunks}</td></tr>
         <tr><th>Strategy</th><td><code>${esc(r.strategy || "-")}</code></td></tr>
         <tr><th>Collection</th><td><code>${esc(r.collection)}</code></td></tr>
+        ${r.drive_status === "uploaded" ? `<tr><th>Google Drive</th><td>${r.drive_link ? `<a href="${esc(r.drive_link)}" target="_blank" rel="noopener">Uploaded to fixed_files</a>` : "Uploaded to fixed_files"}</td></tr>` : ""}
+        ${r.drive_status === "failed" ? `<tr><th>Google Drive</th><td>Upload failed: ${esc(r.drive_error || "check server configuration")}</td></tr>` : ""}
         ${r.reason ? `<tr><th>Reason</th><td>${esc(r.reason)}</td></tr>` : ""}
       </table>`;
     if (good) { picked = null; setFile(null); loadDocs(); }
