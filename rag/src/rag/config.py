@@ -141,6 +141,10 @@ class Settings(BaseSettings):
     #: Collapse retrieved passages with identical text (same content published
     #: under several URLs). Keeps the best-scoring copy.
     DEDUPLICATE_RESULTS: bool = True
+    #: Collapse chunks with near-identical meaning during ingestion. The
+    #: threshold is cosine similarity between their embedding vectors.
+    DEDUPLICATE_SEMANTIC_CHUNKS: bool = True
+    SEMANTIC_CHUNK_DEDUP_THRESHOLD: float = 0.92
     MAX_CONTEXT_CHARS: int = 8000
 
     # ---- Ingestion --------------------------------------------------------
