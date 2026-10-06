@@ -4198,6 +4198,8 @@
           const warnings = [];
           if (result.quality?.needs_ocr) warnings.push("needs OCR");
           if (result.quality?.reversed_arabic) warnings.push("reversed Arabic repaired");
+          if (result.drive_status === "uploaded") warnings.push("copied to Google Drive / fixed_files");
+          if (result.drive_status === "failed") warnings.push(`Google Drive upload failed: ${result.drive_error || "check server configuration"}`);
           target.innerHTML = `
             <p class="${good ? "success-text" : "error-text"}" style="margin-top:14px">
               ${good
