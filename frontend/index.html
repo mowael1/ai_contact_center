@@ -1471,6 +1471,8 @@
           await renderDashboard();
         } else if (route === "/knowledge") {
           await renderKnowledgeBase();
+        } else if (route === "/search") {
+          await renderWebSearch();
         } else if (route === "/profile") {
           renderProfile();
 
@@ -1568,6 +1570,16 @@
         `
         : "";
 
+      const searchNav = ["SUPER_ADMIN", "ADMIN", "AGENT"].includes(role)
+        ? `
+          <button class="nav-btn ${activeItem === "search" ? "active" : ""}"
+                  onclick="navigate('/search')">
+            <span>🔎</span>
+            <span>Search</span>
+          </button>
+        `
+        : "";
+
       const adminsNav = role === "SUPER_ADMIN"
         ? `
           <button class="nav-btn ${activeItem === "admins" ? "active" : ""}"
@@ -1653,6 +1665,7 @@
               ${ticketsNav}
               ${followUpsNav}
               ${knowledgeNav}
+              ${searchNav}
 
               <button class="nav-btn ${activeItem === "profile" ? "active" : ""}"
                       onclick="navigate('/profile')">
@@ -4806,6 +4819,110 @@
       } catch (error) {
         target.innerHTML = `<p class="error-text">${escapeHtml(error.message)}</p>`;
       }
+    }
+
+    async function renderWebSearch() {
+      const role = getRoleName();
+      const isSuperAdmin = role === "SUPER_ADMIN";
+      let companies = [];
+
+      if (isSuperAdmin) {
+        try {
+          companies = await apiRequest("/companies/");
+        } catch (_) {
+          companies = [];
+        }
+        if (!kbSelectedCompany && companies.length) {
+          kbSelectedCompany = companies[0].id;
+        }
+      }
+
+      const companyPicker = isSuperAdmin ? `
+        <div class="card" style="margin-bottom:18px">
+          <div class="card-head">
+            <h3>Search for company</h3>
+            <p class="muted">Choose the company whose web-search request will be sent to n8n.</p>
+          </div>
+          <div class="card-body">
+            ${companies.length ? `
+              <select id="searchCompany" class="input" style="max-width:340px">
+                ${companies.map((c) => `
+                  <option value="${c.id}" ${c.id === kbSelectedCompany ? "selected" : ""}>
+                    ${escapeHtml(c.name)}
+                  </option>`).join("")}
+              </select>`
+              : `<p class="muted">No companies exist yet. Create one first.</p>`}
+          </div>
+        </div>` : "";
+
+      renderShell(`
+        <section class="page">
+          <div class="page-header">
+            <div>
+              <h2>Web Search</h2>
+              <p class="muted">Search the web through the n8n web-search agent.</p>
+            </div>
+          </div>
+          ${companyPicker}
+          <div class="card">
+            <div class="card-head">
+              <h3>Search the web</h3>
+              <p class="muted">The request is sent to the configured n8n workflow. Results should include an answer and optional sources.</p>
+            </div>
+            <div class="card-body">
+              <form id="webSearchForm">
+                <label for="webSearchQuery">What do you want to search?</label>
+                <textarea id="webSearchQuery" class="input" rows="4"
+                  placeholder="Search for the latest information…"
+                  maxlength="2000" required></textarea>
+                <div class="form-actions" style="margin-top:14px">
+                  <button class="btn btn-primary" id="webSearchButton" type="submit">Search</button>
+                </div>
+              </form>
+              <div id="webSearchResult" style="margin-top:20px"></div>
+            </div>
+          </div>
+        </section>
+      `, "search", "Search");
+
+      const picker = document.getElementById("searchCompany");
+      if (picker) {
+        picker.onchange = () => { kbSelectedCompany = parseInt(picker.value, 10); };
+      }
+
+      document.getElementById("webSearchForm").onsubmit = async (event) => {
+        event.preventDefault();
+        const button = document.getElementById("webSearchButton");
+        const resultTarget = document.getElementById("webSearchResult");
+        const query = document.getElementById("webSearchQuery").value.trim();
+        button.disabled = true;
+        button.textContent = "Searching…";
+        resultTarget.innerHTML = `<p class="muted">Searching the web…</p>`;
+        try {
+          const result = await kbRequest("/web-search", {
+            method: "POST",
+            body: { query }
+          });
+          const sources = (result.sources || []).map((source) => {
+            const title = source.title || source.name || source.url || "Source";
+            return source.url
+              ? `<li><a href="${escapeHtml(source.url)}" target="_blank" rel="noopener">${escapeHtml(title)}</a></li>`
+              : `<li>${escapeHtml(title)}</li>`;
+          }).join("");
+          resultTarget.innerHTML = `
+            <div class="card" style="background:var(--surface-2);box-shadow:none">
+              <h3>Answer</h3>
+              <div class="kb-text" style="white-space:pre-wrap;margin-top:10px"
+                   ${isRtl(result.answer) ? 'dir="rtl"' : ""}>${escapeHtml(result.answer || "The search agent returned no answer.")}</div>
+              ${sources ? `<h4 style="margin-top:18px">Sources</h4><ul style="margin:8px 0 0 20px">${sources}</ul>` : ""}
+            </div>`;
+        } catch (error) {
+          resultTarget.innerHTML = `<p class="error-text">${escapeHtml(error.message)}</p>`;
+        } finally {
+          button.disabled = false;
+          button.textContent = "Search";
+        }
+      };
     }
 
     function renderProfile() {

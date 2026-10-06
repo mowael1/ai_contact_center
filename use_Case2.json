@@ -1,0 +1,142 @@
+{
+  "name": "My workflow 2",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "12094f12-c930-47d2-8d28-6da3fa765c24",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "38de6d90-615d-43c9-ae9b-1b412e3e53ee",
+      "name": "Webhook",
+      "webhookId": "12094f12-c930-47d2-8d28-6da3fa765c24"
+    },
+    {
+      "parameters": {
+        "query": "={{ $json.body.query }}",
+        "options": {
+          "end_date": "2026-12-31",
+          "max_results": 5,
+          "start_date": "2026-01-01"
+        }
+      },
+      "type": "@tavily/n8n-nodes-tavily.tavily",
+      "typeVersion": 2,
+      "position": [
+        448,
+        0
+      ],
+      "id": "13543356-5858-413f-93a9-bc7164cdc7d6",
+      "name": "Search the web",
+      "credentials": {
+        "tavilyApi": {
+          "id": "Mrx9aZj1M1hKfQT5",
+          "name": "Tavily account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "models/gemini-3-flash-preview"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=you are a search agent summarizer, you have a scraped content about a this user query  {{ $json.query }} , and these are the results we got from the web search {{ $json.results[0].content }} {{ $json.results[1].content }} {{ $json.results[2].content }} {{ $json.results[3].content }}  {{ $json.results[4].content }} , your job is to summrize the scrapped results to the user as a simple report , return your answer as a text "
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        672,
+        0
+      ],
+      "id": "2a577aec-6342-4611-aec8-853bcfe4fb1f",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "dA1ZFQIAu7Hs2zBv",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.content.parts[0].text }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1072,
+        0
+      ],
+      "id": "23be2c68-916f-4b98-ad22-6f3b4fac10a0",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Search the web",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search the web": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "917a5140-4301-4dc9-8dc1-7c15fb311a94",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8b05c265072eeae991c47cad627c351749064cf259a51095a13d8292a4b3e07c"
+  },
+  "nodeGroups": [],
+  "id": "tVF3UJ0pRZc8Xx6w",
+  "tags": []
+}

@@ -162,6 +162,10 @@ class Settings(BaseSettings):
     KB_UPLOAD_DIR: Path = RAG_ROOT.parent / "uploads"
     KB_MAX_UPLOAD_MB: int = 25
 
+    # ---- External web-search agent ---------------------------------------
+    WEB_SEARCH_N8N_WEBHOOK_URL: str = ""
+    WEB_SEARCH_TIMEOUT_SECONDS: float = 120.0
+
     # ---- Google Drive upload mirror --------------------------------------
     GOOGLE_DRIVE_ENABLED: bool = False
     GOOGLE_DRIVE_ACCOUNT_EMAIL: str = "tokamohamed1072004@gmail.com"

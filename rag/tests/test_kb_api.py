@@ -211,6 +211,85 @@ def test_a_request_without_a_company_is_refused(client):
     assert client.get("/api/v1/kb/info").status_code == 400
 
 
+def test_web_search_forwards_query_and_company_to_n8n(client, monkeypatch):
+    from rag.config import settings
+
+    class Response:
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return {
+                "answer": "Latest web answer",
+                "sources": [{"title": "Example", "url": "https://example.com"}],
+            }
+
+    calls = []
+
+    def fake_post(url, **kwargs):
+        calls.append((url, kwargs))
+        return Response()
+
+    monkeypatch.setattr(settings, "WEB_SEARCH_N8N_WEBHOOK_URL", "https://n8n.example/webhook")
+    monkeypatch.setattr("rag.api.kb_routes.httpx.post", fake_post)
+
+    response = client.post(
+        "/api/v1/kb/web-search",
+        headers={"X-Company-Id": "9"},
+        json={"query": "latest Vodafone offers"},
+    )
+
+    assert response.status_code == 200
+    assert response.json()["answer"] == "Latest web answer"
+    assert calls == [(
+        "https://n8n.example/webhook",
+        {
+            "json": {"query": "latest Vodafone offers", "company_id": 9},
+            "timeout": settings.WEB_SEARCH_TIMEOUT_SECONDS,
+        },
+    )]
+
+
+def test_web_search_accepts_plain_text_from_n8n(client, monkeypatch):
+    from rag.config import settings
+
+    class Response:
+        text = "إجابة البحث من n8n"
+
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            raise ValueError("not JSON")
+
+    monkeypatch.setattr(settings, "WEB_SEARCH_N8N_WEBHOOK_URL", "https://n8n.example/webhook")
+    monkeypatch.setattr("rag.api.kb_routes.httpx.post", lambda *args, **kwargs: Response())
+
+    response = client.post(
+        "/api/v1/kb/web-search",
+        headers={"X-Company-Id": "3"},
+        json={"query": "latest offers"},
+    )
+
+    assert response.status_code == 200
+    assert response.json()["answer"] == "إجابة البحث من n8n"
+    assert response.json()["sources"] == []
+
+
+def test_web_search_reports_missing_configuration(client, monkeypatch):
+    from rag.config import settings
+
+    monkeypatch.setattr(settings, "WEB_SEARCH_N8N_WEBHOOK_URL", "")
+    response = client.post(
+        "/api/v1/kb/web-search",
+        headers={"X-Company-Id": "1"},
+        json={"query": "anything"},
+    )
+
+    assert response.status_code == 503
+    assert "WEB_SEARCH_N8N_WEBHOOK_URL" in response.json()["detail"]
+
+
 # ---- conversation memory --------------------------------------------------
 def test_follow_up_is_expanded_for_retrieval(client):
     upload(client, 1, "returns.md", COMPANY_A_DOC)

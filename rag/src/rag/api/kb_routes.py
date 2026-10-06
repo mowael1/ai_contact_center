@@ -5,6 +5,7 @@
 from __future__ import annotations
 
 import time
+import httpx
 from dataclasses import asdict
 from pathlib import Path
 from datetime import datetime
@@ -141,6 +142,17 @@ class AskResponse(BaseModel):
     latency_ms: dict[str, float] = Field(default_factory=dict)
 
 
+class WebSearchRequest(BaseModel):
+    query: str = Field(..., min_length=1, max_length=2000)
+
+
+class WebSearchResponse(BaseModel):
+    query: str
+    answer: str = ""
+    sources: list[dict] = Field(default_factory=list)
+    data: dict = Field(default_factory=dict)
+
+
 # ---- helpers --------------------------------------------------------------
 def _store_upload(tenant: Tenant, upload: UploadFile) -> Path:
     suffix = Path(upload.filename or "").suffix.lower()
@@ -172,6 +184,79 @@ def _store_upload(tenant: Tenant, upload: UploadFile) -> Path:
 
 
 # ---- endpoints ------------------------------------------------------------
+@router.post(
+    "/web-search",
+    response_model=WebSearchResponse,
+    summary="Search the web through the configured n8n agent",
+)
+def web_search(
+    payload: WebSearchRequest,
+    tenant: Tenant = Depends(get_tenant),
+) -> WebSearchResponse:
+    """Delegate a web search to n8n without exposing the webhook to browsers."""
+    webhook_url = settings.WEB_SEARCH_N8N_WEBHOOK_URL.strip()
+    if not webhook_url:
+        raise HTTPException(
+            status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Web search is not configured. Set WEB_SEARCH_N8N_WEBHOOK_URL.",
+        )
+
+    try:
+        response = httpx.post(
+            webhook_url,
+            json={"query": payload.query, "company_id": tenant.company_id},
+            timeout=settings.WEB_SEARCH_TIMEOUT_SECONDS,
+        )
+        response.raise_for_status()
+        try:
+            result = response.json()
+        except ValueError:
+            # n8n may return the model output as text/plain when the
+            # Respond to Webhook node is configured with a text response.
+            result = {"answer": response.text}
+    except httpx.ReadTimeout as exc:
+        logger.exception("n8n web search timed out for company %s", tenant.company_id)
+        raise HTTPException(
+            status.HTTP_504_GATEWAY_TIMEOUT,
+            detail=(
+                "The web-search agent took too long to respond. "
+                "Try again or increase WEB_SEARCH_TIMEOUT_SECONDS."
+            ),
+        ) from exc
+    except httpx.HTTPError as exc:
+        logger.exception("n8n web search failed for company %s", tenant.company_id)
+        raise HTTPException(
+            status.HTTP_502_BAD_GATEWAY,
+            detail="The web-search agent is currently unavailable.",
+        ) from exc
+
+    if isinstance(result, list):
+        result = {"results": result}
+    if not isinstance(result, dict):
+        raise HTTPException(
+            status.HTTP_502_BAD_GATEWAY,
+            detail="The web-search agent returned an invalid response.",
+        )
+
+    raw_sources = result.get("sources", result.get("results", []))
+    if not isinstance(raw_sources, list):
+        raw_sources = []
+    sources = [
+        item if isinstance(item, dict) else {"title": str(item)}
+        for item in raw_sources
+    ]
+    answer = result.get(
+        "answer",
+        result.get("response", result.get("text", result.get("output", ""))),
+    )
+    return WebSearchResponse(
+        query=payload.query,
+        answer=str(answer or ""),
+        sources=sources,
+        data=result,
+    )
+
+
 @router.post(
     "/documents",
     response_model=UploadResponse,
