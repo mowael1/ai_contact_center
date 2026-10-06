@@ -1,0 +1,219 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "1nMNOpNprXq_EXq0LFGd4FZlG9X8L6Vjn",
+          "mode": "list",
+          "cachedResultName": "fixed_files",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1nMNOpNprXq_EXq0LFGd4FZlG9X8L6Vjn"
+        },
+        "event": "watchFolderUpdated"
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "bb272a58-6667-4bab-b41c-96b99d922b07",
+      "name": "Google Drive Trigger",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "vIiGe5vYFzTcd9cl",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "searchMethod": "query",
+        "limit": 1,
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "1nMNOpNprXq_EXq0LFGd4FZlG9X8L6Vjn",
+            "mode": "list",
+            "cachedResultName": "fixed_files",
+            "cachedResultUrl": "https://drive.google.com/drive/folders/1nMNOpNprXq_EXq0LFGd4FZlG9X8L6Vjn"
+          },
+          "whatToSearch": "files"
+        },
+        "options": {
+          "fields": [
+            "id",
+            "name"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        224,
+        0
+      ],
+      "id": "ff1c49ad-dd10-4ee7-941e-5a0358909dd8",
+      "name": "Search files and folders",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "vIiGe5vYFzTcd9cl",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {
+          "binaryPropertyName": "data"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        448,
+        0
+      ],
+      "id": "ef53351b-3143-46d6-9838-82adad8ebc79",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "vIiGe5vYFzTcd9cl",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "document",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-3.1-flash-lite-preview",
+          "mode": "list",
+          "cachedResultName": "models/gemini-3.1-flash-lite-preview"
+        },
+        "text": "analyze the binary file well , and make it structured json with all important headings and text, return a structured json without```json",
+        "inputType": "binary",
+        "binaryPropertyName": "=data",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        704,
+        0
+      ],
+      "id": "15f302ad-5c3e-4924-9a6a-ce17b1c2859a",
+      "name": "Analyze document",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "dA1ZFQIAu7Hs2zBv",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "=documents",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "text",
+              "fieldValue": "={{ $json.content.parts[0].text }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        928,
+        0
+      ],
+      "id": "9b8b05f5-425b-469d-a905-df0b3ee898dc",
+      "name": "Create a row",
+      "credentials": {
+        "supabaseApi": {
+          "id": "gIywHlVv0NImba48",
+          "name": "Supabase account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Drive Trigger": {
+      "main": [
+        [
+          {
+            "node": "Search files and folders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search files and folders": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Analyze document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze document": {
+      "main": [
+        [
+          {
+            "node": "Create a row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "286b633f-0abd-4637-9df9-2629696cf8be",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8b05c265072eeae991c47cad627c351749064cf259a51095a13d8292a4b3e07c"
+  },
+  "nodeGroups": [],
+  "id": "1IFgZFYvb3mp7XN8",
+  "tags": []
+}
