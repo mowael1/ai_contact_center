@@ -158,6 +158,13 @@ class Settings(BaseSettings):
     KB_UPLOAD_DIR: Path = RAG_ROOT.parent / "uploads"
     KB_MAX_UPLOAD_MB: int = 25
 
+    # ---- Google Drive upload mirror --------------------------------------
+    GOOGLE_DRIVE_ENABLED: bool = False
+    GOOGLE_DRIVE_ACCOUNT_EMAIL: str = "tokamohamed1072004@gmail.com"
+    GOOGLE_DRIVE_FOLDER_NAME: str = "fixed_files"
+    GOOGLE_DRIVE_OAUTH_TOKEN_FILE: Path = RAG_ROOT / "secrets" / "google_drive_token.json"
+    GOOGLE_DRIVE_OAUTH_CLIENT_FILE: Path = RAG_ROOT / "secrets" / "google_drive_client.json"
+
     # ---- Logging ----------------------------------------------------------
     LOG_LEVEL: str = "INFO"
 
