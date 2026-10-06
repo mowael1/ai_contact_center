@@ -227,6 +227,7 @@ private.key
 
 # Uploaded knowledge-base documents. Customer data - never committed.
 uploads/
+rag/secrets/
 
 # SQL Server backup handed over for migration. Binary, and not needed once the
 # schema lives in migrations/.
